@@ -26,7 +26,7 @@ int main()
 		//read 4 segments
 		scanf("%d %d %d %d", &cardSegments[0], &cardSegments[1], &cardSegments[2], &cardSegments[3]);
 
-		//construct int array of the segments
+		//construct int array of the four segments
 		for (int j = 0; j < cardNumberSeg; j++){
 			int cardSegmentValue = cardSegments[j];
 			for (int k = 0; k < 4; k++){
@@ -35,12 +35,14 @@ int main()
 			}
 		}
 		
+		//card number output verification
 		/*
 		for (int j = 0; j < cardNumberLen; j++) {
 			cout << creditCardNumber[j];
 		}
 		*/
 
+		//Checking algorithm
 		bool isEvenPos  = true;
 		int sumOfDigits = 0;
 		for (int j = 0; j < cardNumberLen; j++) {
@@ -58,17 +60,24 @@ int main()
 			isEvenPos = (!isEvenPos);
 		}
 
-		if()
+		// set final result
+		if (sumOfDigits % 10 == 0)
+			results[i] = true;
+		else
+			results[i] = false;
 
-				
 	}
 
-	/*
+	
 	for (int i = 0; i < n; i++)
 	{
-		printf("%.3lf%%\n", results[i]);
+		string output = "Invalid";
+		if (results[i])
+			output = "Valid";
+
+		printf("%s\n", output.c_str());
 	}
-	*/
+	
 	return 0;
 }
 
