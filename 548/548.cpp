@@ -7,9 +7,8 @@
 using namespace std;
 
 
-//Length taken to represent a given integer as a binary
-int len_to_represent(int value) {
-	//CITATION: http://stackoverflow.com/questions/680002/find-out-number-of-bits-needed-to-represent-a-positive-integer-in-binary
+//Length required to represent a given integer as binary
+int len_to_represent(unsigned long long value) {
 	int count = 0;
 	while (value > 0) {
 		count++;
@@ -18,15 +17,16 @@ int len_to_represent(int value) {
 	return count;
 }
 
-//Decides if card has to be removed or placed...
-bool add_remove(int curr, int position) {
+//Decides if the card has to be removed or shown (bit converts to -> 1/0)...
+//position is the location of the bit being flipped
+//curr is the number
+bool add_remove(unsigned long long curr, int position) {
 	//returns 0 for remove and 1 for add.
 	int count = 0;
-	int bits = curr;
 	int bitValue = 0;
-	while (bits && count <= position) {
-		bitValue = (bits & 1);
-		bits >>= 1;
+	while (curr && count <= position) {
+		bitValue = (curr & 1);
+		curr >>= 1;
 		count++;
 	}
 	
@@ -36,23 +36,18 @@ bool add_remove(int curr, int position) {
 		return 0; // prev: 1, need to add the card
 }
 
-int max_intermediate_sum(int a, int b) {
-	int lenArray = b - a + 1;
-
-	int *isShown = new int[lenArray];
-	for (int i = 0; i < lenArray; i++)
-		isShown[i] = 0;
-
+unsigned long long max_intermediate_sum(unsigned long long a, unsigned long long b) {
+	
 	//init
-	int maxShown = a;
-	int currShown = a;
+	unsigned long long maxShown = a;
+	unsigned long long currShown = a;
 
-	for (int i = a; i < b; i++) {
-		int curr = i;
-		int next = i + 1;
+	for (unsigned long long i = a; i < b; i++) {
+		unsigned long long curr = i;
+		unsigned long long next = i + 1;
 		//cout << "\n=============\n" << curr << "=>" << next << "\n";
-		int binary_diff = i ^ (i + 1);
-		int bits = binary_diff;
+		unsigned long long binary_diff = i ^ (i + 1);
+		unsigned long long bits = binary_diff;
 
 
 		int reprLen = len_to_represent(binary_diff); //representation length
@@ -72,7 +67,7 @@ int max_intermediate_sum(int a, int b) {
 			bool toFlip = posToFlip[j];
 
 			if (toFlip) {
-				int card = 1 << j;//calculates 2 to the power j via bit manipulation
+				unsigned long long card = 1 << j;//calculates 2 to the power j via bit manipulation
 				//cout << "\ncard" << card;
 
 				if (add_remove(curr, j)) {
@@ -100,10 +95,10 @@ int max_intermediate_sum(int a, int b) {
 int main()
 {
 	//cout << "\nFINAL RESULT: " << max_intermediate_sum(6, 8);
+	//printf("%llu\n", max_intermediate_sum(6, 8));
+	//printf("%llu\n", max_intermediate_sum(35, 38));
 	
-
-
-	printf("%d\n", max_intermediate_sum(6, 8));
+	printf("%llu\n", max_intermediate_sum(1125899906842630, 1125899906842632));
 
 
     return 0;
