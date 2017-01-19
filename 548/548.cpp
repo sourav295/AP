@@ -97,8 +97,12 @@ int main()
 	//cout << "\nFINAL RESULT: " << max_intermediate_sum(6, 8);
 	//printf("%llu\n", max_intermediate_sum(6, 8));
 	//printf("%llu\n", max_intermediate_sum(35, 38));
+	unsigned long long a, b;
 	
-	printf("%llu\n", max_intermediate_sum(1125899906842630, 1125899906842632));
+	while (scanf("%llu %llu", &a, &b) != EOF) {
+		printf("%llu\n", max_intermediate_sum(a, b));
+	}
+	
 
 
     return 0;
