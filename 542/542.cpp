@@ -38,7 +38,7 @@ public:
 		Given everything other parameter, k should existd
 		*/
 
-		float k1 = ((float)time_now - ((float)time_period - 5)) / (2 * (float)time_period);
+		float k1 = ((float)time_now - ((float)time_period - 5 - 1)) / (2 * (float)time_period);//exclusion of the ending
 		float k2 = (float)time_now / (2 * (float)time_period);
 
 
