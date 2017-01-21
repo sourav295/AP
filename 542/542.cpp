@@ -53,19 +53,7 @@ public:
 
 };
 
-
-int main()
-{
-
-	vector<Signal> signals;
-	
-	Signal s (30);
-	Signal s1(25);
-	Signal s2(35);
-	signals.push_back(s);
-	signals.push_back(s1);
-	signals.push_back(s2);
-
+int calculateWait(vector<Signal> signals) {
 	int cycle_limit = 5 * 60 * 60 / (10 * 2); // 5hrs divided by min cycle size
 
 
@@ -78,7 +66,7 @@ int main()
 		int end_time = base_signal.calculateGreenTime_end(cycle);
 
 		for (int time_now = start_time; time_now < end_time; time_now++) {
-			
+
 			bool interim_simultaneously_green = true;
 			for (std::vector<int>::size_type i = 1; i != signals.size(); i++) {
 				int cycle_intersection = signals[i].getGreenLightCycleNumber(time_now);
@@ -102,7 +90,32 @@ int main()
 			break;
 	}
 
-	cout << success_time;
+	return success_time;
+}
+
+
+
+int main()
+{
+
+	vector<Signal> signals;
+	
+	Signal s (30);
+	Signal s1(25);
+	Signal s2(35);
+	signals.push_back(s);
+	signals.push_back(s1);
+	signals.push_back(s2);
+
+	
+	int success_time = calculateWait(signals);
+
+	int seconds =  success_time;
+	int minutes = seconds / 60;
+	int hours   = minutes / 60;
+
+	printf("%02d:%02d:%02d\n", hours, (minutes%60), (seconds%60));
+
 
 	
 	return 0;
