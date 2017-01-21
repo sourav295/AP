@@ -110,13 +110,17 @@ int main()
 	
 	int success_time = calculateWait(signals);
 
-	int seconds =  success_time;
-	int minutes = seconds / 60;
-	int hours   = minutes / 60;
+	if (success_time == 0) {
+		printf("%s", "Replace with custom text");
+	}
+	else {
+		int seconds = success_time;
+		int minutes = seconds / 60;
+		int hours = minutes / 60;
 
-	printf("%02d:%02d:%02d\n", hours, (minutes%60), (seconds%60));
+		printf("%02d:%02d:%02d\n", hours, (minutes % 60), (seconds % 60));
 
-
+	}
 	
 	return 0;
 }
