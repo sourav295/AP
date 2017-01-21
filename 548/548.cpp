@@ -4,6 +4,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 
@@ -36,6 +37,12 @@ bool add_remove(unsigned long long curr, int position) {
 		return 0; // prev: 1, need to add the card
 }
 
+struct cardOperation {
+	bool showCard;//false -> hide card
+	bool position;//position in the bits
+};
+
+
 unsigned long long max_intermediate_sum(unsigned long long a, unsigned long long b) {
 	
 	//init
@@ -46,20 +53,27 @@ unsigned long long max_intermediate_sum(unsigned long long a, unsigned long long
 		unsigned long long curr = i;
 		unsigned long long next = i + 1;
 		//cout << "\n=============\n" << curr << "=>" << next << "\n";
-		unsigned long long binary_diff = i ^ (i + 1);
-		unsigned long long bits = binary_diff;
-
-
-		int reprLen = len_to_represent(binary_diff); //representation length
-		bool *posToFlip = new bool[reprLen];
-
+		unsigned long long bits = i ^ (i + 1);
+		
+		unsigned long long curr_copy = curr;
 		// searches for the flip positions
-		int count = 0;
+		int binary_pos = 0;
+
+		vector<cardOperation> operation_list;
+
 		while (bits) {
-			posToFlip[count] = (bits & 1);
-			//cout << (bits & 1);
+			if (bits & 1) {
+				//requried to operate on this card
+				cardOperation task;
+				task.position = binary_pos;
+				task.showCard = !(curr_copy & 1);
+
+				operation_list.push_back()
+			}
+			
 			bits >>= 1;
-			count++;
+			curr_copy >>= 1;
+			binary_pos++;
 		}
 
 
