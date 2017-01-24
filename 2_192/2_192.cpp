@@ -32,40 +32,79 @@ struct TreeNode {
 	TreeNode *left;			// Pointer to the left subtree.
 	TreeNode *right;		// Pointer to the right subtree.
 
+	static TreeNode* initalize(int weight, int distance_to_parent) {
+		struct TreeNode *newNode = (struct TreeNode*) malloc(sizeof(struct TreeNode));
+		newNode->left = NULL;
+		newNode->right = NULL;
+		newNode->weight = weight;
+		newNode->distance_to_parent = distance_to_parent;
+
+		return newNode;
+	}
+
 };
 
-void construct_tree(int wl, int dl, int w2, int d2) {
+void construct_tree(queue<InputLine>& input_queue, TreeNode* parent) {
 
+	InputLine input_line = input_queue.front();
+	input_queue.pop();
 
-
-}
-
-TreeNode* construct_root() {
-	struct TreeNode *rootNode = (struct TreeNode*) malloc(sizeof(struct TreeNode));
 	
-	rootNode->weight = 0;
-	rootNode->distance_to_parent = 0;
+	TreeNode* leftChild = TreeNode::initalize(input_line.weight_left, input_line.distance_left);
+	parent->left = leftChild;
 
-	return rootNode;
+	TreeNode* rightChild = TreeNode::initalize(input_line.weight_right, input_line.distance_right);
+	parent->right = rightChild;
+	
+	
+	if (input_line.weight_left == 0) {
+		//has a left child
+		construct_tree(input_queue, leftChild);
+	}
+
+	if (input_line.weight_right == 0) {
+		//has a right child
+		construct_tree(input_queue, rightChild);
+	}
+
 }
 
-void connect_left(TreeNode *parent, int w, int d) {
+
+//<isBalanced, weight of subtree >
+pair <bool, int> isBalanced(TreeNode* parent) {
+
+
+
+
+
+	return make_pair(true, 3);
 
 }
 
-void connect_right(TreeNode *parent, int w, int d) {
-
-}
 
 
 int main()
 {
+	queue<InputLine> input_queue;
+	
+	TreeNode* root_fulcrum = TreeNode::initalize(0, 0);
+	input_queue.push(InputLine(1, 6, 3, 2));
 
-	TreeNode* root_fulcrum = construct_root();
-
-	cout << root_fulcrum->distance_to_parent;
-
+	construct_tree(input_queue, root_fulcrum);
+	cout << ((root_fulcrum->right->right->right) == NULL);
 
 	return 0;
 }
 
+/* == TEST CASE ==
+TreeNode* root_fulcrum = TreeNode::initalize(0, 0);
+input_queue.push(InputLine(0, 2, 0, 4));
+input_queue.push(InputLine(0, 3, 0, 1));
+input_queue.push(InputLine(1, 1, 1, 1));
+input_queue.push(InputLine(2, 4, 4, 2));
+input_queue.push(InputLine(1, 6, 3, 2));
+
+construct_tree(input_queue, root_fulcrum);
+
+cout<< (root_fulcrum->right->right->weight);
+*/
