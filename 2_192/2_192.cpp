@@ -7,8 +7,7 @@
 using namespace std;
 
 
-//pair <int, int> p = std::make_pair(1, 2);
-//cout << p.first << " " << p.second << std::endl;
+
 
 struct InputLine {
 	int weight_left;
@@ -70,14 +69,39 @@ void construct_tree(queue<InputLine>& input_queue, TreeNode* parent) {
 }
 
 
-//<isBalanced, weight of subtree >
-pair <bool, int> isBalanced(TreeNode* parent) {
+struct BalanceState {
+	bool isbalanced;
+	int weight, w_prod_d;
+
+	BalanceState(bool isbal, int w, int prod) {
+		isbalanced	= isbal;
+		weight		= w;
+		w_prod_d	= prod;
+	}
+};
+
+
+BalanceState isBalanced(TreeNode* node) {
+
+	//leaf nodes
+	if (node->left == NULL && node->right == NULL)
+		return BalanceState(true, 
+							node->weight, 
+							(node->distance_to_parent)*(node->weight)
+		);
+	
+	//non-leaf nodes
+	BalanceState left  = isBalanced(node->left);
+	BalanceState right = isBalanced(node->right);
+
+	node->weight = (left.weight + right.weight);
 
 
 
-
-
-	return make_pair(true, 3);
+	return BalanceState((left.w_prod_d==right.w_prod_d) && left.isbalanced && right.isbalanced,
+						node->weight,
+						(node->distance_to_parent)*(node->weight)
+		);
 
 }
 
@@ -88,10 +112,17 @@ int main()
 	queue<InputLine> input_queue;
 	
 	TreeNode* root_fulcrum = TreeNode::initalize(0, 0);
+	input_queue.push(InputLine(0, 2, 0, 4));
+	input_queue.push(InputLine(0, 3, 0, 1));
+	input_queue.push(InputLine(1, 1, 1, 1));
+	input_queue.push(InputLine(2, 4, 4, 2));
 	input_queue.push(InputLine(1, 6, 3, 2));
 
 	construct_tree(input_queue, root_fulcrum);
-	cout << ((root_fulcrum->right->right->right) == NULL);
+	
+	cout << ((isBalanced(root_fulcrum)).isbalanced);
+
+
 
 	return 0;
 }
