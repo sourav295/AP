@@ -6,6 +6,20 @@
 #include <stack> 
 using namespace std;
 
+//////////////////////////////////////////////
+void printStackState(stack<char> dump) {
+	for (dump; !dump.empty(); dump.pop())
+		cout << dump.top() << '\t';
+}
+
+void printStackState(stack<int> dump) {
+	for (dump; !dump.empty(); dump.pop())
+		cout << dump.top() << '\t';
+}
+//TESTING
+
+///////////////////////////////////////////////
+
 
 int parseAsInt(char o) {
 
@@ -36,8 +50,7 @@ int parseAsInt(char o) {
 
 
 
-
-int evaluate(char o1, char op, char o2) {
+int evaluate(int o1, char op, int o2) {
 
 	if (op == '+')
 		return o1 + o2;
@@ -45,61 +58,102 @@ int evaluate(char o1, char op, char o2) {
 		return o1 * o2;
 }
 
-void insert_operand(stack<int>& stack_var, char o) {
-
-	stack_var.push(o);
+int extract_and_evaluate(stack<char>& operator_stack, stack<int>& operand_stack) {
+	int o1 = operand_stack.top();
+	operand_stack.pop();
+	int o2 = operand_stack.top();
+	operand_stack.pop();
+	
+	return evaluate(o1, operator_stack.top(), o2);
 }
+
+
+
+void insert_operand(stack<char>& operator_stack, stack<int>& operand_stack, int o) {
+
+	// handles ')'
+	if (o == -2) {
+		while (true) {
+			int res = extract_and_evaluate(operator_stack, operand_stack);
+			operator_stack.pop();
+			
+			bool doExit = false;
+			if (operand_stack.top() == -1) {
+				doExit = true;
+				operand_stack.pop();//remove -1
+			}
+
+			operand_stack.push(res);
+			if (doExit)
+				break;
+		}
+
+		return;
+	}
+
+	operand_stack.push(o);
+	
+}
+
 
 void insert_operator(stack<char>& operator_stack, stack<int>& operand_stack, char op) {
 	
-	if (op == '+' && operator_stack.top() == '*') {
-		//insertion of a lower precedence character. Since we need to pop until there is a lower precedence character at top, we have to empty the stack as [+] is the lowest one
+	//2 cases where we need to extract and evaluate
+	if (op == '+' && !operator_stack.empty() && operator_stack.top() == '*') {//Need to extract
 		while(!operator_stack.empty()){
-			int o1 = operand_stack.top();
-			operand_stack.pop();
-			int o2 = operand_stack.top();
-			operand_stack.pop();
-			operand_stack.push(evaluate(o1, 
-										operator_stack.top(),
-										o2)
-			);
-
+			insert_operand(operator_stack, operand_stack, extract_and_evaluate(operator_stack, operand_stack) );
 			operator_stack.pop();
 		}
-
-		operator_stack.push(op);
-
+		operator_stack.push(op);//push new oprator
+		return;
 	}
 
-	//op = '*' && top = '*'
-	//when empty
-
-
-
+	if (op == '*' && !operator_stack.empty() && operator_stack.top() == '*') {
+		while (!operator_stack.empty() && operand_stack.top() == '+') {
+			insert_operand(operator_stack, operand_stack, extract_and_evaluate(operator_stack, operand_stack) );
+			operator_stack.pop();
+		}
+		operator_stack.push(op);
+		return;
+	}
+	//no manipulation required, just push
 	operator_stack.push(op);
+
 }
 
-void printStackState(stack<char>& dump) {
-	for (dump; !dump.empty(); dump.pop())
-		cout << dump.top() << '\n';
-}
+
 
 int main()
 {
+
 	stack<char> operator_stack;
 	stack<int>  operand_stack;
-	char line[] = "4+5*3+5";
+	char line[] = "(4+5)*3+5";
 
-	for (int i = 0; line[i] != '\0'; i++)
-		if (line[i] == '+' || line[i] == '*')
+	
+	for (int i = 0; line[i] != '\0'; i++){
+		if (line[i] == '+' || line[i] == '*') {
 			insert_operator(operator_stack, operand_stack, line[i]);
-		else
-			insert_operand(operand_stack, parseAsInt(line[i]));
+			cout << "==============\nInsert " << line[i] << ": ";printStackState(operator_stack);cout << "<>";printStackState(operand_stack);cout << "\n";
+		}
+		else{
+			insert_operand(operator_stack, operand_stack, parseAsInt(line[i]));
+			cout << "==============\nInsert " << line[i] << ": ";printStackState(operator_stack);cout << "<>";printStackState(operand_stack);cout << "\n";
+		}
+	}
 
+
+
+	while (!operator_stack.empty()) {
+		insert_operand(operator_stack, operand_stack, extract_and_evaluate(operator_stack, operand_stack));
+		operator_stack.pop();
+		
+	}
 	
 	//printStackState(operator_stack);
 	
-	
+	cout << "\n\n";
+	printStackState(operand_stack);
 	
 
     return 0;
