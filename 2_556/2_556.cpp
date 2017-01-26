@@ -40,15 +40,22 @@ public:
 		return operand;
 	}
 
-	bool operator==(const OperandState other) const { return ((other.getOperand()) == operand); }
+	const Operand getState() const {
+		return state;
+	}
+
+	bool operator==(const OperandState other) const { return ((other.getOperand()) == operand) && (other.getState()==state); }
 
 };
 
 class State {
 
 	vector<OperandState> constrained_operands;
-	
 
+public:
+	bool checkConstraint(OperandState otherState) {
+		
+	}
 
 	
 
@@ -73,8 +80,6 @@ void insert_operator(stack<char>& operator_stack, stack<int>& operand_stack, cha
 
 int main()
 {
-
-	
 
 
 	return 0;
