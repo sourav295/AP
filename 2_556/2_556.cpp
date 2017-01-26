@@ -1,42 +1,56 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <iostream>
-//#include <vector>
-#include <utility>
+#include <vector>
+//#include <utility>
 #include <stack> 
 using namespace std;
-
-
-struct available_options
-{
-	bool can_be_false;
-	bool can_be_true;
-
-	available_options() {
-		can_be_false = true;
-		can_be_true = true;
-	}
-};
 
 
 class Operand {
 
 	char symbol;
-	available_options availability;
-
+	
+public:
 	Operand(char sym) {
 		symbol = sym;
-		availability = available_options();
 	}
 
-	static available_options generateOptions(Operand op1,) {
-
+	const char getSymbol() const{
+		return symbol;
 	}
+
+	bool operator==(const Operand other) const { return ((other.getSymbol()) == symbol); }
+
 };
 
-class Operator {
+class OperandState
+{
+	Operand operand = NULL;
+	bool state;
 
-	char 
+public:
+	
+	OperandState(Operand op, bool val) {
+		operand = op;
+		state = val;
+	}
+
+	const Operand getOperand() const {
+		return operand;
+	}
+
+	bool operator==(const OperandState other) const { return ((other.getOperand()) == operand); }
+
+};
+
+class State {
+
+	vector<OperandState> constrained_operands;
+	
+
+
+	
 
 };
 
