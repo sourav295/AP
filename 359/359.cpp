@@ -131,7 +131,6 @@ int main()
 	m.display();
 
 	bool terminate = false;
-	m.executeInstruction(0, terminate);
 
 	
 
