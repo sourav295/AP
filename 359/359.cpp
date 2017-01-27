@@ -8,11 +8,15 @@ using namespace std;
 
 struct MemorySegment{
 
+	uint8_t value;
+
 	uint8_t instruction;
 	uint8_t content;
 
 	MemorySegment(uint8_t segment) {
 		
+		value = segment;
+
 		instruction = 0;
 		content = 0;
 		
@@ -61,42 +65,48 @@ struct Memory{
 		len = count;
 	};
 
-
-	void display() {
-		cout << "\n";
-		for (uint8_t i = 0; i < len; i++)
-			cout << unsigned(memorySegment[i].instruction)<<" " << unsigned(memorySegment[i].content) << " \n";
+	void start() {
+		bool terminate = false;
+		do {
+			executeInstruction(counter, terminate);
+		} while (!terminate);
 	}
 	
-	void interpretInstruction(uint8_t index) {
+	void executeInstruction(uint8_t &index, bool &terminate) {
 
+		//FETCH INSTRUCTION
 		uint8_t instr = memorySegment[index].instruction;
+		uint8_t cont  = memorySegment[index].content;
+
+		//INCREMENT COUNTER
+		index++;
 		
+		//EXCUTE INSTRUCTION
 		switch (unsigned(instr))
 		{
-		case 0:
-			cout << "0";
+		case 0://STA
+			memorySegment[cont] = MemorySegment(acc);
 			break;
-		case 1:
-			cout << "1";
+		case 1://LDA
+			acc = memorySegment[cont].value;
 			break;
-		case 2:
-			cout << "2";
+		case 2://BEQ
+			if (acc == 0)
+				index = cont;
 			break;
-		case 3:
-			cout << "3";
+		case 3://NOP
 			break;
-		case 4:
-			cout << "4";
+		case 4://DEC
+			acc--;
 			break;
-		case 5:
-			cout << "5";
+		case 5://INC
+			acc++;
 			break;
-		case 6:
-			cout << "6";
+		case 6://JMP
+			index = cont;
 			break;
-		case 7:
-			cout << "7";
+		case 7://HLT
+			terminate = true;
 			break;
 		default:
 			break;
@@ -104,6 +114,12 @@ struct Memory{
 
 	}
 
+
+	void display() {
+		cout << "\n";
+		for (uint8_t i = 0; i < len; i++)
+			cout << unsigned(memorySegment[i].instruction) << " " << unsigned(memorySegment[i].content) << " \n";
+	}
 };
 
 int main()
@@ -114,8 +130,8 @@ int main()
 	Memory m(x);
 	m.display();
 
-	
-	m.interpretInstruction(0);
+	bool terminate = false;
+	m.executeInstruction(0, terminate);
 
 	
 
