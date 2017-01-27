@@ -12,23 +12,26 @@ struct MemorySegment{
 	bitset<5> content;
 
 	MemorySegment(uint8_t segment) {
-		
-				
 		//extract content
 		uint8_t count = 0;
-		for (segment; count < 5; segment >> 1){
+		for (segment; count < 5; segment = segment >> 1){
 			content[count++] = segment & 1;
-			cout << (segment & 1) << "\n";
 		}
 		count = 0;
-		for (segment; count < 3; segment >> 1) {
+		for (segment; count < 3; segment = segment >> 1) {
 			instruction[count++] = segment & 1;
-			cout << (segment & 1) << "\n";
 		}
-
-		cout << instruction[2] << instruction[1] << instruction[0];
-
 	}
+
+	uint8_t getContent() {
+		uint8_t con = 0;
+		for (int i = 0; i < 5; i++) {
+			if (content[i])
+				con += (1 << i);
+		}
+		return con
+	}
+	
 	MemorySegment() {
 
 	}
@@ -67,7 +70,6 @@ struct Memory{
 
 };
 
-
 int main()
 {
 	//queue<string> x;
@@ -77,10 +79,11 @@ int main()
 	//m.display();
 
 	
-	MemorySegment x = MemorySegment((stoi("11111110", nullptr, 2)));
+	MemorySegment x (stoi("11011111", nullptr, 2));
+	cout <<"contetn"<< (uint8_t)x.getContent();
 	//cout<< x.instruction[0];
 
-
+	
 
     return 0;
 }
