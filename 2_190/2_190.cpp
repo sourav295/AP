@@ -12,6 +12,9 @@ using namespace std;
 
 bool isIncomingPrecedenceHigher(char incoming_symbol, stack<char> &eval) {
 
+	if (eval.empty() || eval.top() == '(')
+		return true;
+
 	char stack_top_value = eval.top();
 
 	switch (incoming_symbol)
@@ -30,32 +33,53 @@ bool isIncomingPrecedenceHigher(char incoming_symbol, stack<char> &eval) {
 
 string convertToPostFix(queue<char> input) {
 
-	
-	
-	
 	string output = "";
-
 	stack<char> eval;
 
 	for (input; !input.empty(); input.pop()) {
-		//cout<< input.front() << "\n";
+		
+		char incoming_operator = input.front();
+		
 		//incoming character is a number
-		if (isdigit(input.front())) {
-			output.push_back(input.front());
+		if (isdigit(incoming_operator)) {
+			output.push_back(incoming_operator);
 		}
 		//=========================================
 		//Incoming element is a operator
 		//incoming character is of higher precedence than stack top(), also manages the case of empty stack!!
-		else if (eval.empty() || isIncomingPrecedenceHigher(input.front(), eval)) {
-			eval.push(input.front());
+		else if (isIncomingPrecedenceHigher(incoming_operator, eval)) {
+			eval.push(incoming_operator);
 			continue;
 		}
-
-		//incomin
-
-
-
+		//special case - handles brace operators
+		else if (incoming_operator == '(') {
+			eval.push(incoming_operator);
+		}
+		else if (incoming_operator == ')') {
+			while (eval.top() != '(') {
+				output.push_back(eval.top());
+				eval.pop();
+			}
+			//remove left brace
+			eval.pop();
+		}
+		//incoming character is of lower precendence
+		else {
+			//achieve the state where the incoming has the highest precedence, keep popping till then
+			while (isIncomingPrecedenceHigher(incoming_operator, eval)) {
+				output.push_back(eval.top());
+				eval.pop();
+			}
+			//coveted state achieved
+			eval.push(incoming_operator);
+		}
 	}
+
+	//extract remaining operator
+	for(eval; !eval.empty(); eval.pop())
+		output.push_back(eval.top());
+
+
 
 	return output;
 }
@@ -69,9 +93,11 @@ int main()
 	queue<char> input_queue;
 	input_queue.push('2');
 	input_queue.push('*');
+	input_queue.push('(');
 	input_queue.push('3');
 	input_queue.push('-');
 	input_queue.push('4');
+	input_queue.push(')');
 	input_queue.push('/');
 	input_queue.push('5');
 
