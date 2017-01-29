@@ -7,31 +7,14 @@
 using namespace std;
 
 
-struct Operand {
-
-	char symbol;
-	
-	Operand(char sym) {
-		symbol = sym;
-	}
-
-	bool operator==(const Operand other) const { return ((other.symbol) == symbol); }
-
-	Operand() {
-
-	}
-};
-
 struct OperandState
 {
-	Operand operand;
+	char operand;
 	bool state;
-	
-	OperandState(Operand op, bool val) {
+	OperandState(char op, bool val) {
 		operand = op;
 		state = val;
 	}
-
 	bool operator==(const OperandState other) const { return ((other.operand) == operand) && (other.state==state); }
 
 };
@@ -42,7 +25,7 @@ class State {
 
 public:
 	bool checkConstraint(OperandState otherState) {
-		
+			
 	}
 
 	
