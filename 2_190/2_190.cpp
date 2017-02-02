@@ -101,7 +101,35 @@ int main()
 	input_queue.push('/');
 	input_queue.push('5');
 
-	cout << convertToPostFix(input_queue);
+	int n;
+	cin >> n; // number of test cases
+	
+	int input_number = 0;
+	char c;
+
+	while (true) {
+
+		c = getchar();
+		if (c = '\n'){
+			cout << "new input";
+			input_number++;
+		}
+		else {
+			cout << "old input";
+			while (getchar() != '\n' || !getchar()) {
+
+			}
+
+		}
+
+
+
+
+	}
+
+
+
+	//cout << convertToPostFix(input_queue);
 
 	/*
 	stack<char> test;
