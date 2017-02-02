@@ -1,9 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <stdint.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <iostream>
 //#include <vector>
 #include <bitset>
 #include <queue> 
+
 using namespace std;
 
 struct MemorySegment{
@@ -47,7 +50,7 @@ struct MemorySegment{
 
 
 struct Memory{
-
+	
 	MemorySegment memorySegment[32];
 	uint8_t len;
 
@@ -61,7 +64,8 @@ struct Memory{
 
 		uint8_t count = 0;
 		for (input; !input.empty(); input.pop())
-			memorySegment[count++] = MemorySegment(stoi(input.front(), nullptr, 2));
+			memorySegment[count++] = MemorySegment((bitset<8>(input.front())).to_ulong());
+			//memorySegment[count++] = MemorySegment(stoi(input.front(), nullptr, 2));
 		len = count;
 	};
 
@@ -125,15 +129,53 @@ struct Memory{
 int main()
 {
 	queue<string> x;
-	x.push("01100000");
-	x.push("00000001");
-	Memory m(x);
-	m.display();
+	
+	string line;
+	while (getline(cin, line))
+	{
+		x.push(line);
+	}
 
-	bool terminate = false;
+	Memory m(x);
+	m.start();
+	cout << bitset<8>((unsigned)m.acc);
 
 	
-
+	
     return 0;
 }
 
+/*
+	x.push("00111110");
+	x.push("10100000");
+	x.push("01010000");
+	x.push("11100000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00111111");
+	x.push("10000000");
+	x.push("00000010");
+	x.push("11000010");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("00000000");
+	x.push("11111111");
+	x.push("10001001");
+	*/
