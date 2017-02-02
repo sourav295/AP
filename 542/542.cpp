@@ -5,6 +5,8 @@
 #include <math.h>
 #include <iostream>
 #include <vector>
+#include <string>
+#include <queue>
 using namespace std;
 
 
@@ -92,12 +94,97 @@ int calculateWait(vector<Signal> signals) {
 
 	return success_time;
 }
+/*
+void execute(vector<Signal> signals) {
+	int success_time = calculateWait(signals);
 
+	int seconds = success_time;
+	int minutes = seconds / 60;
+	int hours = minutes / 60;
+
+	if((hours > 5) || (hours == 5 && ((seconds%60) > 0|| (minutes%60) > 0)))
+		printf("%s\n", "Signals fail to synchronise in 5 hours");
+	else
+		printf("%02d:%02d:%02d\n", hours, (minutes % 60), (seconds % 60));
+
+}
+*/
+
+bool isTerminatingLine(char line[], int max) {
+	int continuousZeros = 0;
+	for (int i = 0; i < max; i++) {
+		char c = line[i];
+
+
+		if (isdigit(c)) {
+			if ((c - '0') == 0)
+				continuousZeros++;
+			else
+				return false;
+		
+			if (continuousZeros == 3)
+				return true;
+		
+		}
+	}
+
+	return false;
+}
 
 
 int main()
 {
+	const int max = 100;
+	queue<int> results;
+	
+	vector<Signal> signals;
+	
+	while(true){
+		int temp = 0;
+		char string[max] = { 0 };
+		cin.getline(string, max, '\n');
 
+		if (isTerminatingLine(string, max))
+			break;
+		
+		for (int i = 0; i < max; i++) {
+		
+			if (!isdigit(string[i])) {
+				if (temp != 0) {
+					Signal s(temp);
+					signals.push_back(s);
+				}
+				temp = 0;
+			}
+			else {
+				int num = (int)(string[i] - '0');
+				if (temp == 0 && num == 0){
+					//execute(signals);
+					results.push(calculateWait(signals));
+					signals.clear();
+					break;
+				}
+				temp = (temp * 10) + num;
+			}
+		}
+	}
+	
+	for (results; !results.empty(); results.pop()) {
+		int success_time = results.front();
+
+		int seconds = success_time;
+		int minutes = seconds / 60;
+		int hours = minutes / 60;
+
+		if ((hours > 5) || (hours == 5 && ((seconds % 60) > 0 || (minutes % 60) > 0)))
+			printf("%s\n", "Signals fail to synchronise in 5 hours");
+		else
+			printf("%02d:%02d:%02d\n", hours, (minutes % 60), (seconds % 60));
+
+
+	}
+
+	/*
 	vector<Signal> signals;
 	
 	Signal s (30);
@@ -121,7 +208,7 @@ int main()
 		printf("%02d:%02d:%02d\n", hours, (minutes % 60), (seconds % 60));
 
 	}
-	
+	*/
 	return 0;
 }
 

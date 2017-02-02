@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include <queue>
 using namespace std;
 
 
@@ -16,6 +17,9 @@ struct cardOperation {
 
 unsigned long long max_intermediate_sum(unsigned long long a, unsigned long long b) {
 	
+	if (a == b)
+		return a;
+
 	//init
 	unsigned long long maxShown = 0;
 	unsigned long long currShown;
@@ -77,11 +81,16 @@ int main()
 	//printf("%llu\n", max_intermediate_sum(35, 38));
 	unsigned long long a, b;
 	
+	queue<unsigned long long> results;
+
 	while (scanf("%llu %llu", &a, &b) != EOF) {
-		printf("%llu\n", max_intermediate_sum(a, b));
+		results.push(max_intermediate_sum(a, b));
+		//printf("%llu\n", max_intermediate_sum(a, b));
 	}
 	
-
+	for (results;!results.empty(); results.pop()){
+		printf("%llu\n", results.front());
+	}
 
 
     return 0;
