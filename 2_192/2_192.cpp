@@ -4,6 +4,7 @@
 //#include <vector>
 #include <utility>
 #include <queue> 
+#include<string>
 using namespace std;
 
 
@@ -110,7 +111,35 @@ BalanceState isBalanced(TreeNode* node) {
 int main()
 {
 	queue<InputLine> input_queue;
+	queue<bool> results;
+
+	int n;
+
+	string line;
 	
+	int inputNumber = 0;
+	TreeNode* root_fulcrum;
+	while (getline(cin, line))
+	{
+		if (line.empty()){
+			//this marks the onset of the new input and the completion of the previous one
+			inputNumber++;
+			root_fulcrum = TreeNode::initalize(0, 0);
+		}
+		else {
+
+
+
+		}
+
+			
+
+	}
+
+
+	cout << n;
+
+	/*
 	TreeNode* root_fulcrum = TreeNode::initalize(0, 0);
 	input_queue.push(InputLine(0, 2, 0, 4));
 	input_queue.push(InputLine(0, 3, 0, 1));
@@ -121,7 +150,7 @@ int main()
 	construct_tree(input_queue, root_fulcrum);
 	
 	cout << ((isBalanced(root_fulcrum)).isbalanced);
-
+	*/
 
 
 	return 0;
