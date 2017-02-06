@@ -5,34 +5,74 @@
 #include <utility>
 #include <queue> 
 #include<string>
+#include <set>
 using namespace std;
 
 struct Country
 {
+	int id = 0;
 	int dist_src = 0;
 	queue<Country *> all_neighbours;
-	
-	
+
 	void insert_neighbour(Country *neighbour) {
 		//cout << (*neighbour).dist_src;
 		all_neighbours.push(neighbour);
 	}
 
+	Country(int identity) {
+		id = identity;
+	}
+
+	Country() {}
 };
+
+
+
+struct World {
+
+	Country countries[20];
+
+	World() {
+		for (int i = 0; i < 20; i++) {
+			countries[i] = (Country(i + 1));
+		}
+	}
+
+	Country findCountryById(int id) {
+		return countries[id - 1];
+	}
+
+	void constructGraph(queue<string> graphInput) {
+		
+		for (graphInput; !graphInput.empty(); graphInput.pop()) {
+			string input_line = graphInput.front();
+			int noOfHigherNeighbours = (input_line.at(0));
+			
+			int first_neightbour = 2;
+			int last_neightbour = noOfHigherNeighbours * 2;
+			cout << input_line<<"\n";
+			cout << noOfHigherNeighbours;
+			for (int i = first_neightbour; i <= last_neightbour; i = i + 2) {//skipt the space as well
+				cout << (input_line.at(i));
+			}
+			cout << "\n";
+		}
+		
+	}
+
+
+};
+
+
+
+//queue<Country> all_countries;
 
 void linkCountries(Country *a, Country *b) {
 	(*a).insert_neighbour(b);
 	(*b).insert_neighbour(a);
 }
 
-void constructGraph(Country *src) {
-	
-	(*src).dist_src = 0;
-	
 
-
-
-}
 
 
 int main()
@@ -58,7 +98,8 @@ int main()
 	graphInput.push("1 20");
 	graphInput.push("1 20");
 
-
+	World w;
+	w.constructGraph(graphInput);
 
     return 0;
 }
