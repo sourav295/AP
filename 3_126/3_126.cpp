@@ -26,8 +26,9 @@ struct Country
 	Country() {}
 
 	void displayNeighbours() {
-		for (all_neighbours; !all_neighbours.empty(); all_neighbours.pop()) {
-			Country *x = all_neighbours.front();
+		queue<Country *> temp = all_neighbours;
+		for (temp; !temp.empty(); temp.pop()) {
+			Country *x = temp.front();
 			cout <<"(" <<(*x).id<<"," << (*x).dist_src << ")";
 		}
 	}
@@ -68,10 +69,7 @@ struct World {
 	}
 	
 	void connect(int c1_Id, int c2_Id) {
-		Country c1 = findCountryById(c1_Id);
-		Country c2 = findCountryById(c2_Id);
-
-		linkCountries(&c1, &c2);
+		linkCountries(&(countries[c1_Id-1]), &(countries[c2_Id-1]));
 	}
 
 	void readInputLine(string input, int curr_id) {
@@ -80,6 +78,10 @@ struct World {
 		int pos = 2;
 		int hit = 0;
 		
+		if (curr_id == 18) {
+			cout << "";
+		}
+
 		while (pos < len && hit < n) {
 			if (isdigit(input.at(pos))) {
 				hit++;
@@ -99,8 +101,7 @@ struct World {
 	void display() {
 		for (int i = 0; i < 20; i++) {
 			cout << "\n" << (i+1);
-			Country x = countries[i];
-			(x).displayNeighbours();
+			countries[i].displayNeighbours();
 		}
 	}
 
