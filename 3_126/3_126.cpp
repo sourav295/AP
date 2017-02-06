@@ -8,10 +8,18 @@
 #include <set>
 using namespace std;
 
+struct comparator {
+	bool operator()(int i, int j) {
+		return i > j;
+	}
+};
+
+
+
 struct Country
 {
 	int id = 0;
-	int dist_src = 0;
+	int dist_src = 20;
 	queue<Country *> all_neighbours;
 
 	void insert_neighbour(Country *neighbour) {
@@ -31,6 +39,10 @@ struct Country
 			Country *x = temp.front();
 			cout <<"(" <<(*x).id<<"," << (*x).dist_src << ")";
 		}
+	}
+
+	bool operator<(const Country & d) const {
+		return dist_src < d.dist_src;
 	}
 
 };
@@ -104,15 +116,16 @@ struct World {
 			countries[i].displayNeighbours();
 		}
 	}
+	
+	void execute() {
+		
+		countries[4].dist_src = 0;
+		sort_heap(&countries[0], &countries[19]);
+		cout << "~"<<countries[0].id;
+	}
+
 
 };
-
-
-
-//queue<Country> all_countries;
-
-
-
 
 
 
@@ -141,7 +154,7 @@ int main()
 
 	World w;
 	w.constructGraph(graphInput);
-	w.display();
+	w.execute();
 
     return 0;
 }
