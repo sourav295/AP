@@ -24,6 +24,14 @@ struct Country
 	}
 
 	Country() {}
+
+	void displayNeighbours() {
+		for (all_neighbours; !all_neighbours.empty(); all_neighbours.pop()) {
+			Country *x = all_neighbours.front();
+			cout <<"(" <<(*x).id<<"," << (*x).dist_src << ")";
+		}
+	}
+
 };
 
 
@@ -44,22 +52,57 @@ struct World {
 
 	void constructGraph(queue<string> graphInput) {
 		
+		int curr_id = 1;
 		for (graphInput; !graphInput.empty(); graphInput.pop()) {
-			string input_line = graphInput.front();
-			int noOfHigherNeighbours = (input_line.at(0));
-			
-			int first_neightbour = 2;
-			int last_neightbour = noOfHigherNeighbours * 2;
-			cout << input_line<<"\n";
-			cout << noOfHigherNeighbours;
-			for (int i = first_neightbour; i <= last_neightbour; i = i + 2) {//skipt the space as well
-				cout << (input_line.at(i));
-			}
-			cout << "\n";
+			//cout << graphInput.front() << "\n";
+			readInputLine(graphInput.front(), curr_id);
+			curr_id++;
+			//cout << "\n=======\n";
 		}
 		
 	}
 
+	void linkCountries(Country *a, Country *b) {
+		(*a).insert_neighbour(b);
+		(*b).insert_neighbour(a);
+	}
+	
+	void connect(int c1_Id, int c2_Id) {
+		Country c1 = findCountryById(c1_Id);
+		Country c2 = findCountryById(c2_Id);
+
+		linkCountries(&c1, &c2);
+	}
+
+	void readInputLine(string input, int curr_id) {
+		int n = input.at(0) - '0';
+		int len = input.length();
+		int pos = 2;
+		int hit = 0;
+		
+		while (pos < len && hit < n) {
+			if (isdigit(input.at(pos))) {
+				hit++;
+				if ((pos+1) < len && isdigit(input.at(pos + 1))) {
+					connect(curr_id, ((input.at(pos) - '0') * 10 + (input.at(pos + 1) - '0')));
+					pos++;
+				}
+				else{
+					connect(curr_id, ((input.at(pos) - '0')));
+				}
+			}
+			pos++;
+		}
+	}
+
+	
+	void display() {
+		for (int i = 0; i < 20; i++) {
+			cout << "\n" << (i+1);
+			Country x = countries[i];
+			(x).displayNeighbours();
+		}
+	}
 
 };
 
@@ -67,10 +110,7 @@ struct World {
 
 //queue<Country> all_countries;
 
-void linkCountries(Country *a, Country *b) {
-	(*a).insert_neighbour(b);
-	(*b).insert_neighbour(a);
-}
+
 
 
 
@@ -100,6 +140,7 @@ int main()
 
 	World w;
 	w.constructGraph(graphInput);
+	w.display();
 
     return 0;
 }
