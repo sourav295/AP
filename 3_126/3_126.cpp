@@ -6,6 +6,7 @@
 #include <queue> 
 #include<string>
 #include <set>
+#include <algorithm>
 using namespace std;
 
 
@@ -42,7 +43,7 @@ struct CompareDistance {
 		// return "true" if "p1" is ordered before "p2", for example:
 		return c1.dist_src > c2.dist_src;
 	}
-};
+}comparator_distance;
 
 struct World {
 
@@ -114,14 +115,25 @@ struct World {
 	
 	void execute() {
 		
-		countries[4].dist_src = 0;
+		//init
+		int src_id = 4;
+		countries[src_id-1].dist_src = 0;
 		
-		priority_queue<Country, vector<Country>, CompareDistance> country_heap;
+		vector<Country> country_vec;
 		for (int i = 0; i < 20; i++)
-			country_heap.push(countries[i]);
-		cout << country_heap.top().dist_src;
-	}
+			country_vec.push_back(countries[i]);
+		sort(country_vec.begin(), country_vec.end(), comparator_distance);
+		cout <<(*country_vec.begin()).id;
+		
+		/*
+		while (!country_vec.empty()) {
+			sort(country_vec.begin(), country_vec.end(), comparator_distance);
 
+
+
+		}
+		*/
+	}
 
 };
 
@@ -153,7 +165,8 @@ int main()
 	World w;
 	w.constructGraph(graphInput);
 	w.execute();
-
+	w.display();
+	
     return 0;
 }
 
@@ -171,6 +184,29 @@ cout << &c1 << " " << cTemp << "\n";
 cTemp = c1.all_neighbours.front();
 
 cout << &c2 << " " << cTemp;
+|||||||||||||||||||||||||||||||||||||||||||||||||||||
+priority_queue<Country, vector<Country>, CompareDistance> country_heap;
+for (int i = 0; i < 20; i++)
+country_heap.push(countries[i]);
+//cout << country_heap.top().id;
+
+while (!country_heap.empty()) {
+//extract min
+Country u = country_heap.top();
+country_heap.pop();
+
+queue<Country *> v_list = u.all_neighbours;
+for (v_list; !v_list.empty(); v_list.pop()) {
+
+Country *v = v_list.front();
+
+int potential_dist = u.dist_src + 1;
+if (potential_dist < (*v).dist_src)
+(*v).dist_src = potential_dist;
+}
+}
+
+
 
 
 */
