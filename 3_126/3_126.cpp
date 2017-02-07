@@ -8,12 +8,6 @@
 #include <set>
 using namespace std;
 
-struct comparator {
-	bool operator()(int i, int j) {
-		return i > j;
-	}
-};
-
 
 
 struct Country
@@ -40,14 +34,15 @@ struct Country
 			cout <<"(" <<(*x).id<<"," << (*x).dist_src << ")";
 		}
 	}
-
-	bool operator<(const Country & d) const {
-		return dist_src < d.dist_src;
-	}
-
+	
 };
 
-
+struct CompareDistance {
+	bool operator()(Country const & c1, Country const & c2) const {
+		// return "true" if "p1" is ordered before "p2", for example:
+		return c1.dist_src > c2.dist_src;
+	}
+};
 
 struct World {
 
@@ -120,8 +115,11 @@ struct World {
 	void execute() {
 		
 		countries[4].dist_src = 0;
-		sort_heap(&countries[0], &countries[19]);
-		cout << "~"<<countries[0].id;
+		
+		priority_queue<Country, vector<Country>, CompareDistance> country_heap;
+		for (int i = 0; i < 20; i++)
+			country_heap.push(countries[i]);
+		cout << country_heap.top().dist_src;
 	}
 
 
