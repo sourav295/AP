@@ -151,34 +151,36 @@ struct World {
 
 };
 
-
-
 int main()
 {
-	queue<string> graphInput;
-	graphInput.push("1 3");
-	graphInput.push("2 3 4");
-	graphInput.push("3 4 5 6");
-	graphInput.push("1 6");
-	graphInput.push("1 7");
-	graphInput.push("2 12 13");
-	graphInput.push("1 8");
-	graphInput.push("2 9 10");
-	graphInput.push("1 11");
-	graphInput.push("1 11");
-	graphInput.push("2 12 17");
-	graphInput.push("1 14");
-	graphInput.push("2 14 15");
-	graphInput.push("2 15 16");
-	graphInput.push("1 16");
-	graphInput.push("1 19");
-	graphInput.push("2 18 19");
-	graphInput.push("1 20");
-	graphInput.push("1 20");
+	string blank;
+	int test_case = 1;
 
-	World w;
-	w.constructGraph(graphInput);
-	cout<< w.execute(2, 9);
+	do {
+		printf("Test Set #%d", test_case);
+
+		queue<string> graphInput;
+		string line;
+
+		for (int i = 1; i <= 19; i++) {
+			getline(cin, line);
+			graphInput.push(line);
+		}
+
+		int n;
+		cin >> n;
+		for (int i = 0; i < n; i++) {
+			int srcid, destid;
+			cin >> srcid >> destid;
+
+			World w;
+			w.constructGraph(graphInput);
+			int requiredHops = w.execute(srcid, destid);
+			printf("2d to 2d: 2d\n", srcid, destid, requiredHops);
+		}
+
+		test_case++;
+	} while (getline(cin, blank));
 	
 	
     return 0;
@@ -198,29 +200,32 @@ cout << &c1 << " " << cTemp << "\n";
 cTemp = c1.all_neighbours.front();
 
 cout << &c2 << " " << cTemp;
-|||||||||||||||||||||||||||||||||||||||||||||||||||||
-priority_queue<Country, vector<Country>, CompareDistance> country_heap;
-for (int i = 0; i < 20; i++)
-country_heap.push(countries[i]);
-//cout << country_heap.top().id;
-
-while (!country_heap.empty()) {
-//extract min
-Country u = country_heap.top();
-country_heap.pop();
-
-queue<Country *> v_list = u.all_neighbours;
-for (v_list; !v_list.empty(); v_list.pop()) {
-
-Country *v = v_list.front();
-
-int potential_dist = u.dist_src + 1;
-if (potential_dist < (*v).dist_src)
-(*v).dist_src = potential_dist;
-}
-}
 
 
+queue<string> graphInput;
+graphInput.push("1 3");
+graphInput.push("2 3 4");
+graphInput.push("3 4 5 6");
+graphInput.push("1 6");
+graphInput.push("1 7");
+graphInput.push("2 12 13");
+graphInput.push("1 8");
+graphInput.push("2 9 10");
+graphInput.push("1 11");
+graphInput.push("1 11");
+graphInput.push("2 12 17");
+graphInput.push("1 14");
+graphInput.push("2 14 15");
+graphInput.push("2 15 16");
+graphInput.push("1 16");
+graphInput.push("1 19");
+graphInput.push("2 18 19");
+graphInput.push("1 20");
+graphInput.push("1 20");
+
+World w;
+w.constructGraph(graphInput);
+cout<< w.execute(2, 9);
 
 
 */
