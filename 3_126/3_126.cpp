@@ -15,11 +15,11 @@ struct Country
 {
 	int id = 0;
 	int dist_src = 20;
-	queue<Country *> all_neighbours;
+	queue<int> all_neighbours;
 
-	void insert_neighbour(Country *neighbour) {
+	void insert_neighbour(int id) {
 		//cout << (*neighbour).dist_src;
-		all_neighbours.push(neighbour);
+		all_neighbours.push(id);
 	}
 
 	Country(int identity) {
@@ -29,10 +29,9 @@ struct Country
 	Country() {}
 
 	void displayNeighbours() {
-		queue<Country *> temp = all_neighbours;
+		queue<int> temp = all_neighbours;
 		for (temp; !temp.empty(); temp.pop()) {
-			Country *x = temp.front();
-			cout <<"(" <<(*x).id<<"," << (*x).dist_src << ")";
+			cout <<","<< temp.front();
 		}
 	}
 	
@@ -40,8 +39,7 @@ struct Country
 
 struct CompareDistance {
 	bool operator()(Country const & c1, Country const & c2) const {
-		// return "true" if "p1" is ordered before "p2", for example:
-		return c1.dist_src > c2.dist_src;
+		return c1.dist_src < c2.dist_src;
 	}
 }comparator_distance;
 
@@ -72,8 +70,8 @@ struct World {
 	}
 
 	void linkCountries(Country *a, Country *b) {
-		(*a).insert_neighbour(b);
-		(*b).insert_neighbour(a);
+		(*a).insert_neighbour((*b).id);
+		(*b).insert_neighbour((*a).id);
 	}
 	
 	void connect(int c1_Id, int c2_Id) {
@@ -108,31 +106,47 @@ struct World {
 	
 	void display() {
 		for (int i = 0; i < 20; i++) {
-			cout << "\n" << (i+1);
+			cout << "\n" << (i+1) << " "<< countries[i].dist_src;
 			countries[i].displayNeighbours();
 		}
 	}
 	
-	void execute() {
+
+	int execute(int src_id, int dest_id) {
 		
-		//init
-		int src_id = 4;
 		countries[src_id-1].dist_src = 0;
 		
 		vector<Country> country_vec;
 		for (int i = 0; i < 20; i++)
 			country_vec.push_back(countries[i]);
-		sort(country_vec.begin(), country_vec.end(), comparator_distance);
-		cout <<(*country_vec.begin()).id;
 		
-		/*
 		while (!country_vec.empty()) {
+			//sort, extract min and pop front
 			sort(country_vec.begin(), country_vec.end(), comparator_distance);
-
-
-
+			Country u = (*country_vec.begin());
+			
+			if (u.id == dest_id)
+				return u.dist_src;
+			
+			
+			country_vec.erase(country_vec.begin());
+			int potential_dist = u.dist_src + 1;
+			
+			for (u.all_neighbours; !u.all_neighbours.empty(); u.all_neighbours.pop()) {
+				int v = u.all_neighbours.front();
+				//find vector
+				for (int i = 0; i < country_vec.size(); i++) {
+					if (country_vec[i].id == v) {
+						if (country_vec[i].dist_src > potential_dist) {
+							country_vec[i].dist_src = potential_dist;
+						}
+						break;
+					}
+				}
+			}
 		}
-		*/
+
+		return NULL;
 	}
 
 };
@@ -164,8 +178,8 @@ int main()
 
 	World w;
 	w.constructGraph(graphInput);
-	w.execute();
-	w.display();
+	cout<< w.execute(2, 9);
+	
 	
     return 0;
 }
