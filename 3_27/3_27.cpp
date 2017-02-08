@@ -16,7 +16,7 @@ struct Chamber {
 
 	//State variables
 	bool involved_in_graph = false;
-	bool has_incoming = false;
+	
 
 	bool updated = false;
 	bool taken = false;
@@ -68,26 +68,21 @@ int execute(int a, int b, int c, int n) {
 			(*root).next = &(chambers[next_id]);
 			
 			root = (*root).next;
-			if(id != next_id)
-				(*root).has_incoming = true;
-
 
 		} while (!(*root).involved_in_graph);
 	}
 
-	//identify starting points
-	queue<Chamber *> starting_pointers;
-	for (int i = 0; i < chambers.size(); i++) {
-		if (!chambers[i].has_incoming)
-			starting_pointers.push(&(chambers[i]));
-	}
+	int max = 0;
+	int curr = 0;
 
-	//recurr till all updated
-	for (starting_pointers; !starting_pointers.empty(); starting_pointers.pop()) {
-		cout <<"\n"<< (*starting_pointers.front()).id << " "<< calculate_benefit(starting_pointers.front());
+	for (int i = 0; i < chambers.size(); i++) {
+		curr = calculate_benefit(&(chambers[i]));
+		if (curr > max)
+			max = curr;
 	}
 	
-	return starting_pointers.size();
+	
+	return max;
 	
 
 }
@@ -98,7 +93,7 @@ int execute(int a, int b, int c, int n) {
 
 int main()
 {
-	cout << execute(1, 1, 1, 5);
+	cout << execute(1, 2, 0, 64);
 	/*
 	string blank;
 
