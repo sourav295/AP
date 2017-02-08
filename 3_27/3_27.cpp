@@ -9,6 +9,8 @@
 #include <algorithm>
 using namespace std;
 
+
+
 struct Chamber {
 	int id;
 
@@ -16,8 +18,8 @@ struct Chamber {
 	bool involved_in_graph = false;
 	bool has_incoming = false;
 
-	bool updated;
-	bool taken;
+	bool updated = false;
+	bool taken = false;
 	int  benefit;
 
 	Chamber* next;
@@ -28,6 +30,22 @@ struct Chamber {
 	}
 	Chamber(){}
 };
+
+int calculate_benefit(Chamber *c) {
+
+	if ((*c).updated)
+		return (*c).benefit;
+	if ((*c).taken)
+		return 0;
+
+	(*c).taken = true;
+	(*c).benefit = calculate_benefit((*c).next) + 1;
+	(*c).updated = true;
+
+	return (*c).benefit;
+}
+
+
 
 int execute(int a, int b, int c, int n) {
 
@@ -46,11 +64,12 @@ int execute(int a, int b, int c, int n) {
 			(*root).involved_in_graph = true;
 
 			int id = (*root).id;
-			int next_id = (a*id*id + b*id + c)%n ;
+			int next_id = (a*id*id + b*id + c)%n;
 			(*root).next = &(chambers[next_id]);
 			
 			root = (*root).next;
-			(*root).has_incoming = true;
+			if(id != next_id)
+				(*root).has_incoming = true;
 
 
 		} while (!(*root).involved_in_graph);
@@ -63,16 +82,16 @@ int execute(int a, int b, int c, int n) {
 			starting_pointers.push(&(chambers[i]));
 	}
 
-	for (starting_pointers; !starting_pointers.empty(); starting_pointers.pop())
-	{
-		cout << (*(starting_pointers.front())).id;
+	//recurr till all updated
+	for (starting_pointers; !starting_pointers.empty(); starting_pointers.pop()) {
+		cout <<"\n"<< (*starting_pointers.front()).id << " "<< calculate_benefit(starting_pointers.front());
 	}
-
-
+	
 	return starting_pointers.size();
 	
 
 }
+
 
 
 
