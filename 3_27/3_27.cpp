@@ -88,26 +88,19 @@ int execute(int a, int b, int c, int n) {
 }
 
 
-
-
-
 int main()
 {
-	cout << execute(1, 2, 0, 64);
-	/*
+	int n_test;
+	cin >> n_test;
+
 	string blank;
 
-	int t;//number of test cases
-	cin >> t;
-
-	for (int i = 0; i < t; i++) {
+	for (int i = 0; i < n_test; i++) {
 		getline(cin, blank);
-
 		int a, b, c, n;
 		cin >> a >> b >> c >> n;
-		
+		cout << execute(a, b, c, n) << "\n";
 	}
-	*/
 
     return 0;
 }

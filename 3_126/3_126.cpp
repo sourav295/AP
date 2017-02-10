@@ -156,19 +156,29 @@ int main()
 	string blank;
 	int test_case = 1;
 
-	do {
-		printf("Test Set #%d", test_case);
-
+	while(true) {
+		
+		bool do_exit = false;
+		
 		queue<string> graphInput;
 		string line;
 
 		for (int i = 1; i <= 19; i++) {
-			getline(cin, line);
+			if (!getline(cin, line)) {
+				do_exit = true;
+				break;
+			}
 			graphInput.push(line);
 		}
 
+		if (do_exit)
+			break;
+
 		int n;
 		cin >> n;
+		
+		printf("Test Set #%d", test_case);
+
 		for (int i = 0; i < n; i++) {
 			int srcid, destid;
 			cin >> srcid >> destid;
@@ -176,11 +186,11 @@ int main()
 			World w;
 			w.constructGraph(graphInput);
 			int requiredHops = w.execute(srcid, destid);
-			printf("2d to 2d: 2d\n", srcid, destid, requiredHops);
+			printf("%2d to %2d: %2d\n", srcid, destid, requiredHops);
 		}
 
 		test_case++;
-	} while (getline(cin, blank));
+	} 
 	
 	
     return 0;
