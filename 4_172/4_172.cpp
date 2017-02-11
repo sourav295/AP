@@ -85,7 +85,7 @@ int main()
 				cout << ",  " << (*(links.front().neightbour)).id<< " " << links.front().distance ;
 			priority_queue.pop_back();
 		}*/
-				
+		
 		//djikstra
 		int results = 0;
 		while (!priority_queue.empty()) {
@@ -94,26 +94,27 @@ int main()
 			Junction *junction = &(priority_queue.back());
 
 			int curr_distance = (*junction).distance_src;
-			queue<Link> extracted_links = (*junction).neighbours;
-			
+	
 			if ((*junction).id == (n - 1)) {
 				results = (*junction).distance_src;
 				break;
 			}
 
-			priority_queue.pop_back();
-
-			for (extracted_links; !extracted_links.empty(); extracted_links.pop()) {
-				Link link = extracted_links.front();
+			
+			for ((*junction).neighbours; !(*junction).neighbours.empty(); (*junction).neighbours.pop()) {
+				Link link = (*junction).neighbours.front();
 				Junction *j = link.neightbour;
 				int distance = link.distance;//distance till the neightbour
 				
 				int potential_distance = curr_distance + distance;
 				//cout << (*j).id<< " P"<< potential_distance<< " "<< ", ";
-				if ((*j).distance_src > potential_distance)
+				if ((*j).distance_src > potential_distance) {
 					(*j).distance_src = potential_distance;
+					cout <<(*junction).id<<" "<< (*j).id << " " << (*j).distance_src<<"\n";
+				}
 
 			}
+			priority_queue.pop_back();
 		}
 		
 		cout << "Set #" << test_number<<"\n";
