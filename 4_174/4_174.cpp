@@ -54,12 +54,12 @@ int minDistance(vector<int> dist, vector<bool> sptSet, int n)
 }
 
 
-void execute(int n, vector<City> map, int src_id, int dest_id) {
+void execute(int n, vector<City> map, int src_id, int dest_id, vector<int> tax) {
 
 	//dijkstra
 	vector<int> dist;
 	vector<bool> sptSet;
-	vector<int> preceedingId;
+	vector<int> preceedingId;//for backtracking
 
 	for (int i = 0; i < n; i++){
 		dist.push_back(INT_MAX); 
@@ -75,26 +75,45 @@ void execute(int n, vector<City> map, int src_id, int dest_id) {
 		sptSet[u] = true;
 
 		if (dest_id - 1 == u) {
-			cout << dist[u];
+			//backtrack
+			stack<int> path;
+			int current = dest_id;
+			
+			while (src_id != current) {
+				path.push(current);
+				current = preceedingId[current - 1];
+			}
+
+			cout << "From " << src_id << " to " << dest_id << " :\n";
+			cout << "Path: "<<src_id;
+			for (path; !path.empty(); path.pop())
+				cout << "-->" << path.top();
+			cout << "\nTotal cost : " << dist[u]<<"\n";
+
 			break;
 		}
 
 		City c = map[u];
 		for (c.neighbours; !c.neighbours.empty(); c.neighbours.pop()) {
 			pair<int, int> id_dist = c.neighbours.front();
-			int id = id_dist.first;
-			int d  = id_dist.second;
+			int id = id_dist.first;//opposite end (relaxation)
+			int d  = id_dist.second;//distance to the opposite end
 
-			if (!sptSet[id - 1] && (dist[u] + d) < dist[id - 1] && d != -1) {
-				dist[id - 1] = (dist[u] + d);
-				preceedingId[id - 1] = u + 1;//u+1 => id
+			if (!sptSet[id - 1] && d != -1) {
+				if (id == dest_id && (dist[u] + d) < dist[id - 1]) {
+					dist[id - 1] = (dist[u] + d);
+					preceedingId[id - 1] = u + 1;//u+1 => id
+				}
+				else if((dist[u] + d + tax[id - 1]) < dist[id - 1]){
+					dist[id - 1] = (dist[u] + d + tax[id - 1]);
+					preceedingId[id - 1] = u + 1;//u+1 => id
+				}			
 			}
 		}
 
 	}
 
-	stack<int> path;
-	//do backtrack
+	
 }
 
 
@@ -106,10 +125,12 @@ int main()
 	cin >> M;
 
 	getline(cin, line);
+	getline(cin, line);
 
 	for (int case_no = 0; case_no < M; case_no++) {
 
 		vector<City> map;
+		vector<int> tax;
 
 		int n = INT_MAX;//number of columns
 		int row_number = 0;
@@ -121,8 +142,22 @@ int main()
 			);
 			row_number++;
 		} while (row_number < n);
-	
-		execute(n, map, 1, 3);
+
+		for (int i = 0; i < n; i++) {
+			int tax_instance;
+			cin >> tax_instance;
+			tax.push_back(tax_instance);
+		}
+		
+		getline(cin, line);
+			
+		while (getline(cin, line)) {
+			stringstream ss(line);
+			int a, b;
+			ss >> a;
+			ss >> b;
+			execute(n, map, a, b, tax);
+		}	
 	}
 
 
