@@ -44,7 +44,7 @@ City cityFactory(int id, string line, int &n) {
 
 int minDistance(vector<int> dist, vector<bool> sptSet, int n)
 {
-	int min = INT_MAX, min_index;
+	int min = numeric_limits<int>::max(), min_index;
 
 	for (int v = 0; v < n; v++)
 		if (sptSet[v] == false && dist[v] <= min)
@@ -62,7 +62,7 @@ void execute(int n, vector<City> map, int src_id, int dest_id, vector<int> tax) 
 	vector<int> preceedingId;//for backtracking
 
 	for (int i = 0; i < n; i++){
-		dist.push_back(INT_MAX); 
+		dist.push_back(numeric_limits<int>::max());
 		sptSet.push_back(false);
 		preceedingId.push_back(0);
 	}
@@ -132,7 +132,7 @@ int main()
 		vector<City> map;
 		vector<int> tax;
 
-		int n = INT_MAX;//number of columns
+		int n = numeric_limits<int>::max();//number of columns
 		int row_number = 0;
 		do {
 			
