@@ -87,9 +87,10 @@ void execute(int n, vector<City> map, int src_id, int dest_id, vector<int> tax) 
 			cout << "From " << src_id << " to " << dest_id << " :\n";
 			cout << "Path: "<<src_id;
 			for (path; !path.empty(); path.pop())
-				cout << "-->" << path.top();
+				cout << "->" << path.top();
 			cout << "\nTotal cost : " << dist[u]<<"\n";
 
+			cout << "\n";
 			break;
 		}
 
