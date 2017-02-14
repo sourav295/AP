@@ -151,7 +151,7 @@ int main()
 		
 		getline(cin, line);
 			
-		while (getline(cin, line)) {
+		while (getline(cin, line) && line!="") {
 			stringstream ss(line);
 			int a, b;
 			ss >> a;
