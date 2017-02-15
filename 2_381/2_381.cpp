@@ -7,6 +7,7 @@
 #include<string>
 #include<sstream>
 #include<ctype.h>
+#include <stdlib.h>
 using namespace std;
 
 
@@ -144,8 +145,14 @@ int main()
 			);
 		}
 		
-		cout << operand_stack.top().value<<"\n";
 
+		stringstream ss1;
+		int ans = operand_stack.top().value;
+
+		ss1 << std::hex << ans;
+		string res(ss1.str());
+
+		cout << res;
 	}
 	
 
