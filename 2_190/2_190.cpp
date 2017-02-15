@@ -20,9 +20,18 @@ bool isIncomingPrecedenceHigher(char incoming_symbol, stack<char> &eval) {
 	switch (incoming_symbol)
 	{
 
-	case('*'):
-	case('/'):
-		if (stack_top_value == '+' || stack_top_value == '-')
+	case('*') :
+		return true;
+	case('/') :
+		if (stack_top_value == '*')
+			return false;
+		return true;
+	case('+') :
+		if (stack_top_value == '*' || stack_top_value == '/')
+			return false;
+		return true;
+	case('-') :
+		if (stack_top_value == '-')
 			return true;
 		return false;
 	default:
@@ -66,7 +75,7 @@ string convertToPostFix(queue<char> input) {
 		//incoming character is of lower precendence
 		else {
 			//achieve the state where the incoming has the highest precedence, keep popping till then
-			while (isIncomingPrecedenceHigher(incoming_operator, eval)) {
+			while (!isIncomingPrecedenceHigher(incoming_operator, eval)) {
 				output.push_back(eval.top());
 				eval.pop();
 			}
@@ -81,10 +90,7 @@ string convertToPostFix(queue<char> input) {
 		if(c !='(' && c!=')')
 			output.push_back(c);
 	}
-		
-
-
-
+	
 	return output;
 }
 
