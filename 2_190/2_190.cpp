@@ -76,8 +76,12 @@ string convertToPostFix(queue<char> input) {
 	}
 
 	//extract remaining operator
-	for(eval; !eval.empty(); eval.pop())
-		output.push_back(eval.top());
+	for (eval; !eval.empty(); eval.pop()) {
+		char c = eval.top();
+		if(c !='(' && c!=')')
+			output.push_back(c);
+	}
+		
 
 
 
@@ -89,7 +93,42 @@ string convertToPostFix(queue<char> input) {
 int main()
 {
 
+	queue<string> postfix;
 
+	int n;
+	cin >> n;
+
+	string blank;
+	getline(cin, blank);
+	getline(cin, blank);
+
+	int inputNumber = 0;
+	while (inputNumber < n) {
+
+		queue<char> input_queue;
+		string line;
+		while (getline(cin, line) && line != "") {
+			input_queue.push(line.at(0));
+		}
+		postfix.push(convertToPostFix(input_queue));
+		inputNumber++;
+	}
+
+
+	while (!postfix.empty()) {
+
+		cout << postfix.front() << "\n";
+
+		postfix.pop();
+		if (!postfix.empty())
+			cout << "\n";
+
+
+
+	}
+
+
+	/*
 	queue<char> input_queue;
 	input_queue.push('2');
 	input_queue.push('*');
@@ -101,42 +140,8 @@ int main()
 	input_queue.push('/');
 	input_queue.push('5');
 
-	int n;
-	cin >> n; // number of test cases
-	
-	int input_number = 0;
-	char c;
-
-	while (true) {
-
-		c = getchar();
-		if (c = '\n'){
-			cout << "new input";
-			input_number++;
-		}
-		else {
-			cout << "old input";
-			while (getchar() != '\n' || !getchar()) {
-
-			}
-
-		}
-
-
-
-
-	}
-
-
-
-	//cout << convertToPostFix(input_queue);
-
-	/*
-	stack<char> test;
-	test.push('*');
-	cout << isIncomingPrecedenceHigher('+', test);
+	cout << ;
 	*/
-
 
 
     return 0;

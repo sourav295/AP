@@ -87,10 +87,10 @@ void execute(int n, vector<City> map, int src_id, int dest_id, vector<int> tax) 
 			cout << "From " << src_id << " to " << dest_id << " :\n";
 			cout << "Path: "<<src_id;
 			for (path; !path.empty(); path.pop())
-				cout << "->" << path.top();
+				cout << "-->" << path.top();
 			cout << "\nTotal cost : " << dist[u]<<"\n";
 
-			cout << "\n";
+			
 			break;
 		}
 
@@ -122,7 +122,7 @@ int main()
 {
 	int M = 0;// no of cases
 	string line;
-
+	bool first = true;
 	cin >> M;
 
 	getline(cin, line);
@@ -132,6 +132,8 @@ int main()
 
 		vector<City> map;
 		vector<int> tax;
+
+		
 
 		int n = numeric_limits<int>::max();//number of columns
 		int row_number = 0;
@@ -153,6 +155,14 @@ int main()
 		getline(cin, line);
 			
 		while (getline(cin, line) && line!="") {
+			
+			if (first) {
+				first = false;
+			}
+			else {
+				cout << "\n";
+			}
+			
 			stringstream ss(line);
 			int a, b;
 			ss >> a;
