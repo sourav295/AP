@@ -72,9 +72,6 @@ bool higherIncomingPrecedence(char incoming_symbol, char stackTop_symbol) {
 
 int main()
 {
-
-	
-	
 	string line;
 	
 	while (getline(cin, line)) {
@@ -91,13 +88,22 @@ int main()
 			else if (c == ')') {
 				bool terminate = false;
 				while (!terminate) {
-					char op = operator_stack.top();
-					operator_stack.pop();
-
+					
 					Int_Bracket i1 = operand_stack.top();
 					operand_stack.pop();
 					Int_Bracket i2 = operand_stack.top();
 					operand_stack.pop();
+
+					if (!i2.isInt) {
+						//only 1 operand inside bracket
+						operand_stack.push(i1);
+						terminate = true;
+						continue;
+					}
+
+					char op = operator_stack.top();
+					operator_stack.pop();
+
 
 					if (operand_stack.top().isInt == false) {
 						operand_stack.pop();//remove bracket
@@ -152,8 +158,13 @@ int main()
 		ss1 << std::hex << ans;
 		string res(ss1.str());
 
-		cout << res;
+		for (int i = 0; i < res.size(); i++) {
+			if (!isdigit(res[i]))
+				res[i] = toupper(res[i]);
+		}
+		cout << res <<"\n";
 	}
+	
 	
 
 
