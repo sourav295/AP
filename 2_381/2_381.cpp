@@ -3,22 +3,28 @@
 #include <iostream>
 //#include <vector>
 #include <utility>
-#include <stack> 
+#include <stack>
+#include<string>
+#include<sstream>
+#include<ctype.h>
 using namespace std;
 
-//////////////////////////////////////////////
-void printStackState(stack<char> dump) {
-	for (dump; !dump.empty(); dump.pop())
-		cout << dump.top() << '\t';
-}
 
-void printStackState(stack<int> dump) {
-	for (dump; !dump.empty(); dump.pop())
-		cout << dump.top() << '\t';
-}
-//TESTING
+struct Int_Bracket {
 
-///////////////////////////////////////////////
+	bool isInt;//true == integer, otherwise (
+	int value = 0;
+
+	Int_Bracket(int v) {
+		value = v;
+		isInt = true;
+	}
+
+	Int_Bracket() {
+		isInt = false;
+	}
+
+};
 
 
 int parseAsInt(char o) {
@@ -37,10 +43,6 @@ int parseAsInt(char o) {
 		return 14;
 	case 'F':
 		return 15;
-	case '(':
-		return -1;
-	case ')':
-		return -2;
 
 	default:
 		return o-'0';
@@ -126,8 +128,27 @@ void insert_operator(stack<char>& operator_stack, stack<int>& operand_stack, cha
 int main()
 {
 
-	stack<char> operator_stack;
-	stack<int>  operand_stack;
+	stack<char>  operator_stack;
+	stack<char>  operand_stack;
+	
+	string line;
+	while (getline(cin, line)) {
+		stringstream ss(line);
+		char c;
+		while (ss >> c) {
+			if (isalnum(c))
+				operand_stack.push(c);
+			else
+				operand_stack.push(c);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	/*
 	char line[] = "(4+5)*3+5";
 
 	
@@ -154,7 +175,7 @@ int main()
 	
 	cout << "\n\n";
 	printStackState(operand_stack);
-	
+	*/
 
     return 0;
 }
