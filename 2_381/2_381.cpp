@@ -72,12 +72,15 @@ bool higherIncomingPrecedence(char incoming_symbol, char stackTop_symbol) {
 int main()
 {
 
-	stack<char>  operator_stack;
-	stack<Int_Bracket>  operand_stack;
+	
 	
 	string line;
 	
 	while (getline(cin, line)) {
+		stack<char>  operator_stack;
+		stack<Int_Bracket>  operand_stack;
+		
+		
 		stringstream ss(line);
 		char c;
 		while (ss >> c) {
@@ -88,7 +91,7 @@ int main()
 				bool terminate = false;
 				while (!terminate) {
 					char op = operator_stack.top();
-					operand_stack.pop();
+					operator_stack.pop();
 
 					Int_Bracket i1 = operand_stack.top();
 					operand_stack.pop();
@@ -96,7 +99,7 @@ int main()
 					operand_stack.pop();
 
 					if (operand_stack.top().isInt == false) {
-						operand_stack.pop();
+						operand_stack.pop();//remove bracket
 						terminate = true;
 					}
 
@@ -104,8 +107,6 @@ int main()
 						Int_Bracket::evaluate(i1, op, i2)
 					);
 				}
-
-
 			}
 			else if (isalnum(c)){
 				operand_stack.push(Int_Bracket(parseAsInt(c)));
@@ -114,7 +115,7 @@ int main()
 				
 				while (!operator_stack.empty() && !higherIncomingPrecedence(c, operator_stack.top())) {
 					char op = operator_stack.top();
-					operand_stack.pop();
+					operator_stack.pop();
 
 					Int_Bracket i1 = operand_stack.top();
 					operand_stack.pop();
@@ -125,9 +126,26 @@ int main()
 						Int_Bracket::evaluate(i1, op, i2)
 					);
 				}
-				operand_stack.push(c);
+				operator_stack.push(c);
 			}
 		}
+
+		while (!operator_stack.empty()) {
+			char op = operator_stack.top();
+			operator_stack.pop();
+
+			Int_Bracket i1 = operand_stack.top();
+			operand_stack.pop();
+			Int_Bracket i2 = operand_stack.top();
+			operand_stack.pop();
+
+			operand_stack.push(
+				Int_Bracket::evaluate(i1, op, i2)
+			);
+		}
+		
+		cout << operand_stack.top().value<<"\n";
+
 	}
 	
 
