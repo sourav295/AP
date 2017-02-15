@@ -24,6 +24,16 @@ struct Int_Bracket {
 		isInt = false;
 	}
 
+
+	static Int_Bracket evaluate(Int_Bracket o1, char op, Int_Bracket o2) {
+
+		if (op == '+')
+			return Int_Bracket(o1.value + o2.value);
+		else
+			return Int_Bracket(o1.value * o2.value);
+	}
+
+
 };
 
 
@@ -51,131 +61,76 @@ int parseAsInt(char o) {
 }
 
 
+bool higherIncomingPrecedence(char incoming_symbol, char stackTop_symbol) {
 
-int evaluate(int o1, char op, int o2) {
-
-	if (op == '+')
-		return o1 + o2;
-	else
-		return o1 * o2;
+	if (incoming_symbol == '*' && stackTop_symbol == '+')
+		return true;
+	return false;
 }
-
-int extract_and_evaluate(stack<char>& operator_stack, stack<int>& operand_stack) {
-	int o1 = operand_stack.top();
-	operand_stack.pop();
-	int o2 = operand_stack.top();
-	operand_stack.pop();
-	
-	return evaluate(o1, operator_stack.top(), o2);
-}
-
-
-
-void insert_operand(stack<char>& operator_stack, stack<int>& operand_stack, int o) {
-
-	// handles ')'
-	if (o == -2) {
-		while (true) {
-			int res = extract_and_evaluate(operator_stack, operand_stack);
-			operator_stack.pop();
-			
-			bool doExit = false;
-			if (operand_stack.top() == -1) {
-				doExit = true;
-				operand_stack.pop();//remove -1
-			}
-
-			operand_stack.push(res);
-			if (doExit)
-				break;
-		}
-
-		return;
-	}
-
-	operand_stack.push(o);
-	
-}
-
-
-void insert_operator(stack<char>& operator_stack, stack<int>& operand_stack, char op) {
-	
-	//2 cases where we need to extract and evaluate
-	if (op == '+' && !operator_stack.empty() && operator_stack.top() == '*') {//Need to extract
-		while(!operator_stack.empty()){
-			insert_operand(operator_stack, operand_stack, extract_and_evaluate(operator_stack, operand_stack) );
-			operator_stack.pop();
-		}
-		operator_stack.push(op);//push new oprator
-		return;
-	}
-
-	if (op == '*' && !operator_stack.empty() && operator_stack.top() == '*') {
-		while (!operator_stack.empty() && operand_stack.top() == '+') {
-			insert_operand(operator_stack, operand_stack, extract_and_evaluate(operator_stack, operand_stack) );
-			operator_stack.pop();
-		}
-		operator_stack.push(op);
-		return;
-	}
-	//no manipulation required, just push
-	operator_stack.push(op);
-
-}
-
 
 
 int main()
 {
 
 	stack<char>  operator_stack;
-	stack<char>  operand_stack;
+	stack<Int_Bracket>  operand_stack;
 	
 	string line;
+	
 	while (getline(cin, line)) {
 		stringstream ss(line);
 		char c;
 		while (ss >> c) {
-			if (isalnum(c))
+			if (c == '(') {
+				operand_stack.push(Int_Bracket());
+			}
+			else if (c == ')') {
+				bool terminate = false;
+				while (!terminate) {
+					char op = operator_stack.top();
+					operand_stack.pop();
+
+					Int_Bracket i1 = operand_stack.top();
+					operand_stack.pop();
+					Int_Bracket i2 = operand_stack.top();
+					operand_stack.pop();
+
+					if (operand_stack.top().isInt == false) {
+						operand_stack.pop();
+						terminate = true;
+					}
+
+					operand_stack.push(
+						Int_Bracket::evaluate(i1, op, i2)
+					);
+				}
+
+
+			}
+			else if (isalnum(c)){
+				operand_stack.push(Int_Bracket(parseAsInt(c)));
+			}
+			else{
+				
+				while (!operator_stack.empty() && !higherIncomingPrecedence(c, operator_stack.top())) {
+					char op = operator_stack.top();
+					operand_stack.pop();
+
+					Int_Bracket i1 = operand_stack.top();
+					operand_stack.pop();
+					Int_Bracket i2 = operand_stack.top();
+					operand_stack.pop();
+
+					operand_stack.push(
+						Int_Bracket::evaluate(i1, op, i2)
+					);
+				}
 				operand_stack.push(c);
-			else
-				operand_stack.push(c);
+			}
 		}
 	}
 	
-	
-	
-	
-	
-	
-	/*
-	char line[] = "(4+5)*3+5";
 
-	
-	for (int i = 0; line[i] != '\0'; i++){
-		if (line[i] == '+' || line[i] == '*') {
-			insert_operator(operator_stack, operand_stack, line[i]);
-			cout << "==============\nInsert " << line[i] << ": ";printStackState(operator_stack);cout << "<>";printStackState(operand_stack);cout << "\n";
-		}
-		else{
-			insert_operand(operator_stack, operand_stack, parseAsInt(line[i]));
-			cout << "==============\nInsert " << line[i] << ": ";printStackState(operator_stack);cout << "<>";printStackState(operand_stack);cout << "\n";
-		}
-	}
-
-
-
-	while (!operator_stack.empty()) {
-		insert_operand(operator_stack, operand_stack, extract_and_evaluate(operator_stack, operand_stack));
-		operator_stack.pop();
-		
-	}
-	
-	//printStackState(operator_stack);
-	
-	cout << "\n\n";
-	printStackState(operand_stack);
-	*/
 
     return 0;
 }
