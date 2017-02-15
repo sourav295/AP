@@ -21,7 +21,7 @@ bool isIncomingPrecedenceHigher(char incoming_symbol, stack<char> &eval) {
 	{
 
 	case('*') :
-		if (stack_top_value == '*')
+		if (stack_top_value == '*' || stack_top_value == '/')
 			return false;
 		return true;
 	case('/') :
@@ -29,9 +29,6 @@ bool isIncomingPrecedenceHigher(char incoming_symbol, stack<char> &eval) {
 			return false;
 		return true;
 	case('+') :
-		if (stack_top_value == '*' || stack_top_value == '/' || stack_top_value == '+')
-			return false;
-		return true;
 	case('-') :
 		return false;
 	default:
