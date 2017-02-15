@@ -4,7 +4,8 @@
 //#include <vector>
 #include <utility>
 #include <queue> 
-#include<string>
+#include <string>
+#include <sstream>
 using namespace std;
 
 
@@ -110,15 +111,57 @@ BalanceState isBalanced(TreeNode* node) {
 
 int main()
 {
-	queue<InputLine> input_queue;
-	queue<bool> results;
-
+	
 	int n;
 
-	string line;
-	
 	int inputNumber = 0;
-	TreeNode* root_fulcrum;
+	queue<bool> results;
+	
+	cin >> n;
+
+	string blank;
+	getline(cin, blank);
+	getline(cin, blank);
+
+	while (inputNumber < n) {
+		queue<InputLine> input_queue;
+		string line;
+		while (getline(cin, line) && line != "") {
+			int wl, dl, wr, dr;
+			stringstream ss(line);
+			ss >> wl;
+			ss >> dl;
+			ss >> wr;
+			ss >> dr;
+			input_queue.push(InputLine(wl, dl, wr, dr));
+			//cout << wl << dl << wr << dr;
+		}
+		
+		TreeNode* root_fulcrum = TreeNode::initalize(0, 0);
+		construct_tree(input_queue, root_fulcrum);
+		
+		results.push(((isBalanced(root_fulcrum)).isbalanced));
+
+		
+		inputNumber++;
+	}
+
+	while (!results.empty()) {
+
+		if (results.front())
+			cout << "YES\n";
+		else
+			cout << "NO\n";
+
+		results.pop();
+
+		if (!results.empty())
+			cout << "\n";
+
+	}
+
+	
+	/*
 	while (getline(cin, line))
 	{
 		if (line.empty()){
@@ -139,7 +182,7 @@ int main()
 
 	cout << n;
 
-	/*
+	
 	TreeNode* root_fulcrum = TreeNode::initalize(0, 0);
 	input_queue.push(InputLine(0, 2, 0, 4));
 	input_queue.push(InputLine(0, 3, 0, 1));

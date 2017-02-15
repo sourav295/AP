@@ -129,16 +129,29 @@ struct Memory{
 int main()
 {
 	queue<string> x;
-	
 	string line;
+	
+	int count = 0;
 	while (getline(cin, line))
 	{
+		count++;
 		x.push(line);
-	}
 
-	Memory m(x);
-	m.start();
-	cout << bitset<8>((unsigned)m.acc);
+		if (count == 32){
+			//execute
+			Memory m(x);
+			m.start();
+			cout << bitset<8>((unsigned)m.acc) << "\n";
+
+			count = 0;
+			x = queue<string>();
+
+		}
+		
+	}
+	
+
+	
 
 	
 	
