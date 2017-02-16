@@ -50,6 +50,7 @@ void execute(vector<Junction> all_junctions) {
 	}
 
 	dist[0] = 0;
+	bool found = false;
 
 	for (int i = 0; i < n; i++) {
 
@@ -58,6 +59,7 @@ void execute(vector<Junction> all_junctions) {
 
 		if (u == n - 1) {
 			cout << dist[u]<<"\n";
+			found = true;
 			break;
 		}
 	
@@ -74,6 +76,8 @@ void execute(vector<Junction> all_junctions) {
 
 	}
 
+	if (found != true)
+		cout << '?\n';
 }
 
 
@@ -81,6 +85,7 @@ void execute(vector<Junction> all_junctions) {
 int main()
 {
 	string line;
+	int count = 1;
 	while (getline(cin, line)) {
 
 		stringstream ss(line);
@@ -100,8 +105,9 @@ int main()
 		}
 
 		execute(all_junctions);
-
+		cout << "Set #" << count;
 		getline(cin, line);
+		count++;
 	}
 	
 	return 0;
