@@ -104,10 +104,6 @@ int main()
 			int a, b, dist;
 			cin >> a >> b >> dist;
 
-			if (a == 0 && b == n - 1)
-				continue;
-
-
 			all_junctions[a].neighbours.push({ b, dist });
 			all_junctions[b].neighbours.push({ a, dist });
 		}
