@@ -8,117 +8,100 @@
 #include <set>
 #include <algorithm>
 #include <limits>
+#include <sstream>
 using namespace std;
-
-typedef struct Junction Junction;
-
-struct Link {
-	Junction *neightbour;
-	int distance;
-
-	Link(Junction *x, int dist) {
-		neightbour = x;
-		distance = dist;
-	}
-
-};
 
 struct Junction {
 
-	queue<Link> neighbours;
+	
 	int id;
-	int distance_src;
+	
+	queue<pair<int, int>> neighbours;//id-distance
 	
 	Junction(int identity) {
 		id = identity;
-		distance_src = numeric_limits<int>::max();
 	}
-
-	Junction(){}
-
-	bool operator()(Junction const &a, Junction const &b) const { return a.distance_src > b.distance_src; }
 
 };
 
+int minDistance(vector<int> dist, vector<bool> sptSet, int n)
+{
+	int min = numeric_limits<int>::max(), min_index;
 
-bool sortHelper(Junction i, Junction j) { return (i.distance_src > j.distance_src); }
+	for (int v = 0; v < n; v++)
+		if (sptSet[v] == false && dist[v] <= min)
+			min = dist[v], min_index = v;
+
+	return min_index;
+}
+
+
+void execute(vector<Junction> all_junctions) {
+
+	//dijkstra
+	vector<int> dist;
+	vector<bool> sptSet;
+
+	int n = all_junctions.size();
+
+	for (int i = 0; i < n; i++) {
+		dist.push_back(numeric_limits<int>::max());
+		sptSet.push_back(false);
+	}
+
+	dist[0] = 0;
+
+	for (int i = 0; i < n; i++) {
+
+		int u = minDistance(dist, sptSet, n);
+		sptSet[u] = true;
+
+		if (u == n - 1) {
+			cout << dist[u]<<"\n";
+			break;
+		}
+	
+
+		Junction j = all_junctions[u];
+		for(j.neighbours; !j.neighbours.empty(); j.neighbours.pop()){
+			pair<int, int> id_dist = j.neighbours.front();
+			int id = id_dist.first;
+			int d = id_dist.second;
+
+			if (!sptSet[id] && dist[u] + d < dist[id])
+				dist[id] = dist[u] + d;
+		}
+
+	}
+
+}
+
+
 
 int main()
 {
-	int n,r;
-	int test_number = 0;
-	while (cin >> n >> r) {
-		test_number++;
-		
-		vector<Junction> priority_queue;
+	string line;
+	while (getline(cin, line)) {
 
-		//create junctions 
-		for (int i = 0; i < n; i++) {
-			priority_queue.push_back(Junction(i));
-		}
-		
-		//link the junctions 
+		stringstream ss(line);
+		int n, r;
+		ss >> n;
+		ss >> r;
+
+		vector<Junction> all_junctions;
+		for (int i = 0; i < n; i++)
+			all_junctions.push_back(Junction(i));
+
 		for (int i = 0; i < r; i++) {
-			int start, end, dist = 0;
-			
-			cin >> start >> end >> dist;
-
-			priority_queue[start].neighbours.push(
-				Link(&(priority_queue[end]), dist)
-			);
-
-			priority_queue[end].neighbours.push(
-				Link(&(priority_queue[start]), dist)
-			);
+			int a, b, dist;
+			cin >> a >> b >> dist;
+			all_junctions[a].neighbours.push({ b, dist });
+			all_junctions[b].neighbours.push({ a, dist });
 		}
 
-		//init src
-		priority_queue[0].distance_src = 0;
+		execute(all_junctions);
 
-		/*
-		while (!priority_queue.empty()) {
-			cout << "\n" << priority_queue.back().id;
-			queue<Link> links = priority_queue.back().neighbours;
-
-			
-			for (links; !links.empty(); links.pop())
-				cout << ",  " << (*(links.front().neightbour)).id<< " " << links.front().distance ;
-			priority_queue.pop_back();
-		}*/
-		
-		//djikstra
-		int results = 0;
-		while (!priority_queue.empty()) {
-			sort(priority_queue.begin(), priority_queue.end(), sortHelper);
-
-			Junction *junction = &(priority_queue.back());
-
-			int curr_distance = (*junction).distance_src;
-	
-			if ((*junction).id == (n - 1)) {
-				results = (*junction).distance_src;
-				break;
-			}
-
-			
-			for ((*junction).neighbours; !(*junction).neighbours.empty(); (*junction).neighbours.pop()) {
-				Link link = (*junction).neighbours.front();
-				Junction *j = link.neightbour;
-				int distance = link.distance;//distance till the neightbour
-				
-				int potential_distance = curr_distance + distance;
-				//cout << (*j).id<< " P"<< potential_distance<< " "<< ", ";
-				if ((*j).distance_src > potential_distance) {
-					(*j).distance_src = potential_distance;
-					cout <<(*junction).id<<" "<< (*j).id << " " << (*j).distance_src<<"\n";
-				}
-
-			}
-			priority_queue.pop_back();
-		}
-		
-		cout << "Set #" << test_number<<"\n";
-		cout <<results<<"\n";
+		getline(cin, line);
 	}
 	
 	return 0;
