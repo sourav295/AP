@@ -57,6 +57,9 @@ void execute(vector<Junction> all_junctions) {
 		int u = minDistance(dist, sptSet, n);
 		sptSet[u] = true;
 
+		if (dist[u] == numeric_limits<int>::max())
+			break;
+		
 		if (u == n - 1) {
 			cout << dist[u]<<"\n";
 			found = true;
@@ -77,7 +80,7 @@ void execute(vector<Junction> all_junctions) {
 	}
 
 	if (found != true)
-		cout << '?\n';
+		cout << "?\n";
 }
 
 
@@ -104,8 +107,8 @@ int main()
 			all_junctions[b].neighbours.push({ a, dist });
 		}
 
+		cout << "Set #" << count<<"\n";
 		execute(all_junctions);
-		cout << "Set #" << count;
 		getline(cin, line);
 		count++;
 	}
