@@ -135,9 +135,6 @@ int main()
 
 		getline(cin, place);//blank
 
-		
-
-
 		for (int i = 0; i < n_roads; i++) {
 			string road;
 			getline(cin, road);
