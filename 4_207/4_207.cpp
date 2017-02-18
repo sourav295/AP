@@ -15,7 +15,7 @@ struct Place {
 
 	int id;
 	string name;
-	queue<pair<int, int>> id_dist;
+	vector<pair<int, int>> id_dist;
 
 	Place(string n, int identity) {
 		name = n;
@@ -39,7 +39,7 @@ int minDistance(vector<int> dist, vector<bool> sptSet)
 }
 
 
-stack<Place> execute(vector<Place> nodes, int index_src, int index_dest, int &distance) {
+stack<Place> execute(vector<Place> &nodes, int index_src, int index_dest, int &distance) {
 	int n = nodes.size();
 
 	vector<int> dist;
@@ -74,12 +74,11 @@ stack<Place> execute(vector<Place> nodes, int index_src, int index_dest, int &di
 		}
 		
 		Place p = nodes[u];
-		queue<pair<int, int>> neighbours = p.id_dist;
-
+		
 		//Relaxation
-		for (neighbours; !neighbours.empty(); neighbours.pop()) {
-			int other_nodeId = neighbours.front().first;
-			int dist_toNode  = neighbours.front().second;
+		for (int k = 0; k < p.id_dist.size(); k++) {
+			int other_nodeId = p.id_dist[k].first;
+			int dist_toNode  = p.id_dist[k].second;
 
 			if (!sptSet[other_nodeId] && dist[u] != numeric_limits<int>::max() && dist[u] + dist_toNode < dist[other_nodeId]) {
 				dist[other_nodeId] = dist[u] + dist_toNode;
@@ -189,9 +188,9 @@ int main()
 		
 			if (ss_nums >> d2) {
 				//bi-directional
-				nodes[index_p2].id_dist.push({ index_p1, d2 });
+				nodes[index_p2].id_dist.push_back({ index_p1, d2 });
 			}
-			nodes[index_p1].id_dist.push({index_p2, d1});
+			nodes[index_p1].id_dist.push_back({index_p2, d1});
 
 		}
 
