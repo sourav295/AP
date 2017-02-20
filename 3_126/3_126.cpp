@@ -7,10 +7,125 @@
 #include<string>
 #include <set>
 #include <algorithm>
+#include <sstream>
+#include <limits>
 using namespace std;
 
+int minDistance(int dist[], bool sptSet[])
+{
+	// Initialize min value
+	int min = INT_MAX, min_index;
+
+	for (int v = 0; v < V; v++)
+		if (sptSet[v] == false && dist[v] <= min)
+			min = dist[v], min_index = v;
+
+	return min_index;
+}
 
 
+
+
+int dijkstra(Country world[], int src, int dest)
+{
+	const int n = 20;
+	int dist[n];
+	bool sptSet[n];
+	
+	for (int i = 0; i < n; i++){
+		dist[i] = numeric_limits<int>::max();
+		sptSet[i] = false;
+	}
+	
+	dist[src] = 0;
+
+	for (int count = 0; count < n; count++)
+	{
+		int u = minDistance(dist, sptSet);
+		
+		if (dest == u)
+			return dist[u];
+		
+		sptSet[u] = true;
+		Country c = world[u];
+		
+		for (int i = 0; i < c.neighbour_id.size; i++) {
+			int other_id = c.neighbour_id[i];
+			if (!sptSet[other_id] && dist[u] != numeric_limits<int>::max() && dist[u] + 1 < dist[other_id])
+				dist[other_id] = dist[u] + 1;
+		}
+	}
+
+	return 0;
+}
+
+
+struct Country {
+	vector<int> neighbour_id;
+};
+
+int main() {
+	Country world[20];
+	string line;
+	
+	int count = 1;
+	while (getline(cin, line)) {
+		
+		//init the country
+		if (count == 1)
+			for (int i = 0; i < 20; i++)
+				world[i] = Country();
+		//read the 19 neighbour data lines
+		if (1 <= count && count <= 19) {
+			stringstream ss(line);
+			int degree;
+			ss >> degree;
+
+			for (int i = 0; i < degree; i++) {
+				int nodeA = count-1;
+				int nodeB;
+				ss >> nodeB;
+				nodeB--;
+				world[nodeA].neighbour_id.push_back(nodeB);
+				world[nodeB].neighbour_id.push_back(nodeA);
+			}
+		}
+
+		count++;
+		//execute
+		if (count == 20){
+			//get src and dest
+			int testCases;
+			cin >> testCases;
+			for (int i = 0; i < testCases; i++) {
+				int src, dest;
+				cin >> src;
+				cin >> dest;
+				src--;
+				dest--;
+
+				Country copy_world[20];
+				for(int j = 0; j < 20; j++)
+					copy_world[j] = world[j];
+
+				int dist = dijkstra(copy_world, src, dest);
+
+
+			}
+
+
+
+			count = 1;
+		}
+
+	}
+}
+
+
+
+
+
+/*
 struct Country
 {
 	int id = 0;
@@ -195,7 +310,7 @@ int main()
 	
     return 0;
 }
-
+*/
 /*
 
 Country c1;
