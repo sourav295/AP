@@ -129,9 +129,20 @@ int main()
 					Int_Bracket i2 = operand_stack.top();
 					operand_stack.pop();
 
+					if (!i1.isInt || !i2.isInt) {
+						//defines condition ((1+1)+(x+, where the latter x would try to collapse the plus between 1+1
+						//put the extracted stuff back
+						operator_stack.push(op);
+						operand_stack.push(i2);
+						operand_stack.push(i1);
+
+						break;
+					}
+					
 					operand_stack.push(
 						Int_Bracket::evaluate(i1, op, i2)
 					);
+					
 				}
 				operator_stack.push(c);
 			}
