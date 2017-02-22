@@ -11,20 +11,19 @@
 #include <algorithm>
 using namespace std;
 
+
+const int limit_n = 1000;
+
 struct Chemical {
 	queue<pair<int, int>> reactions;
 	vector<int> results;
 
 };
 
-
-
-int minDistance(vector<int> dist, vector<bool> sptSet)
+int minDistance(int dist[], bool sptSet[], int V)
 {
 	int min = numeric_limits<int>::max();
 	int min_index;
-
-	int V = dist.size();
 
 	for (int v = 0; v < V; v++)
 		if (sptSet[v] == false && dist[v] <= min){
@@ -36,23 +35,21 @@ int minDistance(vector<int> dist, vector<bool> sptSet)
 }
 
 
-void execute(vector<Chemical> chemicals, int src) {
-	vector<int> dist;
-	vector<bool> sptSet;
+void execute(Chemical chemicals[], int src, int n) {
+	int dist[limit_n];
+	bool sptSet[limit_n];
 	
-	int V = chemicals.size();
-
-	for (int i = 0; i < V; i++) {
-		dist.push_back(numeric_limits<int>::max());
-		sptSet.push_back(false);
+	for (int i = 0; i < n; i++) {
+		dist[i] = numeric_limits<int>::max();
+		sptSet[i] = false;
 	}
 	
 	dist[src] = 0;
 
 	// Find shortest path for all vertices
-	for (int count = 0; count < V; count++)
+	for (int count = 0; count < n; count++)
 	{
-		int u = minDistance(dist, sptSet);
+		int u = minDistance(dist, sptSet, n);
 		sptSet[u] = true;
 
 		chemicals[src].results.push_back(dist[u]);
@@ -68,7 +65,7 @@ void execute(vector<Chemical> chemicals, int src) {
 
 	sort(chemicals[src].results.begin(), chemicals[src].results.end());
 	
-	int res_n = chemicals[src].results.size();
+	int res_n = n;
 	if (res_n % 2 != 0)
 		cout << chemicals[src].results[res_n / 2];
 	else
@@ -84,14 +81,17 @@ void execute(vector<Chemical> chemicals, int src) {
 int main()
 {
 	string line;
+	
+	Chemical chemicals[limit_n];
+	
 	while (getline(cin, line)) {
 		int n;
 		stringstream ss(line);
 		ss >> n;
 
-		vector<Chemical> chemicals;
+		
 		for (int i = 0; i < n; i++)
-			chemicals.push_back(Chemical());
+			chemicals[i] = Chemical();
 
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
@@ -101,11 +101,11 @@ int main()
 			}
 		}
 		for (int i = 0; i < n; i++) {
-			execute(chemicals, i);
+			execute(chemicals, i, n);
 		}
 		getline(cin, line);
 	}
-
+	
 
     return 0;
 }
