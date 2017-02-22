@@ -35,7 +35,7 @@ int minDistance(int dist[], bool sptSet[], int V)
 }
 
 
-void execute(Chemical chemicals[], int src, int n) {
+double execute(Chemical chemicals[], int src, int n) {
 	int dist[limit_n];
 	bool sptSet[limit_n];
 	
@@ -67,11 +67,9 @@ void execute(Chemical chemicals[], int src, int n) {
 	
 	int res_n = n;
 	if (res_n % 2 != 0)
-		cout << chemicals[src].results[res_n / 2];
+		return chemicals[src].results[res_n / 2];
 	else
-		cout << ((double)(chemicals[src].results[(res_n-1) / 2] + chemicals[src].results[(res_n) / 2]))/2;
-	cout << "\n";
-
+		return ((double)(chemicals[src].results[(res_n-1) / 2] + chemicals[src].results[(res_n) / 2]))/2;
 }
 
 
@@ -81,6 +79,7 @@ void execute(Chemical chemicals[], int src, int n) {
 int main()
 {
 	string line;
+	queue<double> res;
 	
 	Chemical chemicals[limit_n];
 	
@@ -101,11 +100,13 @@ int main()
 			}
 		}
 		for (int i = 0; i < n; i++) {
-			execute(chemicals, i, n);
+			res.push(execute(chemicals, i, n));
 		}
 		getline(cin, line);
 	}
-	
+	for (res; !res.empty(); res.pop()) {
+		cout << res.front() << "\n";
+	}
 
     return 0;
 }
