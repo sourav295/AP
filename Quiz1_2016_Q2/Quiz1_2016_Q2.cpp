@@ -27,7 +27,7 @@ int search(int r, int c, int N, int M, bool **space) {
 	//check bottom
 	if (r + 1 < N && space[r + 1][c])
 		sum += search(r + 1, c, N, M, space);
-	//check bottom
+	//check top
 	if (r - 1 >= 0 && space[r - 1][c])
 		sum += search(r - 1, c, N, M, space);
 
@@ -66,7 +66,10 @@ int main()
 			space[r][c] = true;
 			starts[k] = { r, c };
 		}
-		getline(cin, line);
+
+		if(K > 0)
+			getline(cin, line);
+
 		int max = 0;
 		int res = 0;
 		for (int k = 0; k < K; k++) {
