@@ -14,14 +14,11 @@ using namespace std;
 const int n_limit = 100;
 
 int search(int r, int c, int N, int M, bool **space) {
-	if (!space[r][c])
-		return 0;
-
 	//uncheck current box
 	space[r][c] = false;
 
-	//check left
 	int sum = 1;//including this
+	//check left
 	if (c - 1 >= 0 && space[r][c - 1])
 		sum += search(r, c - 1, N, M, space);
 	//check right
