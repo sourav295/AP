@@ -10,6 +10,76 @@
 #include <sstream>
 using namespace std;
 
+const int limit_cents = 10000;
+const int limit_denom = 100;
+
+pair<int, int> minPayOUT(int denom[limit_denom], int n, int price) {
+
+	int loss[limit_cents + 1];
+	int table[limit_cents + 1];
+
+	loss[0] = 0;
+	table[0] = 0;
+
+	for (int i = 1; i <= price; i++){
+		loss[i] = numeric_limits<int>::min();
+		table[i]= numeric_limits<int>::max();
+	}
+
+	for (int i = 1; i <= price; i++) {
+		for (int j = 0; j < n; j++) {
+			if (i - denom[j] <= 0) {
+				if(i - denom[j] > loss[i]){
+					loss[i] = i - denom[j];
+					table[i] = 1;
+				}
+			}
+			else {
+				int sub_loss = loss[i - denom[j]];
+				if (sub_loss != numeric_limits<int>::min() && sub_loss > loss[i]) {
+					loss[i] = sub_loss;
+					table[i] = table[i - denom[j]] + 1;
+				}
+				else if (sub_loss != numeric_limits<int>::min() && sub_loss == loss[i]) {
+					if (table[i] > table[i - denom[j]] + 1)
+						table[i] = table[i - denom[j]] + 1;
+				}
+			}
+		}
+	}
+
+}
+
+
+int main()
+{
+	int t = 1;
+	int n = 3;
+	int price = 1600;
+
+	int denom[limit_denom];
+
+	cin >> t;
+	for (int j = 0; j < t; j++) {
+
+		cin >> price;
+		cin >> n;
+		for (int i = 0; i < n; i++) {
+			int d;
+			cin >> d;
+			denom[i] = d;
+		}
+
+		pair<int, int> res = minPayOUT(price, denom);
+		cout << price - res.first << " " << res.second << "\n";
+	}
+
+	return 0;
+}
+
+
+
+/*
 pair<int, int> minPayOUT(int price, vector<int> denominations) {
 
 	if (price <= 0)
@@ -58,3 +128,4 @@ int main()
     return 0;
 }
 
+*/
