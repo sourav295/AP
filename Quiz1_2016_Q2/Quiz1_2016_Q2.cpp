@@ -73,9 +73,11 @@ int main()
 		int max = 0;
 		int res = 0;
 		for (int k = 0; k < K; k++) {
-			res = search(starts[k].first, starts[k].second, N, M, space);
-			if (res > max)
-				max = res;
+			if (space[starts[k].first][starts[k].second]) {
+				res = search(starts[k].first, starts[k].second, N, M, space);
+				if (res > max)
+					max = res;
+			}
 		}
 		cout << max << "\n";
 	}
