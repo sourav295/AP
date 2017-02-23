@@ -15,8 +15,8 @@ using namespace std;
 const int limit_n = 1000;
 
 struct Chemical {
-	queue<pair<int, int>> reactions;
-	vector<int> results;
+	vector<pair<int, int>> reactions;
+	vector<pair<bool, int>> results;
 
 };
 
@@ -35,41 +35,70 @@ int minDistance(int dist[], bool sptSet[], int V)
 }
 
 
-double execute(Chemical chemicals[], int src, int n) {
-	int dist[limit_n];
-	bool sptSet[limit_n];
+void execute(vector<Chemical> chemicals, int n) {
 	
-	for (int i = 0; i < n; i++) {
-		dist[i] = numeric_limits<int>::max();
-		sptSet[i] = false;
-	}
+	for (int src = 0; src < n; src++){
 	
-	dist[src] = 0;
+		int dist[limit_n];
+		bool sptSet[limit_n];
+		int backtracker[limit_n];
+	
+		for (int i = 0; i < n; i++) {
+			dist[i] = numeric_limits<int>::max();
+			sptSet[i] = false;
+		}
+	
+		dist[src] = 0;
 
-	// Find shortest path for all vertices
-	for (int count = 0; count < n; count++)
-	{
-		int u = minDistance(dist, sptSet, n);
-		sptSet[u] = true;
-
-		chemicals[src].results.push_back(dist[u]);
+		// Find shortest path for all vertices
+		for (int count = 0; count < n; count++)
+		{
+			if (chemicals[src].results[count].first == true)
+				continue;
 		
-		Chemical c = chemicals[u];
-		for (c.reactions; !c.reactions.empty(); c.reactions.pop()) {
-			int id = c.reactions.front().first;
-			int h = c.reactions.front().second;
-			if (!sptSet[id] && dist[u] != numeric_limits<int>::max() && dist[u] + h < dist[id])
-				dist[id] = dist[u] + h;
-		}	
+			int u = minDistance(dist, sptSet, n);
+			sptSet[u] = true;
+
+			//backtrack and update----------------------------------------------
+			int dest = u;
+			int d = dest;
+			while (d != src) {
+				int s = backtracker[d];
+				while (s != src) {
+					chemicals[s].results[d] = { true, dist[d] - dist[s] };
+					s = backtracker[s];
+				}
+				d = backtracker[d];
+			}
+			chemicals[src].results[dest] = { true, dist[dest] };
+			//-------------------------------------------------------------------
+		
+			//RELAX---------------
+			Chemical c = chemicals[u];
+			for (int k =0; k < c.reactions.size(); k++) {
+				int id = c.reactions[k].first;
+				int h = c.reactions[k].second;
+				if (!sptSet[id] && dist[u] != numeric_limits<int>::max() && dist[u] + h < dist[id]){
+					dist[id] = dist[u] + h;
+					backtracker[id] = u;
+				}
+			}
+			//---------------------
+		}
+		
 	}
 
-	sort(chemicals[src].results.begin(), chemicals[src].results.end());
+	for (int i = 0; i < n; i++) {
+		sort(chemicals[i].results.begin(), chemicals[i].results.end());
+		int res_n = n;
+		if (res_n % 2 != 0)
+			cout << chemicals[i].results[res_n / 2].second << "\n";
+		else
+			cout << ((double)(chemicals[i].results[(res_n - 1) / 2].second + chemicals[i].results[(res_n) / 2].second)) / 2 << "\n";
+	}
+		 
 	
-	int res_n = n;
-	if (res_n % 2 != 0)
-		return chemicals[src].results[res_n / 2];
-	else
-		return ((double)(chemicals[src].results[(res_n-1) / 2] + chemicals[src].results[(res_n) / 2]))/2;
+	
 }
 
 
@@ -81,31 +110,27 @@ int main()
 	string line;
 	queue<double> res;
 	
-	Chemical chemicals[limit_n];
+	
 	
 	while (getline(cin, line)) {
 		int n;
 		stringstream ss(line);
 		ss >> n;
 
-		
+		vector<Chemical> chemicals;
 		for (int i = 0; i < n; i++)
-			chemicals[i] = Chemical();
+			chemicals.push_back(Chemical());
 
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				int heat;
 				cin >> heat;
-				chemicals[i].reactions.push({ j, heat });
+				chemicals[i].reactions.push_back({ j, heat });
+				chemicals[i].results.push_back({ false, 0 });
 			}
 		}
-		for (int i = 0; i < n; i++) {
-			res.push(execute(chemicals, i, n));
-		}
+		execute(chemicals, n);
 		getline(cin, line);
-	}
-	for (res; !res.empty(); res.pop()) {
-		cout << res.front() << "\n";
 	}
 
     return 0;
