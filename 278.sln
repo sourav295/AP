@@ -39,6 +39,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quiz1_2016_Q3", "Quiz1_2016
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quiz1_2016_Q4", "Quiz1_2016_Q4\Quiz1_2016_Q4.vcxproj", "{A251E6D3-385E-400E-B9FE-EAA8D999B9C2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quiz1_2016_Q2", "Quiz1_2016_Q2\Quiz1_2016_Q2.vcxproj", "{16E4FCFA-CDB0-4068-9BD1-45EA995E2A2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -191,6 +193,14 @@ Global
 		{A251E6D3-385E-400E-B9FE-EAA8D999B9C2}.Release|x64.Build.0 = Release|x64
 		{A251E6D3-385E-400E-B9FE-EAA8D999B9C2}.Release|x86.ActiveCfg = Release|Win32
 		{A251E6D3-385E-400E-B9FE-EAA8D999B9C2}.Release|x86.Build.0 = Release|Win32
+		{16E4FCFA-CDB0-4068-9BD1-45EA995E2A2A}.Debug|x64.ActiveCfg = Debug|x64
+		{16E4FCFA-CDB0-4068-9BD1-45EA995E2A2A}.Debug|x64.Build.0 = Debug|x64
+		{16E4FCFA-CDB0-4068-9BD1-45EA995E2A2A}.Debug|x86.ActiveCfg = Debug|Win32
+		{16E4FCFA-CDB0-4068-9BD1-45EA995E2A2A}.Debug|x86.Build.0 = Debug|Win32
+		{16E4FCFA-CDB0-4068-9BD1-45EA995E2A2A}.Release|x64.ActiveCfg = Release|x64
+		{16E4FCFA-CDB0-4068-9BD1-45EA995E2A2A}.Release|x64.Build.0 = Release|x64
+		{16E4FCFA-CDB0-4068-9BD1-45EA995E2A2A}.Release|x86.ActiveCfg = Release|Win32
+		{16E4FCFA-CDB0-4068-9BD1-45EA995E2A2A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
