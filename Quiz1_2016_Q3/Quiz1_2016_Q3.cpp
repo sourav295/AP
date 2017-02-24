@@ -15,7 +15,7 @@ const int limit_denom = 100;
 
 pair<int, int> minPayOUT(int denom[limit_denom], int n, int price) {
 
-	int loss[limit_cents + 1];
+	int loss[limit_cents + 1];//loss would be negative
 	int table[limit_cents + 1];
 
 	loss[0] = 0;
@@ -37,7 +37,7 @@ pair<int, int> minPayOUT(int denom[limit_denom], int n, int price) {
 			else {
 				int sub_loss = loss[i - denom[j]];
 				if (sub_loss != numeric_limits<int>::min() && sub_loss > loss[i]) {
-					loss[i] = sub_loss;
+					loss[i]  = sub_loss;
 					table[i] = table[i - denom[j]] + 1;
 				}
 				else if (sub_loss != numeric_limits<int>::min() && sub_loss == loss[i]) {
@@ -47,6 +47,8 @@ pair<int, int> minPayOUT(int denom[limit_denom], int n, int price) {
 			}
 		}
 	}
+
+	return{ price - loss[price], table[price] };
 
 }
 
@@ -70,8 +72,8 @@ int main()
 			denom[i] = d;
 		}
 
-		pair<int, int> res = minPayOUT(price, denom);
-		cout << price - res.first << " " << res.second << "\n";
+		pair<int, int> res = minPayOUT(denom, n, price);
+		cout << res.first << " " << res.second << "\n";
 	}
 
 	return 0;
