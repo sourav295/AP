@@ -152,13 +152,35 @@ int max(int a, int b)
 /* Driver program to test above function */
 int main()
 {
-	char X[] = "abcde";
-	char Y[] = "bcgfe";
+	string line;
+	while (getline(cin, line)) {
+		stringstream ss(line);
+		
+		if (line.at(0) == '#')
+			break;
+		
+		string source, goal;
+		ss >> source;
+		ss >> goal;
 
-	int m = strlen(X);
-	int n = strlen(Y);
+		char X[limit_len];
+		char Y[limit_len];
 
-	lcs(X, Y, m, n);
+		int m, n;
+		m = source.length();
+		n = goal.length();
+
+		for (int i = 0; i < m; i++)
+			X[i] = source.at(i);
+		for (int i = 0; i < n; i++)
+			Y[i] = goal.at(i);
+
+		lcs(X, Y, m, n);
+		
+	}
+	
+	
+	//
 	//printf("Length of LCS is %d\n", lcs(X, Y, m, n));
 
 	return 0;
