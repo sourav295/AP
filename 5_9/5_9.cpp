@@ -9,6 +9,7 @@
 #include <limits>
 #include <sstream>
 #include <algorithm>
+#include <iomanip>
 using namespace std;
 
 int max(int a, int b);
@@ -42,17 +43,40 @@ struct OperationStack {
 	}
 
 
-	string instruction(char *X, int m) {
+	void instruction(char *X, int m) {
 		int index[limit_len];
-		
+		string res = "";
 		int offset = 0;//deviation due to add and remove
 
 		for (int i = 0; i < m; i++) {
-			int index = i + 1;
+			int index = i + 1 + offset;
+			
+			stringstream ss;
+			ss << setw(2) << setfill('0') << index;
+			string dd = ss.str();
+			
+			char ch = op_char.top().second;
+			string character(1, ch);
 
-
+			switch (op_char.top().first) {
+			case 1:
+				res += ("I" + character + dd);
+				offset += 1;
+				break;
+			case -1:
+				res += ("D" + character + dd);
+				offset -= 1;
+				break;
+			case 2:
+				res += ("C" + character + dd);
+			case 0:
+				break;
+			}
+			op_char.pop();
 		}
 
+		res += "E";
+		cout << res << "\n";
 
 	}
 
@@ -115,7 +139,7 @@ void lcs(char *X, char *Y, int m, int n)
 		
 	}
 	
-	int x = 5;
+	op.instruction(X, m);
 
 }
 
