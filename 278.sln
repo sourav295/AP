@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1_278", "278\278.vcxproj", "{67F07149-9E4D-4DC5-A4F8-629BE6EEBF04}"
 EndProject
@@ -46,6 +46,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quiz1_2015_Q2", "Quiz1_2015_Q2\Quiz1_2015_Q2.vcxproj", "{EF3CB86D-3B93-46B2-B2D0-0A5AC78D1CCA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quiz1_2015_Q4", "Quiz1_2015_4\Quiz1_2015_4.vcxproj", "{CBBF8F4D-CF25-4E43-AA22-732A902D50D7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "5_281", "5_281\5_281.vcxproj", "{9DF8FBDE-7A13-4AA6-AD48-0E716A65BF49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -231,6 +233,14 @@ Global
 		{CBBF8F4D-CF25-4E43-AA22-732A902D50D7}.Release|x64.Build.0 = Release|x64
 		{CBBF8F4D-CF25-4E43-AA22-732A902D50D7}.Release|x86.ActiveCfg = Release|Win32
 		{CBBF8F4D-CF25-4E43-AA22-732A902D50D7}.Release|x86.Build.0 = Release|Win32
+		{9DF8FBDE-7A13-4AA6-AD48-0E716A65BF49}.Debug|x64.ActiveCfg = Debug|x64
+		{9DF8FBDE-7A13-4AA6-AD48-0E716A65BF49}.Debug|x64.Build.0 = Debug|x64
+		{9DF8FBDE-7A13-4AA6-AD48-0E716A65BF49}.Debug|x86.ActiveCfg = Debug|Win32
+		{9DF8FBDE-7A13-4AA6-AD48-0E716A65BF49}.Debug|x86.Build.0 = Debug|Win32
+		{9DF8FBDE-7A13-4AA6-AD48-0E716A65BF49}.Release|x64.ActiveCfg = Release|x64
+		{9DF8FBDE-7A13-4AA6-AD48-0E716A65BF49}.Release|x64.Build.0 = Release|x64
+		{9DF8FBDE-7A13-4AA6-AD48-0E716A65BF49}.Release|x86.ActiveCfg = Release|Win32
+		{9DF8FBDE-7A13-4AA6-AD48-0E716A65BF49}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
