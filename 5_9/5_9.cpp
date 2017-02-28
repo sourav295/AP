@@ -133,7 +133,7 @@ void lcs(char *X, char *Y, int m, int n)
 		}
 	}
 	
-	cout << "\n";
+	cout << "E\n";
 
 }
 
