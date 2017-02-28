@@ -12,76 +12,35 @@
 #include <iomanip>
 using namespace std;
 
-int max(int a, int b);
+int min(int a, int b);
 
 const int limit_len = 20;
 
-struct OperationStack {
-	//1 - add
-	//-1 - remove
-	//2 - change
-	//0 - match
-	
-	stack<pair<int, char>> op_char;
+struct Operation {
 
-	void insert(int op, char ch) {
-		
-		//convert to change
-		if (!op_char.empty() && op_char.top().first == 1 && op == -1) {
-			char replacement = op_char.top().second;
-			op_char.pop();
-			op_char.push({ 2,  replacement });
-			
-		}//convert to change
-		else if (!op_char.empty() && op_char.top().first == -1 && op == 1) {
-			op_char.pop();
-			op_char.push({ 2, ch });
-		}
-		else {
-			op_char.push({ op, ch });
-		}
+	char operation, character;
+	int position;
+
+	Operation(char op, int pos, char ch) {
+		operation = op;
+		character = ch;
+		position = pos;
 	}
 
+	void generate(int offset) {
+		int index = offset + 1 + position;
+		//string ch(1, character);
 
-	void instruction(char *X, int m) {
-		int index[limit_len];
-		string res = "";
-		int offset = 0;//deviation due to add and remove
-
-		for (int i = 0; i < m; i++) {
-			int index = i + 1 + offset;
-			
-			stringstream ss;
-			ss << setw(2) << setfill('0') << index;
-			string dd = ss.str();
-			
-			char ch = op_char.top().second;
-			string character(1, ch);
-
-			switch (op_char.top().first) {
-			case 1:
-				res += ("I" + character + dd);
-				offset += 1;
-				break;
-			case -1:
-				res += ("D" + character + dd);
-				offset -= 1;
-				break;
-			case 2:
-				res += ("C" + character + dd);
-			case 0:
-				break;
-			}
-			op_char.pop();
-		}
-
-		res += "E";
-		cout << res << "\n";
+		cout << operation;
+		if(operation == 'I')
+			cout << setfill('0') << std::setw(2) << (1 + position);
+		else
+			cout << setfill('0') << std::setw(2) << index;
+		cout << character;
 
 	}
 
 };
-
 
 /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
 void lcs(char *X, char *Y, int m, int n)
@@ -93,60 +52,95 @@ void lcs(char *X, char *Y, int m, int n)
 	{
 		for (j = 0; j <= n; j++)
 		{
-			if (i == 0 || j == 0)
-				L[i][j] = 0;
+			if (i == 0)
+				L[i][j] = j;
+			else if (j == 0)
+				L[i][j] = i;
 
 			else if (X[i - 1] == Y[j - 1])
-				L[i][j] = L[i - 1][j - 1] + 1;
+				L[i][j] = L[i - 1][j - 1];
 
 			else
-				L[i][j] = max(L[i - 1][j], L[i][j - 1]);
+				L[i][j] = min(	min(L[i - 1][j], L[i][j - 1]), L[i-1][j-1]) + 1;
 		}
 	}
-	
+
+	stack<Operation> command;
+	int index = 0;
+
 	i = m;
 	j = n;
-
-	OperationStack op;
-
 	while (!(i == 0 && j == 0))
 	{
-		if (i == 0) {
-			op.insert(1, Y[j - 1]);
-			j--;
-			continue;
-		}
-
-		if (j == 0) {
-			op.insert(-1, X[i - 1]);
-			i--;
-			continue;
-		}
-
 		if (X[i - 1] == Y[j - 1])
 		{
-			op.insert(0, X[i - 1]);
 			i--; j--;
 		}
-		else if (L[i - 1][j] > L[i][j - 1]){
-			op.insert(-1, X[i - 1]);
-			i--;
+		else {
+
+			if (i == 0) {
+				command.push(Operation('I', i - 1, Y[j - 1]));
+				j--;index++;
+				continue;
+			}
+
+			if (j == 0) {
+				command.push(Operation('D', i - 1, X[i - 1]));
+				i--;index++;
+				continue;
+			}
+
+			int top  = L[i - 1][j];
+			int side = L[i][j - 1];
+			int diag = L[i - 1][j - 1];
+
+			if (diag <= side && diag <= top) {
+				//change: position to change, the value to change to
+				command.push(Operation('C', i - 1, Y[j - 1]));
+				i--;j--;index++;
+			}
+			else if (side < top) {
+				//insert: position to insert into, value to insert
+				command.push(Operation('I', j - 1, Y[j - 1]));
+				j--;index++;
+			}
+			else {
+				//drop: position to drop, value to drop
+				command.push(Operation('D', i - 1, X[i - 1]));
+				i--;index++;
+			}
+
 		}
-		else{
-			op.insert(1, Y[j - 1]);
-			j--;
-		}
+	}
+
+	int offset = 0;
+	string result = "";
+	for (command; !command.empty(); command.pop()) {
+		Operation op = command.top();
 		
+		if (op.operation == 'D') {
+			op.generate(offset);
+			offset--;
+		}
+
+		if (op.operation == 'I') {
+			op.generate(offset);
+			offset++;
+		}
+
+		if (op.operation == 'C') {
+			op.generate(offset);
+		}
 	}
 	
-	op.instruction(X, m);
+	cout << "\n";
 
 }
 
 /* Utility function to get max of 2 integers */
-int max(int a, int b)
+int min(int a, int b)
 {
-	return (a > b) ? a : b;
+	return (a < b) ? a : b;
 }
 
 /* Driver program to test above function */
