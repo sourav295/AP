@@ -32,11 +32,12 @@ struct Operation {
 		//string ch(1, character);
 
 		cout << operation;
+		cout << character;
 		if(operation == 'I')
 			cout << setfill('0') << std::setw(2) << (1 + position);
 		else
 			cout << setfill('0') << std::setw(2) << index;
-		cout << character;
+		
 
 	}
 
