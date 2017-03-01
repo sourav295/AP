@@ -80,12 +80,14 @@ void lcs(char *X, char *Y, int m, int n)
 		else {
 
 			if (i == 0) {
-				command.push(Operation('I', i - 1, Y[j - 1]));
+				//insert
+				command.push(Operation('I', j - 1, Y[j - 1]));
 				j--;index++;
 				continue;
 			}
 
 			if (j == 0) {
+				//drop
 				command.push(Operation('D', i - 1, X[i - 1]));
 				i--;index++;
 				continue;
