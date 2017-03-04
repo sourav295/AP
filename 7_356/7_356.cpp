@@ -87,15 +87,17 @@ int main()
 		for (int i = 0; i < n; i++)
 			A[i] = -1;
 
-		int max_ppa = 0;
+		int min_ppa = 0;
 		for (int i = 0; i < m; i++) {
 			int a, b, ppa;
 			cin >> a >> b >> ppa;
 
-			graph[a - 1][b - 1] = ppa;
-			
-			if (max_ppa < ppa)
-				max_ppa = ppa;
+			int negative_ppa = ppa* (-1);
+
+			graph[a - 1][b - 1] = negative_ppa;
+
+			if (min_ppa > negative_ppa)
+				min_ppa = negative_ppa;
 
 			
 			/*
@@ -116,7 +118,7 @@ int main()
 		int count = 0;
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++)
-				if (graph[i][j] == max_ppa){
+				if (graph[i][j] == min_ppa){
 					if (Find(i) != Find(j))
 						Union(i, j);
 				}
