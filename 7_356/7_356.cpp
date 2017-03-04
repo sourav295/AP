@@ -13,8 +13,9 @@
 using namespace std;
 
 const int limit_n = 500;
-
-
+int min_val = 0;
+//const int limit_m = 1000000;
+/*
 struct Edge {
 
 	int indexA, indexB, ppa;
@@ -28,15 +29,17 @@ struct Edge {
 	Edge() {}
 
 };
-
+*/
 
 int A[limit_n];
-Edge edges[limit_n];
+//Edge edges[limit_n];
 
+int graph[limit_n][limit_n];
+/*
 int compareEdge(const void * a, const void * b)
 {
 	return ((*(Edge*)b).ppa - (*(Edge*)a).ppa);
-}
+}*/
 
 void Union(int element1, int element2);
 void UnionSet(int set1, int set2);
@@ -61,10 +64,11 @@ void Union(int element1, int element2) {
 void UnionSet(int set1, int set2) {
 	A[set1] += A[set2];
 	A[set2] = set1;
+
+	if (A[set1] < min_val)
+		min_val = A[set1];
+
 }
-
-
-
 
 int main()
 {
@@ -72,6 +76,11 @@ int main()
 
 	while (true) {
 		cin >> n >> m;
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				graph[i][j] = 0;
+
+
 		if (n == 0 && m == 0)
 			break;
 
@@ -79,11 +88,17 @@ int main()
 			A[i] = -1;
 
 		int max_ppa = 0;
-		int count = 0;
 		for (int i = 0; i < m; i++) {
 			int a, b, ppa;
 			cin >> a >> b >> ppa;
+
+			graph[a - 1][b - 1] = ppa;
 			
+			if (max_ppa < ppa)
+				max_ppa = ppa;
+
+			
+			/*
 			if (ppa > max_ppa) {
 				//restart
 				count   = 0;
@@ -93,24 +108,35 @@ int main()
 			if (ppa == max_ppa) {
 				edges[count] = Edge(a - 1, b - 1, ppa);
 				count++;
-			}
+			}*/
 		}
 
-		qsort(edges, count, sizeof(Edge), compareEdge);
-		
+		min_val = 0;
+
+		int count = 0;
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				if (graph[i][j] == max_ppa){
+					if (Find(i) != Find(j))
+						Union(i, j);
+				}
+
+		//qsort(edges, count, sizeof(Edge), compareEdge);
+		/*
 		for (int i = 0; i < count; i++) {
 			Edge e = edges[i];
-			Union(e.indexA, e.indexB);
+			if(Find(e.indexA) != Find(e.indexB))
+				Union(e.indexA, e.indexB);
 		}
+		
 
 		int min = 0;
 		for (int i = 0; i < n; i++) {
-			cout << A[i] << "\n";
 			if (min > A[i])
 				min = A[i];
-		}
+		}*/
 
-		cout << min*(-1) << "\n";
+		cout << min_val*(-1) << "\n";
 	}
 
     return 0;
