@@ -33,7 +33,7 @@ struct Edge {
 
 int compareEdge(const void * a, const void * b)
 {
-	return ((*(Edge*)b).ppa - (*(Edge*)a).ppa);
+	return ((*(Edge*)a).ppa - (*(Edge*)b).ppa);
 }
 
 
@@ -74,7 +74,7 @@ int main()
 		for (int j = 0; j < m; j++) {
 			int u, v, c;
 			cin >> u >> v >> c;
-			edges[j] = Edge(u, v, c);
+			edges[j] = Edge(u, v, (-1)*c);
 		}
 
 		qsort(edges, m, sizeof(Edge), compareEdge);
@@ -82,17 +82,17 @@ int main()
 		for (int j = 0; j < n; j++)
 			A[j] = -1;
 
-		int min_val = numeric_limits<int>::max();
+		int max_val = numeric_limits<int>::min();
 		for (int j = 0; j < m; j++) {
 			Edge e = edges[j];
 			if (Find(e.indexA) != Find(e.indexB)) {
 				Union(e.indexA, e.indexB);
-				if (e.ppa < min_val)
-					min_val = e.ppa;
+				if (e.ppa > max_val)
+					max_val = e.ppa;
 			}
 		}
 
-		cout << "Case #" << i << ": " << min_val << "\n";
+		cout << "Case #" << i << ": " << max_val*(-1) << "\n";
 	}
 
 
