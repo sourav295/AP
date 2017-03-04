@@ -14,6 +14,7 @@ using namespace std;
 
 
 const int n_limit = 100;
+const int m_limit = 10000;
 int A[n_limit];
 
 struct Edge {
@@ -28,7 +29,12 @@ struct Edge {
 
 	Edge() {}
 
-};
+}edges[m_limit];
+
+int compareEdge(const void * a, const void * b)
+{
+	return ((*(Edge*)b).ppa - (*(Edge*)a).ppa);
+}
 
 
 void Union(int element1, int element2);
@@ -60,7 +66,34 @@ void UnionSet(int set1, int set2) {
 
 int main()
 {
+	int N;
+	cin >> N;
+	for (int i = 1; i <= N; i++) {
+		int n, m;
+		cin >> n >> m;
+		for (int j = 0; j < m; j++) {
+			int u, v, c;
+			cin >> u >> v >> c;
+			edges[j] = Edge(u, v, c);
+		}
 
+		qsort(edges, m, sizeof(Edge), compareEdge);
+
+		for (int j = 0; j < n; j++)
+			A[j] = -1;
+
+		int min_val = numeric_limits<int>::max();
+		for (int j = 0; j < m; j++) {
+			Edge e = edges[j];
+			if (Find(e.indexA) != Find(e.indexB)) {
+				Union(e.indexA, e.indexB);
+				if (e.ppa < min_val)
+					min_val = e.ppa;
+			}
+		}
+
+		cout << "Case #" << i << ": " << min_val << "\n";
+	}
 
 
 
