@@ -31,7 +31,7 @@ struct Edge {
 
 
 int A[limit_n];
-Edge edges[limit_n*limit_n];
+Edge edges[limit_n];
 
 int compareEdge(const void * a, const void * b)
 {
@@ -42,6 +42,12 @@ void Union(int element1, int element2);
 void UnionSet(int set1, int set2);
 int Find(int element);
 
+int Find(int element) {
+	if (A[element] < 0)
+		return element;
+	else
+		return Find(A[element]);
+}
 
 void Union(int element1, int element2) {
 	int root1 = Find(element1);
@@ -57,12 +63,6 @@ void UnionSet(int set1, int set2) {
 	A[set2] = set1;
 }
 
-int Find(int element) {
-	if (A[element] < 0)
-		return element;
-	else
-		return Find(A[element]);
-}
 
 
 
@@ -100,12 +100,12 @@ int main()
 		
 		for (int i = 0; i < count; i++) {
 			Edge e = edges[i];
-			if (Find(e.indexA) != Find(e.indexB) && e.ppa == max_ppa)
-				Union(e.indexA, e.indexB);
+			Union(e.indexA, e.indexB);
 		}
 
 		int min = 0;
 		for (int i = 0; i < n; i++) {
+			cout << A[i] << "\n";
 			if (min > A[i])
 				min = A[i];
 		}
