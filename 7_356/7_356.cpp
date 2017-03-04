@@ -46,7 +46,7 @@ int Find(int element);
 void Union(int element1, int element2) {
 	int root1 = Find(element1);
 	int root2 = Find(element2);
-	if (A[root1] < A[root2])		
+	if (A[root1] < A[root2])
 		UnionSet(root1, root2);
 	else
 		UnionSet(root2, root1);
