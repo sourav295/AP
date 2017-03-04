@@ -24,7 +24,7 @@ struct Edge {
 
 	Edge(int a, int b, int dist) {
 		indexA = a;
-		indexA = b;
+		indexB = b;
 		ppa = dist;
 	}
 
@@ -32,13 +32,18 @@ struct Edge {
 
 };
 
-Edge edges[limit_n*limit_n];
+
 int A[limit_n];
+Edge edges[limit_n*limit_n];
 
 int compareEdge(const void * a, const void * b)
 {
-	return ((*(Edge*)a).ppa - (*(Edge*)b).ppa);
+	return ((*(Edge*)b).ppa - (*(Edge*)a).ppa);
 }
+
+void Union(int element1, int element2);
+void UnionSet(int set1, int set2);
+int Find(int element);
 
 
 void Union(int element1, int element2) {
@@ -80,7 +85,7 @@ int main()
 		for (int i = 0; i < m; i++) {
 			int a, b, ppa;
 			cin >> a >> b >> ppa;
-			edges[i] = Edge(a, b, ppa);
+			edges[i] = Edge(a-1, b-1, ppa);
 			
 			if (ppa > max_ppa)
 				max_ppa = ppa;
@@ -93,7 +98,17 @@ int main()
 			if (Find(e.indexA) != Find(e.indexB) && e.ppa == max_ppa)
 				Union(e.indexA, e.indexB);
 		}
+
+		int min = 0;
+		for (int i = 0; i < n; i++) {
+			if (min > A[i])
+				min = A[i];
+		}
+
+		cout << min*(-1) << "\n";
 	}
+
+	int z = 5;
     return 0;
 }
 
