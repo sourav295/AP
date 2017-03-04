@@ -79,18 +79,26 @@ int main()
 			A[i] = -1;
 
 		int max_ppa = 0;
+		int count = 0;
 		for (int i = 0; i < m; i++) {
 			int a, b, ppa;
 			cin >> a >> b >> ppa;
-			edges[i] = Edge(a-1, b-1, ppa);
 			
-			if (ppa > max_ppa)
+			if (ppa > max_ppa) {
+				//restart
+				count   = 0;
 				max_ppa = ppa;
+			}
+			
+			if (ppa == max_ppa) {
+				edges[count] = Edge(a - 1, b - 1, ppa);
+				count++;
+			}
 		}
 
-		qsort(edges, m, sizeof(Edge), compareEdge);
+		qsort(edges, count, sizeof(Edge), compareEdge);
 		
-		for (int i = 0; i < m; i++) {
+		for (int i = 0; i < count; i++) {
 			Edge e = edges[i];
 			if (Find(e.indexA) != Find(e.indexB) && e.ppa == max_ppa)
 				Union(e.indexA, e.indexB);
