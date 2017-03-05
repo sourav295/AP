@@ -16,7 +16,7 @@ using namespace std;
 const int n_limit = 1000;
 const int m_limit = 25000;
 int A[n_limit];
-bool accepted[n_limit];
+
 struct Edge {
 
 	int indexA, indexB;
@@ -87,22 +87,46 @@ int main()
 
 		qsort(edges, m, sizeof(Edge), compareEdge);
 
-		for (int i = 0; i < n_limit; i++)
-			accepted[i] = false;
-
 		for (int j = 0; j < n; j++)
 			A[j] = -1;
 
+		string unaccepted_links = "";
+
+		unsigned int totalCost = 0;
 		int max_val = numeric_limits<int>::min();
 		for (int j = 0; j < m; j++) {
 			Edge e = edges[j];
 			if (Find(e.indexA) != Find(e.indexB)) {
 				Union(e.indexA, e.indexB);
-				accepted[j] = true;
+				totalCost += e.ppa;
+			}
+			else {
+				if(!unaccepted_links.compare(""))//empty
+					unaccepted_links += to_string(e.ppa);
+				else
+					unaccepted_links += (" " + to_string(e.ppa));
 			}
 		}
 
-		cout << "Case #" << i << ": " << max_val*(-1) << "\n";
+		bool tree_exist = true;
+		int count_negatives = 0;
+		for (int i = 0; i < n; i++) {
+			if (A[i] < 0) {
+				count_negatives++;
+				if (count_negatives == 2) {
+					tree_exist = false;
+					break;
+				}
+			}
+		}
+
+		if (tree_exist)
+			cout << "Min cost: " << totalCost << "\n" << unaccepted_links << "\n";
+		else
+			cout << "\\(^o^)/ pray to god\n";
+
+
+		
 	}
 
 
