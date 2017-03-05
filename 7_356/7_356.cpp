@@ -87,7 +87,7 @@ int main()
 		for (int i = 0; i < n; i++)
 			A[i] = -1;
 
-		int min_ppa = 0;
+		int min_ppa = numeric_limits<int>::max();
 		for (int i = 0; i < m; i++) {
 			int a, b, ppa;
 			cin >> a >> b >> ppa;
