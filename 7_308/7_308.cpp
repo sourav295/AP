@@ -17,6 +17,28 @@ const int n_limit = 500;
 const int m_limit = 124740; //(n*n-1)/2 with n = 500
 int A[n_limit];
 
+int diff(int a, int b){
+	if(b-a <= 10 - b + a)
+		return b - a;
+	else
+		return 10- b + a;
+	
+}
+
+int distance(int A[], int B[]){
+	int distance = 0;
+	for(int i = 0; i < 4; i++){
+		if(A[i] <= B[i]){
+			distance += diff(A[i], B[i]);
+		}else{
+			distance += diff(B[i], A[i]);
+		}
+	}
+	
+	return distance;
+}
+
+
 struct Edge {
 
 	int indexA, indexB;
