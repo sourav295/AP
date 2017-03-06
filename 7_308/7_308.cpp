@@ -143,6 +143,8 @@ int main()
 			}
 		}
 
+		//find maximum depth of the graph
+
 		//find out a way to roll across the tree
 		cout << total_rolls << "\n";
 		
