@@ -41,13 +41,33 @@ int distance(int A[], int B[]){
 
 struct Edge {
 
-	int indexA, indexB;
+	int keyA, keyB;
+	int keyA_id, keyB_id;
+
+	int indexA[4];
+	int indexB[4];
 	int ppa;
 
-	Edge(int a, int b, int dist) {
-		indexA = a;
-		indexB = b;
-		ppa = dist;
+	Edge(int a, int b, int A_id, int B_id) {
+		keyA = a;
+		keyB = b;
+
+		keyA_id = A_id;
+		keyB_id = B_id;
+
+		for (int i = 3; i >= 0; i--) {
+			indexA[i] = a%10;
+			indexB[i] = b%10;
+			
+			a /= 10;
+			b /= 10;
+		}
+		
+		ppa = distance(indexA, indexB);
+	}
+
+	Edge generateEdgeOnIndexB(Edge other) {
+		return Edge(keyB, other.keyB, keyB_id, other.keyB_id);
 	}
 
 	Edge() {}
@@ -93,78 +113,41 @@ void UnionSet(int set1, int set2) {
 
 int main()
 {
-
 	int T;
 	cin >> T;
+	int count = 0;
 	for (int i = 0; i < T; i++) {
 		int N;
 		cin >> N;
 		for (int j = 0; j < N; j++) {
-			
+			int key;
+			cin >> key;
+			edges[count++] = Edge(0, key, 0, count + 1);//connect to 0000
 		}
+		//interconnections
+		for (int j = 0; j < N + 1; j++)
+			for (int k = j+1; k < N + 1; k++)
+				edges[count++] = edges[j].generateEdgeOnIndexB(edges[k]);
 
-	}
-
-
-	while (true) {
-		int n, m;
-		cin >> n >> m;
-
-		if (n == 0 && m == 0)
-			break;
-
-		for (int j = 0; j < m; j++) {
-			int u, v;
-			int c;
-			cin >> u >> v >> c;
-			edges[j] = Edge(u, v, c);
-		}
-
-		qsort(edges, m, sizeof(Edge), compareEdge);
-
-		for (int j = 0; j < n; j++)
+		qsort(edges, count, sizeof(Edge), compareEdge);
+		//MST
+		for (int j = 0; j < N + 1; j++)
 			A[j] = -1;
 
-		string unaccepted_links = "";
-
-		int totalCost = 0;
-		int max_val = numeric_limits<int>::min();
-		for (int j = 0; j < m; j++) {
+		int total_rolls = 0;
+		for (int j = 0; j < count; j++){
 			Edge e = edges[j];
-			if (Find(e.indexA) != Find(e.indexB)) {
-				Union(e.indexA, e.indexB);
-				totalCost += e.ppa;
-			}
-			else {
-				if (!unaccepted_links.compare(""))//empty
-					unaccepted_links += to_string(e.ppa);
-				else
-					unaccepted_links += (" " + to_string(e.ppa));
+			if (Find(e.keyA_id) != Find(e.keyB_id)) {
+				Union(e.keyA_id, e.keyB_id);
+				total_rolls += e.ppa;
 			}
 		}
 
-		bool tree_exist = true;
-		int count_negatives = 0;
-		for (int i = 0; i < n; i++) {
-			if (A[i] < 0) {
-				count_negatives++;
-				if (count_negatives == 2) {
-					tree_exist = false;
-					break;
-				}
-			}
-		}
-
-		if (tree_exist)
-			cout << "Min cost: " << totalCost << "\n" << unaccepted_links << "\n";
-		else
-			cout << "\\(^o^)/ pray to god\n";
-
-
-
+		//find out a way to roll across the tree
+		cout << total_rolls << "\n";
+		
 	}
-
-
+	
 
 	return 0;
 }
