@@ -105,11 +105,12 @@ int main()
 			}
 				//edges[count++] = Edge(i, j, pow(X[i] - X[j], 2) + pow(Y[i] - Y[j], 2));
 
-		if (test > 1)
-			cout << "\n";
+		
+			
 
 		cout << "Scenario #" << test++ << "\n";
 		printf("Frog Distance = %.3f\n", sqrt(dijkstra(N)));
+		cout << "\n";
 
 	}
 
