@@ -66,8 +66,8 @@ int maxFlow(int start, int end, int n) {
 		int u = end;
 		while (u != start) {
 			int v = parent_list[u];
-			flow_passed[v][u] += flow;
-			flow_passed[u][v] -= flow;
+			flow_passed[u][v] += flow;
+			flow_passed[v][u] -= flow;
 			u = v;
 		}
 	}
@@ -99,7 +99,7 @@ int main()
 
 	}
 
-	cout << maxFlow(start, end, n);
+	cout << maxFlow(start - 1, end- 1, n);
 
     return 0;
 }
