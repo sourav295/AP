@@ -60,14 +60,47 @@ int maxFlow(int start, int end, int n) {
 	int maxFlow = 0;
 	while (true) {
 		int flow = bfs(start, end, n);
-
-
+		if (flow == 0) {
+			break;
+		}
+		int u = end;
+		while (u != start) {
+			int v = parent_list[u];
+			flow_passed[v][u] += flow;
+			flow_passed[u][v] -= flow;
+			u = v;
+		}
 	}
+
+	return maxFlow;
 }
 
 
 int main()
 {
+	int n, start, end, c;
+
+	cin >> n >> start >> end >> c;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			graph[i][j] = false;
+		}
+	}
+	
+	for (int i = 0; i < c; i++) {
+		int a, b, bandwidth;
+		cin >> a >> b >> bandwidth;
+
+		graph[a - 1][b - 1] = true;
+		graph[b - 1][a - 1] = true;
+		
+		capacities[a - 1][b - 1] = bandwidth;
+		capacities[b - 1][a - 1] = bandwidth;
+
+	}
+
+	cout << maxFlow(start, end, n);
+
     return 0;
 }
 
