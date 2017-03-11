@@ -42,14 +42,16 @@ int bfs(int start, int end, int n) {
 		q.pop();
 
 		for (int v = 0; v < n; v++) {
-			if (graph[u][v] && parent_list[v] == -1 && capacities[u][v] - flow_passed[u][v] > 0) {
-				parent_list[v] = u;
-				currentPathCapacity[v] = min(currentPathCapacity[u], capacities[u][v] - flow_passed[u][v]);
+			if (graph[u][v] && parent_list[v] == -1) {
+				if (capacities[u][v] - flow_passed[u][v] > 0) {
+					parent_list[v] = u;
+					currentPathCapacity[v] = min(currentPathCapacity[u], capacities[u][v] - flow_passed[u][v]);
 
-				if (u == end) {
-					return currentPathCapacity[v];
+					if (v == end) {
+						return currentPathCapacity[v];
+					}
+					q.push(v);
 				}
-				q.push(v);
 			}
 		}
 	}
@@ -66,10 +68,11 @@ int maxFlow(int start, int end, int n) {
 		int u = end;
 		while (u != start) {
 			int v = parent_list[u];
-			flow_passed[u][v] += flow;
-			flow_passed[v][u] -= flow;
+			flow_passed[v][u] += flow;
+			flow_passed[u][v] -= flow;
 			u = v;
 		}
+
 	}
 
 	return maxFlow;
