@@ -117,7 +117,7 @@ int main()
 		}
 
 		cout <<"Network "<< test_sample++ <<"\n";
-		cout << "The bandwidth is " << maxFlow(start - 1, end - 1, n);
+		cout << "The bandwidth is " << maxFlow(start - 1, end - 1, n)<<".";
 		cout << "\n\n";
 	}
 
