@@ -101,6 +101,7 @@ int main()
 			for (int j = 0; j < n; j++) {
 				graph[i][j] = false;
 				flow_passed[i][j] = 0;
+				capacities[i][j] = 0;
 			}
 		}
 
@@ -111,8 +112,8 @@ int main()
 			graph[a - 1][b - 1] = true;
 			graph[b - 1][a - 1] = true;
 
-			capacities[a - 1][b - 1] = bandwidth;
-			capacities[b - 1][a - 1] = bandwidth;
+			capacities[a - 1][b - 1] += bandwidth;
+			capacities[b - 1][a - 1] += bandwidth;
 
 		}
 
