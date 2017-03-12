@@ -55,6 +55,9 @@ int bfs(int start, int end, int n) {
 			}
 		}
 	}
+
+	return 0;
+
 }
 
 int maxFlow(int start, int end, int n) {
@@ -65,6 +68,7 @@ int maxFlow(int start, int end, int n) {
 		if (flow == 0) {
 			break;
 		}
+		maxFlow += flow;
 		int u = end;
 		while (u != start) {
 			int v = parent_list[u];
@@ -82,27 +86,40 @@ int maxFlow(int start, int end, int n) {
 int main()
 {
 	int n, start, end, c;
+	int test_sample = 1;
 
-	cin >> n >> start >> end >> c;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			graph[i][j] = false;
-		}
-	}
-	
-	for (int i = 0; i < c; i++) {
-		int a, b, bandwidth;
-		cin >> a >> b >> bandwidth;
-
-		graph[a - 1][b - 1] = true;
-		graph[b - 1][a - 1] = true;
+	while (true) {
+		cin >> n;
 		
-		capacities[a - 1][b - 1] = bandwidth;
-		capacities[b - 1][a - 1] = bandwidth;
+		if (n == 0)
+			break;
+		
+		cin >> start >> end >> c;
 
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				graph[i][j] = false;
+				flow_passed[i][j] = 0;
+			}
+		}
+
+		for (int i = 0; i < c; i++) {
+			int a, b, bandwidth;
+			cin >> a >> b >> bandwidth;
+
+			graph[a - 1][b - 1] = true;
+			graph[b - 1][a - 1] = true;
+
+			capacities[a - 1][b - 1] = bandwidth;
+			capacities[b - 1][a - 1] = bandwidth;
+
+		}
+
+		cout <<"Network "<< test_sample++ <<"\n";
+		cout << "The bandwidth is " << maxFlow(start - 1, end - 1, n);
+		cout << "\n\n";
 	}
-
-	cout << maxFlow(start - 1, end- 1, n);
 
     return 0;
 }
