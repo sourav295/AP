@@ -132,7 +132,7 @@ int main()
 			connect(W_a - 1, W_b - 1, cost);
 		}
 
-		cout << maxFlow(0, 2 * (M - 1) + 1, n) << "\n";
+		cout << maxFlow(0, 2 * (M - 1) + 1, n) << "\n";//
 	}
 
 
