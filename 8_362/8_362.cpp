@@ -153,8 +153,14 @@ int main()
 					continue;
 				//check if actually in range
 				int dist_sq = pow((u_x - v_x), 2) + pow((u_y - v_y),2);
-				if (dist_sq < four_d_sq)
-					connect(2 * u + 1, 2 * v, numeric_limits<int>::max());
+				if (dist_sq < four_d_sq) {
+					if (dist_sq == 0) {
+						capacities[2 * u][2 * u + 1] = capacities[2 * u][2 * u + 1] + 1;
+						capacities[2 * u + 1][2 * u] = capacities[2 * u + 1][2 * u] + 1;
+					}else{
+						connect(2 * u + 1, 2 * v, numeric_limits<int>::max());
+					}
+				}
 			}
 		}
 		cout << "Case "<< test_count++ <<": "<< maxFlow(south_id, north_id, 2 * n + 2) << "\n";
