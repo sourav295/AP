@@ -84,70 +84,81 @@ int maxFlow(int start, int end, int n) {
 	return maxFlow;
 }
 
+void connect(int a, int b, int d) {
+	graph[a][b] = true;
+	graph[b][a] = true;
+
+	capacities[a][b] = d;
+	capacities[b][a] = d;
+
+}
+
+void clear(int n) {
+	int dimension = 2 * n + 1;
+
+	for (int i = 0; i <= dimension; i++) {
+		for (int j = 0; j <= dimension; j++) {
+			graph[i][j] = false;
+			flow_passed[i][j] = 0;
+			capacities[i][j] = 0;
+		}
+	}
+
+}
+
+
 int main()
 {
 	int L, W, n, d;
 	int x, y;
 	while (true) {
 		cin >> L >> W >> n >> d;
+		
 		if (L == 0 && W == 0 && n == 0 && d == 0)
 			break;
+		
+		clear(n);
 
 		int north_id	= 0;
-		int south_id	= (2 * n);
+		int south_id	= 1;
 		int d_sq		= d*d;
 
-		for (int i = 1; i <=n; i++) {
+		for (int i = 0; i <n; i++) {
 			cin >> x >> y;
-			if (y + d >= W) {
-				//connect to north
-				graph[i][north_id] = true;
-				graph[north_id][i] = true;
-
-				capacities[north_id][i] = 1;
-			}
-
-			if (y - d <= 0) {
-				//connect to south
-				graph[i][south_id] = true;
-				graph[south_id][i] = true;
-
-				capacities[south_id][i] = 1;
-				capacities[i][south_id] = 1;
-			}
-
-			coordinates[i - 1] = { y , x };//sort by y and then x
+			coordinates[i] = { y , x };//sort by y and then x
 		}
 
+		int u, v;
 		sort(begin(coordinates), end(coordinates));
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i <n; i++) {
+			u = i + 1;
 			int u_x = coordinates[i].second;
 			int u_y = coordinates[i].first;
 
+			connect(2 * u, 2 * u + 1, 1);
+			if (u_y + d >= W)
+				connect(north_id, 2 * u + 1, numeric_limits<int>::max());
+			if (u_y - d <= 0)
+				connect(south_id, 2 * u, numeric_limits<int>::max());
+
 			for (int j = i + 1; j < n; j++) {
+				v = j + 1;
 				int v_x = coordinates[j].second;
 				int v_y = coordinates[j].first;
-
 				//check if out of range
 				if (v_y > u_y + d)
 					break;
-
 				if (v_x > u_x + d)
 					continue;
-
 				//check if actually in range
 				int dist = (u_x - v_x)*(u_x - v_x) - (u_x - v_x)*(u_x - v_x);
-
-
-
+				if (dist < d_sq)
+					connect(2 * u + 1, 2 * v, numeric_limits<int>::max());
 			}
-
-
 		}
-
-
-
 	}
+
+	int x6 = 10;
 
 
     return 0;
