@@ -136,7 +136,7 @@ int main()
 			int u_x = coordinates[i].second;
 			int u_y = coordinates[i].first;
 
-			if (u_x == -1 && u_y == -1)
+			if (u_x == -1 && u_y == -1)//duplicate coordinate
 				continue;
 
 			connect(2 * u, 2 * u + 1, 1);
@@ -157,7 +157,7 @@ int main()
 				//check if actually in range
 				int dist_sq = pow((u_x - v_x), 2) + pow((u_y - v_y),2);
 				if (dist_sq < four_d_sq) {
-					if (dist_sq == 0) {
+					if (dist_sq == 0) {//duplicate coordinate
 						capacities[2 * u][2 * u + 1] = capacities[2 * u][2 * u + 1] + 1;
 						capacities[2 * u + 1][2 * u] = capacities[2 * u + 1][2 * u] + 1;
 						coordinates[j] = { -1, -1 };
