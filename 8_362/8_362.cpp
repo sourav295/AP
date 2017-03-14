@@ -136,6 +136,9 @@ int main()
 			int u_x = coordinates[i].second;
 			int u_y = coordinates[i].first;
 
+			if (u_x == -1 && u_y == -1)
+				continue;
+
 			connect(2 * u, 2 * u + 1, 1);
 			if (u_y + d >= W)
 				connect(north_id, 2 * u + 1, numeric_limits<int>::max());
@@ -157,6 +160,7 @@ int main()
 					if (dist_sq == 0) {
 						capacities[2 * u][2 * u + 1] = capacities[2 * u][2 * u + 1] + 1;
 						capacities[2 * u + 1][2 * u] = capacities[2 * u + 1][2 * u] + 1;
+						coordinates[j] = { -1, -1 };
 					}else{
 						connect(2 * u + 1, 2 * v, numeric_limits<int>::max());
 					}
@@ -166,9 +170,6 @@ int main()
 		cout << "Case "<< test_count++ <<": "<< maxFlow(south_id, north_id, 2 * n + 2) << "\n";
 	}
 
-	
-
-
-    return 0;
+	return 0;
 }
 
