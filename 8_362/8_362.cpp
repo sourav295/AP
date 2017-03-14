@@ -10,12 +10,13 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
+#include <cmath>
 using namespace std;
 
 const int max_coord = 100;
-const int n_limit   = (2* max_coord + 1) + 2;//2 more for source and destination
+const int n_limit   = (2* max_coord) + 2;//2 more for source and destination
 
-pair<int, int> coordinates[max_coord];
+vector<pair<int, int>> coordinates(max_coord);
 bool graph[n_limit][n_limit];
 
 int capacities[n_limit][n_limit];
@@ -23,7 +24,6 @@ int flow_passed[n_limit][n_limit];
 
 int parent_list[n_limit];
 int currentPathCapacity[n_limit];
-
 
 int bfs(int start, int end, int n) {
 
@@ -39,7 +39,6 @@ int bfs(int start, int end, int n) {
 	currentPathCapacity[start] = numeric_limits<int>::max();
 
 	while (!q.empty()) {
-
 		int u = q.front();
 		q.pop();
 
@@ -94,9 +93,9 @@ void connect(int a, int b, int d) {
 }
 
 void clear(int n) {
-	int dimension = 2 * n + 1;
+	int dimension = 2 * n + 2;
 
-	for (int i = 0; i <= dimension; i++) {
+	for (int i = 0; i < dimension; i++) {
 		for (int j = 0; j <= dimension; j++) {
 			graph[i][j] = false;
 			flow_passed[i][j] = 0;
@@ -111,6 +110,8 @@ int main()
 {
 	int L, W, n, d;
 	int x, y;
+
+	int test_count = 1;
 	while (true) {
 		cin >> L >> W >> n >> d;
 		
@@ -121,15 +122,15 @@ int main()
 
 		int north_id	= 0;
 		int south_id	= 1;
-		int d_sq		= d*d;
+		int four_d_sq	= 4*d*d;
 
 		for (int i = 0; i <n; i++) {
 			cin >> x >> y;
 			coordinates[i] = { y , x };//sort by y and then x
 		}
-
+		
 		int u, v;
-		sort(begin(coordinates), end(coordinates));
+		sort(coordinates.begin(), coordinates.begin() + n);
 		for (int i = 0; i <n; i++) {
 			u = i + 1;
 			int u_x = coordinates[i].second;
@@ -146,19 +147,20 @@ int main()
 				int v_x = coordinates[j].second;
 				int v_y = coordinates[j].first;
 				//check if out of range
-				if (v_y > u_y + d)
+				if (v_y > u_y + 2*d)
 					break;
-				if (v_x > u_x + d)
+				if (v_x > u_x + 2*d)
 					continue;
 				//check if actually in range
-				int dist = (u_x - v_x)*(u_x - v_x) - (u_x - v_x)*(u_x - v_x);
-				if (dist < d_sq)
+				int dist_sq = pow((u_x - v_x), 2) + pow((u_y - v_y),2);
+				if (dist_sq < four_d_sq)
 					connect(2 * u + 1, 2 * v, numeric_limits<int>::max());
 			}
 		}
+		cout << "Case "<< test_count++ <<": "<< maxFlow(south_id, north_id, 2 * n + 2) << "\n";
 	}
 
-	int x6 = 10;
+	
 
 
     return 0;
