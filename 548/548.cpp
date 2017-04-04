@@ -18,15 +18,21 @@ int sig_start, sig_end;
 
 bool one_binary[n_limit];
 
-void add_one() {
+unsigned long long  add_one() {
 
 	bool c = false;
+	int max_indexChange= 0;
 	for (int i = 0; i <= sig_end + 1; i++) {
 		startNumber[i] = endNumber[i];//increment the start number by 1
 
+		if (c && !endNumber[i])
+			max_indexChange = i;
 
 		bool val = ((endNumber[i] ^ one_binary[i]) ^ c); // c is carry
 		c = ((endNumber[i] & one_binary[i]) | (endNumber[i] & c)) | (one_binary[i] & c);
+		
+
+
 		endNumber[i] = val;//increment the end number by 1
 	}
 
@@ -34,7 +40,7 @@ void add_one() {
 	if (endNumber[sig_end + 1])
 		sig_end++;
 
-
+	return 1 << max_indexChange;
 }
 
 int convertToBinary(unsigned long long n, bool arr[], int pos)
@@ -54,7 +60,8 @@ int convertToBinary(unsigned long long n, bool arr[], int pos)
 
 unsigned long long getMaxDiff(unsigned long long start) {
 	
-	add_one();
+	
+	/*
 	unsigned long long max_change = start;
 	int max_sig = sig_start > sig_end ? sig_start : sig_end;
 	for (int i = max_sig; i >= 0; i--) {
@@ -69,7 +76,8 @@ unsigned long long getMaxDiff(unsigned long long start) {
 			}
 		}
 	}
-	return max_change;
+	*/
+	return add_one() + start;
 }
 
 
