@@ -16,7 +16,7 @@ bool endNumber[n_limit];
 bool difference[n_limit];
 
 
-int convertToBinary(unsigned long n, bool arr[], int pos)
+int convertToBinary(unsigned long long n, bool arr[], int pos)
 {
 	int p;
 	if (n / 2 != 0) {
@@ -31,19 +31,19 @@ int convertToBinary(unsigned long n, bool arr[], int pos)
 	return p;
 }
 
-unsigned long getMaxDiff(unsigned long start) {
+unsigned long long getMaxDiff(unsigned long long start) {
 	
 	int sig_start = convertToBinary(start, startNumber, 0);
 	int sig_end = convertToBinary(start + 1, endNumber, 0);
 	
-	long max_change = 0;
+	unsigned long long max_change = start;
 	int max_sig = sig_start > sig_end ? sig_start : sig_end;
 	for (int i = max_sig; i >= 0; i--) {
 		//difference[i] = startNumber[i] ^ endNumber[i];
 		if (startNumber[i] ^ endNumber[i]) {
 			if (!startNumber[i]) {
-				//add number
-				max_change = (1 << i);
+				//show number
+				max_change += unsigned long long(1 << i);
 			}
 			else {
 				break;
@@ -58,14 +58,17 @@ int main()
 {
 	
 
-	unsigned long a, b;
+	unsigned long long a, b;
 	while (cin >> a >> b) {
-
-		unsigned long max = 0;
-		for (unsigned long i = a; i < b; i++) {
-			unsigned long res = getMaxDiff(a);
-			if (a > max)
-				max = a;
+		if (a == b){
+			cout << a << "\n";
+			continue;
+		}
+		unsigned long long max = 0;
+		for (unsigned long long i = a; i < b; i++) {
+			unsigned long long res = getMaxDiff(i);
+			if (res > max)
+				max = res;
 		}
 		cout << max << "\n";
 	}
