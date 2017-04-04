@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <stdint.h>
 using namespace std;
-
+/*
 const int n_limit = 66;
 
 bool startNumber[n_limit];
@@ -61,31 +61,53 @@ int convertToBinary(unsigned long long n, bool arr[], int pos)
 unsigned long long getMaxDiff(unsigned long long start) {
 	
 	
-	/*
-	unsigned long long max_change = start;
-	int max_sig = sig_start > sig_end ? sig_start : sig_end;
-	for (int i = max_sig; i >= 0; i--) {
-		//difference[i] = startNumber[i] ^ endNumber[i];
-		if (startNumber[i] ^ endNumber[i]) {
-			if (!startNumber[i]) {
-				//show number
-				max_change += (1 << i);
-			}
-			else {
-				break;
-			}
-		}
-	}
-	*/
+	
 	return add_one() + start;
 }
 
 
+*/
 
+unsigned long long getFirstZero(unsigned long long n) {
+	int i = 0;
+	while (i < 66) {
+		if (!(n & (1 << i))) {
+			return 1 << i;
+		}
+		i++;
+	}
+	return 0;
+}
 
 int main()
 {
 	
+	unsigned long long a, b, candidate1, candidate2;
+	while (cin >> a >> b) {
+		if (a == b) {
+			cout << a << "\n";
+			continue;
+		}
+		int pos = floor(log(b) / log(2));
+		unsigned long long highest_precceding_multipleOf2 = (1 << pos);
+		candidate1 = 0;
+		candidate2 = 0;
+		if (highest_precceding_multipleOf2  > a) {
+			candidate1 =  2 * highest_precceding_multipleOf2 - 1;
+		}
+		candidate2 = (b - 1) + getFirstZero(b - 1);
+		if (candidate1 > candidate2)
+			cout << candidate1 << "\n";
+		else
+			cout << candidate2 << "\n";
+
+
+
+	}
+
+
+
+	/*
 	one_binary[0] = true;
 	unsigned long long a, b;
 	while (cin >> a >> b) {
@@ -109,7 +131,7 @@ int main()
 
 		cout << max << "\n";
 	}
-
+	*/
 
     return 0;
 }
