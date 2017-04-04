@@ -9,12 +9,33 @@
 #include <stdint.h>
 using namespace std;
 
-const int n_limit = 64;
+const int n_limit = 66;
 
 bool startNumber[n_limit];
 bool endNumber[n_limit];
 bool difference[n_limit];
+int sig_start, sig_end;
 
+bool one_binary[n_limit];
+
+void add_one() {
+
+	bool c = false;
+	for (int i = 0; i <= sig_end + 1; i++) {
+		startNumber[i] = endNumber[i];//increment the start number by 1
+
+
+		bool val = ((endNumber[i] ^ one_binary[i]) ^ c); // c is carry
+		c = ((endNumber[i] & one_binary[i]) | (endNumber[i] & c)) | (one_binary[i] & c);
+		endNumber[i] = val;//increment the end number by 1
+	}
+
+	sig_start = sig_end;
+	if (endNumber[sig_end + 1])
+		sig_end++;
+
+
+}
 
 int convertToBinary(unsigned long long n, bool arr[], int pos)
 {
@@ -33,9 +54,7 @@ int convertToBinary(unsigned long long n, bool arr[], int pos)
 
 unsigned long long getMaxDiff(unsigned long long start) {
 	
-	int sig_start = convertToBinary(start, startNumber, 0);
-	int sig_end = convertToBinary(start + 1, endNumber, 0);
-	
+	add_one();
 	unsigned long long max_change = start;
 	int max_sig = sig_start > sig_end ? sig_start : sig_end;
 	for (int i = max_sig; i >= 0; i--) {
@@ -43,7 +62,7 @@ unsigned long long getMaxDiff(unsigned long long start) {
 		if (startNumber[i] ^ endNumber[i]) {
 			if (!startNumber[i]) {
 				//show number
-				max_change += unsigned long long(1 << i);
+				max_change += (1 << i);
 			}
 			else {
 				break;
@@ -54,22 +73,32 @@ unsigned long long getMaxDiff(unsigned long long start) {
 }
 
 
+
+
 int main()
 {
 	
-
+	one_binary[0] = true;
 	unsigned long long a, b;
 	while (cin >> a >> b) {
 		if (a == b){
 			cout << a << "\n";
 			continue;
 		}
+
+		sig_end = convertToBinary(a, endNumber, 0);
+		
 		unsigned long long max = 0;
 		for (unsigned long long i = a; i < b; i++) {
+
 			unsigned long long res = getMaxDiff(i);
 			if (res > max)
 				max = res;
 		}
+
+		for (int i = 0; i <= sig_end; i++)
+			endNumber[i] = false;
+
 		cout << max << "\n";
 	}
 
