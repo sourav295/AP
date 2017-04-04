@@ -13,60 +13,64 @@ const int n_limit = 64;
 
 bool startNumber[n_limit];
 bool endNumber[n_limit];
+bool difference[n_limit];
 
-void loadDest(long dest) {
-	int i;
-	for (i = 0; i < n_limit; ++i) {  // assuming a 32 bit int
-		endNumber[i]   = dest & (1 << i) ? 1 : 0;
+
+int convertToBinary(unsigned long n, bool arr[], int pos)
+{
+	int p;
+	if (n / 2 != 0) {
+		arr[pos] = n % 2;
+		p = convertToBinary(n / 2, arr, pos + 1);
 	}
+	else {
+		arr[pos] = n % 2;
+		p = pos;
+	}
+
+	return p;
 }
 
-void loadSrc(long src) {
-	int i;
-
-
-	for (i = 0; i < n_limit; ++i) {  // assuming a 32 bit int
-		startNumber[i] = src & (1 << i) ? 1 : 0;
+unsigned long getMaxDiff(unsigned long start) {
+	
+	int sig_start = convertToBinary(start, startNumber, 0);
+	int sig_end = convertToBinary(start + 1, endNumber, 0);
+	
+	long max_change = 0;
+	int max_sig = sig_start > sig_end ? sig_start : sig_end;
+	for (int i = max_sig; i >= 0; i--) {
+		//difference[i] = startNumber[i] ^ endNumber[i];
+		if (startNumber[i] ^ endNumber[i]) {
+			if (!startNumber[i]) {
+				//add number
+				max_change = (1 << i);
+			}
+			else {
+				break;
+			}
+		}
 	}
+	return max_change;
 }
 
 
 int main()
 {
-	loadDest(8);
-	loadSrc(7);
-	cout << startNumber[0];
+	
 
-	int sig_bit = n_limit - 1;
-
-	for (int i = sig_bit; i >= 0; i--) {
-		if (startNumber[i] == true) {
-			sig_bit = i;
-			break;
-		}
-	}
-
-
-
-
-
-	int x = 10;
-	/*
-	uint64_t a, b, c, d;
+	unsigned long a, b;
 	while (cin >> a >> b) {
-		
-		c = a ^ b;
-		d = 0;
 
-		int i = 0;
-		while (c >>= 1) {
-			d += (1 << i);
-			i++;
+		unsigned long max = 0;
+		for (unsigned long i = a; i < b; i++) {
+			unsigned long res = getMaxDiff(a);
+			if (a > max)
+				max = a;
 		}
-		printf("%" PRIu64 "\n", (d | b));
-		//printf("%llu\n", );
+		cout << max << "\n";
 	}
-	*/
+
+
     return 0;
 }
 
