@@ -6,7 +6,11 @@
 #include <stdio.h>
 #include <iostream>
 #include <cstdint>
+#include <math.h>
 #include <stdint.h>
+#include<string>
+#include <sstream>
+#include <limits>
 using namespace std;
 /*
 const int n_limit = 66;
@@ -83,7 +87,11 @@ int main()
 {
 	
 	unsigned long long a, b, candidate1, candidate2;
-	while (cin >> a >> b) {
+	string line;
+	while (getline(cin , line)) {
+		stringstream ss(line);
+		ss >> a;
+		ss >> b;
 		if (a == b) {
 			cout << a << "\n";
 			continue;
@@ -105,7 +113,7 @@ int main()
 
 	}
 
-
+	
 
 	/*
 	one_binary[0] = true;
