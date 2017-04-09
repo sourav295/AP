@@ -2,28 +2,22 @@
 //
 
 #define _CRT_SECURE_NO_WARNINGS
-#include <inttypes.h>
 #include <stdio.h>
 #include <iostream>
-#include <cstdint>
-#include <math.h>
-#include <stdint.h>
+#include <vector>
+#include <utility>
+#include <queue> 
 #include<string>
-#include <sstream>
+#include <stack>
 #include <limits>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <cmath>
+#include<math.h>
 using namespace std;
 
 
-unsigned long long getFirstZero(unsigned long long n) {
-	int i = 0;
-	while (i < 66) {
-		if (!(n & (1 << i))) {
-			return 1 << i;
-		}
-		i++;
-	}
-	return 0;
-}
 
 unsigned long long getHighestSum(unsigned long long x, unsigned long long y) {
 	unsigned long long xor, x_copy, sum;
