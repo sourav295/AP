@@ -20,12 +20,12 @@ using namespace std;
 
 
 unsigned long long getHighestSum(unsigned long long x, unsigned long long y) {
-	unsigned long long xor, x_copy, sum;
+	unsigned long long bitsToChange, x_copy, sum;
 	x_copy = x;
 	int highest_hideFlip = -1; 
-	xor = x ^ y;
-	for (int i = 0; xor != 0; xor >>= 1, x >>= 1, i++) {//shift towards left
-		bool change   = xor & 1;
+	bitsToChange = x ^ y;
+	for (int i = 0; bitsToChange != 0; bitsToChange >>= 1, x >>= 1, i++) {//shift towards left
+		bool change   = bitsToChange & 1;
 		bool hideFlip = change && (x & 1);
 
 		if (hideFlip){
