@@ -19,8 +19,8 @@ using namespace std;
 
 
 
-uint64_t getHighestSum(uint64_t x, uint64_t y) {
-	uint64_t xor, x_copy, sum;
+unsigned long long getHighestSum(unsigned long long x, unsigned long long y) {
+	unsigned long long xor, x_copy, sum;
 	x_copy = x;
 	int highest_hideFlip = -1; 
 	xor = x ^ y;
@@ -34,7 +34,7 @@ uint64_t getHighestSum(uint64_t x, uint64_t y) {
 		
 	}
 	
-	uint64_t noChange_mask = 0;
+	unsigned long long noChange_mask = 0;
 	if(highest_hideFlip > -1)
 		noChange_mask = (1 << (highest_hideFlip+1)) - 1;
 	//cout << noChange_mask << "\n";
@@ -46,7 +46,7 @@ uint64_t getHighestSum(uint64_t x, uint64_t y) {
 int main()
 {
 	
-	uint64_t a, b, candidate1, candidate2;
+	unsigned long long a, b, candidate1, candidate2;
 	string line;
 	while (getline(cin , line)) {
 		stringstream ss(line);
@@ -57,7 +57,7 @@ int main()
 			continue;
 		}
 		int pos = floor(log(b) / log(2));
-		uint64_t highest_precceding_multipleOf2 = (1 << pos);
+		unsigned long long highest_precceding_multipleOf2 = (1 << pos);
 		candidate1 = 0;
 		candidate2 = 0;
 		if (highest_precceding_multipleOf2  > a) {
