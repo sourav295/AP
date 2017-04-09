@@ -25,6 +25,30 @@ unsigned long long getFirstZero(unsigned long long n) {
 	return 0;
 }
 
+unsigned long long getHighestSum(unsigned long long x, unsigned long long y) {
+	unsigned long long xor, x_copy, sum;
+	x_copy = x;
+	int highest_hideFlip = -1; 
+	xor = x ^ y;
+	for (int i = 0; xor != 0; xor >>= 1, x >>= 1, i++) {//shift towards left
+		bool change   = xor & 1;
+		bool hideFlip = change && (x & 1);
+
+		if (hideFlip){
+			highest_hideFlip = i;
+		}
+		
+	}
+	
+	unsigned long long noChange_mask = 0;
+	if(highest_hideFlip > -1)
+		noChange_mask = (1 << (highest_hideFlip+1)) - 1;
+	//cout << noChange_mask << "\n";
+	sum =  (x_copy & noChange_mask) | (y & (~noChange_mask));
+	return sum;
+}
+
+
 int main()
 {
 	
@@ -45,16 +69,14 @@ int main()
 		if (highest_precceding_multipleOf2  > a) {
 			candidate1 =  2 * highest_precceding_multipleOf2 - 1;
 		}
-		candidate2 = (b - 1) + getFirstZero(b - 1);
+		candidate2 = getHighestSum(b-1, b);
 		if (candidate1 > candidate2)
 			cout << candidate1 << "\n";
 		else
 			cout << candidate2 << "\n";
 
-
-
 	}
-
+	
     return 0;
 }
 
