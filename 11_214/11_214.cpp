@@ -33,14 +33,17 @@ int main()
 			cout << 0 << "\n";
 		}
 		else {
-			
-			for (y = x; true; y++) {
+			if(x%2 == 0){
+				x += 1;
+			}
+
+			for (y = x; true; y+=2) {
 				if (isPrime(y)){
 					upper_prime = y;
 					break;
 				}
 			}
-			for (y = x; true; y--) {
+			for (y = x-2; true; y-=2) {
 				if (isPrime(y)) {
 					lower_prime = y;
 					break;
