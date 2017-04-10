@@ -15,9 +15,7 @@ using namespace std;
 
 const int c_limit = 47;
 //const int n_limit = 1000000000;
-vector<pair<int, int>> researved(c_limit);
-vector<int> rowBeingJudged(c_limit + 2);
-int possibilities;
+
 
 int calc_possibilities(int start, int end) {
 
@@ -35,8 +33,11 @@ int main()
 	cin >> n_test;
 	for (int test = 0; test < n_test; test++) {
 
+		vector<pair<int, int>> researved(c_limit);
+		vector<int> rowBeingJudged(c_limit + 2);
+
 		cin >> n >> m >> c;
-		possibilities = 0;
+		int possibilities = 0;
 
 		int input, n_uniqueRows;
 		for (int i = 0; i < c; i++) {
@@ -76,7 +77,7 @@ int main()
 		}
 		possibilities += (m - 1)*(n - n_uniqueRows);
 
-		cout << "Case #"<<test<<": "<<possibilities<<"\n";
+		cout << "Case #"<<test+1<<": "<<possibilities<<"\n";
 
 
 
