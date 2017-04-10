@@ -37,7 +37,7 @@ int main()
 		vector<int> rowBeingJudged(c_limit + 2);
 
 		cin >> n >> m >> c;
-		int possibilities = 0;
+		unsigned long long possibilities = 0;
 
 		int input, n_uniqueRows;
 		for (int i = 0; i < c; i++) {
