@@ -4,7 +4,7 @@
 #include <vector>
 #include <utility>
 #include <queue> 
-#include<string>
+#include <string>
 #include <stack>
 #include <limits>
 #include <sstream>
@@ -12,50 +12,69 @@
 #include <iomanip>
 using namespace std;
 
-bool isPrime(unsigned long int x) {
-	unsigned long int x_half = x / 2;
-	bool isPreime = true;
-	
-	for (int i = 2; i < x_half; i++)
-		if (x%i == 0)
-			return false;
-	return true;
-}
+const int n_limit = 1299709;
+bool  flag[n_limit + 1];
+int   prime[n_limit + 1];
 
+void getPrime(int n){
+    
+	for (int i = 0; i <= n_limit; i++) {
+		flag[i] = true;
+	}
+
+    int  count = 0;
+    for (int i = 2; true; i++){
+		
+		if (flag[i] == true){
+			prime[count++] = i;
+			if (n < i)
+				break;
+		}
+					 
+		for( int j=0 ; j<count  &&  i*prime[j] <= n_limit; j++)	{
+			flag[i*prime[j]] = false;			    			    	                              
+			if (i%prime[j] == 0)
+				break;
+		}
+    }
+}
 
 int main()
 {
-	unsigned long int x, y, lower_prime, upper_prime;
-	while (cin >> x) {
-		if (x == 0)
+	queue<int> input;
+	int in, max_input;
+	max_input = 0;
+	while (cin >> in) {
+		
+		if (in == 0) {
 			break;
-		if (isPrime(x)) {
-			cout << 0 << "\n";
-		}
-		else {
-			if(x%2 == 0){
-				x += 1;
-			}
-
-			for (y = x; true; y+=2) {
-				if (isPrime(y)){
-					upper_prime = y;
-					break;
-				}
-			}
-			for (y = x-2; true; y-=2) {
-				if (isPrime(y)) {
-					lower_prime = y;
-					break;
-				}
-			}
-			cout << upper_prime - lower_prime << "\n";
 		}
 
 
-
+		if (in > max_input) {
+			max_input = in;
+		}
+		
+		input.push(in);
 	}
+	
+	getPrime(max_input);
 
+	for (input; !input.empty(); input.pop()) {
+		in = input.front();
+		int succeeding_prime, precceding_prime;
+		for (int i = in; true; i++)
+			if (flag[i]) {
+				succeeding_prime = i;
+				break;
+			}
+		for (int i = in; true; i--)
+			if (flag[i]) {
+				precceding_prime = i;
+				break;
+			}
+		cout << succeeding_prime - precceding_prime << "\n";
+	}
 
     return 0;
 }
