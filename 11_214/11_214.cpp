@@ -13,8 +13,8 @@
 using namespace std;
 
 const int n_limit = 1299709;
-bool  flag[n_limit + 1];
-int   prime[n_limit + 1];
+bool  *flag = new bool[n_limit + 1];
+int   *prime = new int[n_limit + 1];
 
 void getPrime(int n){
     
