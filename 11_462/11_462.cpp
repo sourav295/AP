@@ -19,13 +19,15 @@ long  prime[n_limit + 1];
 long count_prime;
 long primeNumbers_calculated;
 
-void getPrime(long n) {
 
+void getPrime(long n) {
+	
 	if (n <= primeNumbers_calculated)
 		return;
 	else
 		primeNumbers_calculated = n;//new value
-	
+
+
 
 	for (long i = 2; i <= n; i++) {
 
@@ -51,16 +53,37 @@ int main()
 
 	queue<long> input;
 	long in;
-	long half_input;
+	long half_input, best_p1;
 	
+	long p1, p2;
 	while (cin >> in) {
 		getPrime(in);
 		half_input = in / 2;
-		for (long i = 0; prime[i] <= half_input; i++) {
-			cout << prime[i] << "(" << in - prime[i] << ")\t";
+
+
+		best_p1 = -1;
+		//check special case, p1 = 1
+		if (flag[in - 1]) {
+			best_p1 = 1;
 		}
-		cout << "\n";
-	
+
+		for (long i = 0; prime[i] <= half_input; i++) {
+			
+			p1 = prime[i];
+			p2 = in - prime[i];
+			if (flag[p2]) {
+				//checks if p2 is indeed a prime number
+				best_p1 = p1;
+			}
+		}
+		
+		if (best_p1 == -1) {
+			cout <<in<<" is not the sum of two primes!\n";
+		}
+		else {
+			cout <<in<<" is the sum of "<<best_p1<<" and "<<in - best_p1<<".\n";
+		}
+
 	}
 
 	
