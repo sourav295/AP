@@ -29,17 +29,17 @@ int calc_possibilities(int start, int end) {
 int main()
 {
 	int n_test;
-	int n, m, c;
+	long n, m, c;
 	cin >> n_test;
 	for (int test = 0; test < n_test; test++) {
 
-		vector<pair<int, int>> researved(c_limit);
-		vector<int> rowBeingJudged(c_limit + 2);
+		vector<pair<long, long>> researved(c_limit);
+		vector<long> rowBeingJudged(c_limit + 2);
 
 		cin >> n >> m >> c;
 		unsigned long long possibilities = 0;
 
-		int input, n_uniqueRows;
+		long input, n_uniqueRows;
 		for (int i = 0; i < c; i++) {
 			cin >> input;
 			researved[i] = { input, 0 };
