@@ -10,19 +10,28 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
+#include <bitset>
+#include <math.h>
+#include <fstream>
 using namespace std;
 
-vector<bool> hasOnePower, shownInOutput;
+const unsigned long long n_limit = numeric_limits<unsigned long long>::max();
+bitset<64> flag(n_limit / 64);
 
 
 int main()
 {
-	unsigned long long n_limit = 1;
-	for (int i = 1; i <= 64; i++) {
-		n_limit <<= 1;
-		cout <<i << " "<< n_limit << "\n";
-	}
+	cout << flag[0];
+	/*
+	unsigned long long x = 123;
+	unsigned long long d = pow(x, 2);
+	int times = log(n_limit) / log(x);
+	x = pow(x, 4);
 
+	for (int i = 4; i <= times; i += 2, x = x*d) {
+		cout << i << "-"<<x << "\n";
+	}
+	*/
     return 0;
 }
 
