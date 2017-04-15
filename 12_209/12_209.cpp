@@ -24,7 +24,7 @@ float distance(int ax1, int ay1, int ax2, int ay2) {
 }
 
 struct Line{
-	int x1, y1, x2, y2;
+	long long x1, y1, x2, y2;
 
 	float dist;
 
@@ -38,14 +38,14 @@ struct Line{
 	}
 	Line() {}
 
-	int reltivePosition(Line other) {
-		int x3 = other.x1;
-		int x4 = other.x2;
-		int y3 = other.y1;
-		int y4 = other.y2;
+	long long reltivePosition(Line other) {
+		long long x3 = other.x1;
+		long long x4 = other.x2;
+		long long y3 = other.y1;
+		long long y4 = other.y2;
 
-		int first_angle  = (x2*y3 - x3*y2) - x1*(y3 - y2) + y1*(x3 - x2);
-		int second_angle = (x2*y4 - x4*y2) - x1*(y4 - y2) + y1*(x4 - x2);
+		long long first_angle  = (x2*y3 - x3*y2) - x1*(y3 - y2) + y1*(x3 - x2);
+		long long second_angle = (x2*y4 - x4*y2) - x1*(y4 - y2) + y1*(x4 - x2);
 
 		return first_angle * second_angle;
 	}
@@ -79,15 +79,7 @@ bool checkBoundary(Line l1, Line l2) {
 			if (all_points[i] == all_points[j])
 				return true;
 	
-	/*
-	if (l1.x1 == l2.x1 && l1.y1 == l2.y1)
-		return true;
-	if (l1.x1 == l2.x2 && l1.y1 == l2.y2)
-		return true;
-	if (l1.x2 == l2.x1 && l1.y2 == l2.y1)
-		return true;
-	if (l1.x2 == l2.x2 && l1.y2 == l2.y2)
-		return true;*/
+	
 	return false;
 }
 
@@ -98,8 +90,8 @@ bool isIntersecting(Line l1, Line l2) {
 	if (checkBoundary(l1, l2))
 		return true;
 
-	int rel_pos1 = l1.reltivePosition(l2);
-	int rel_pos2 = l2.reltivePosition(l1);
+	long long rel_pos1 = l1.reltivePosition(l2);
+	long long rel_pos2 = l2.reltivePosition(l1);
 	if ((rel_pos1 <= 0 && rel_pos2 <= 0) && !(rel_pos1 == 0 && rel_pos2 == 0))//one of them can be 0, not both
 		return true;
 
