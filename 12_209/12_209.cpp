@@ -104,10 +104,10 @@ bool isIntersecting(Line l1, Line l2) {
 	if ((rel_pos1 <= 0 && rel_pos2 <= 0) && !(rel_pos1 == 0 && rel_pos2 == 0))//one of them can be 0, not both
 		return true;
 
-	bool distance_ok  = (maxDistancebtwLines(l1, l2) <= (l1.dist + l2.dist));
-	bool are_colinear = isColinear(l1, l2);
+	bool distance_ok  = (maxDistancebtwLines(l1, l2) < (l1.dist + l2.dist));
+	//bool are_colinear = isColinear(l1, l2);
 
-	if (rel_pos1 == 0 && rel_pos2 == 0 && are_colinear && distance_ok) {
+	if (rel_pos1 == 0 && rel_pos2 == 0 && distance_ok) {
 		return true;
 	}
 	return false;
