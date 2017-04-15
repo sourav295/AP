@@ -55,13 +55,12 @@ struct Line{
 float maxDistancebtwLines(Line l1, Line l2) {
 
 	vector<pair<int, int>> all_points;
-
 	all_points.push_back({ l1.x1, l1.y1 });
 	all_points.push_back({ l1.x2, l1.y2 });
 	all_points.push_back({ l2.x1, l2.y1 });
 	all_points.push_back({ l2.x2, l2.y2 });
 
-	sort(all_points.begin(), all_points.end());
+	sort(all_points.begin(), all_points.begin() + 4);
 
 	return distance(all_points[0].first, all_points[0].second, all_points[3].first, all_points[3].second);
 }
@@ -75,11 +74,10 @@ bool checkBoundary(Line l1, Line l2) {
 	all_points.push_back({ l2.x1, l2.y1 });
 	all_points.push_back({ l2.x2, l2.y2 });
 
-	sort(all_points.begin(), all_points.end());
-
 	for (int i = 0; i < 3; i++)
-		if (all_points[i] == all_points[i + 1])
-			return true;
+		for(int j = i + 1; j < 4; j++)
+			if (all_points[i] == all_points[j])
+				return true;
 	
 	/*
 	if (l1.x1 == l2.x1 && l1.y1 == l2.y1)
