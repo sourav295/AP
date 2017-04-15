@@ -66,8 +66,8 @@ float maxDistancebtwLines(Line l1, Line l2) {
 	return distance(all_points[0].first, all_points[0].second, all_points[3].first, all_points[3].second);
 }
 
-bool isColinear(Line l1, Line l2) {
-
+bool checkBoundary(Line l1, Line l2) {
+	
 	vector<pair<int, int>> all_points;
 
 	all_points.push_back({ l1.x1, l1.y1 });
@@ -77,10 +77,11 @@ bool isColinear(Line l1, Line l2) {
 
 	sort(all_points.begin(), all_points.end());
 
-	return ((all_points[3].second - all_points[2].second) * (all_points[2].first - all_points[0].first) == (all_points[2].second - all_points[0].second) * (all_points[3].first - all_points[2].first));
-}
-
-bool checkBoundary(Line l1, Line l2) {
+	for (int i = 0; i < 3; i++)
+		if (all_points[i] == all_points[i + 1])
+			return true;
+	
+	/*
 	if (l1.x1 == l2.x1 && l1.y1 == l2.y1)
 		return true;
 	if (l1.x1 == l2.x2 && l1.y1 == l2.y2)
@@ -88,7 +89,7 @@ bool checkBoundary(Line l1, Line l2) {
 	if (l1.x2 == l2.x1 && l1.y2 == l2.y1)
 		return true;
 	if (l1.x2 == l2.x2 && l1.y2 == l2.y2)
-		return true;
+		return true;*/
 	return false;
 }
 
