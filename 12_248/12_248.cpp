@@ -90,7 +90,7 @@ int main()
 	
 	for (int t = 0; t < test; t++) {
 
-		int xstart, ystart, xend, yend, xleft, ytop, xright, ybottom;
+		long long xstart, ystart, xend, yend, xleft, ytop, xright, ybottom;
 		cin >> xstart >> ystart >> xend >> yend >> xleft >> ytop >> xright >> ybottom;
 
 
