@@ -108,11 +108,11 @@ struct Line {
 	double reltivePosition(Line other) {
 		double x3 = other.x1;
 		double x4 = other.x2;
-		double y3 = other.y1;
-		double y4 = other.y2;
+		long long y3 = other.y1;
+		long long y4 = other.y2;
 
-		double first_angle = (x2*y3 - x3*y2) - x1*(y3 - y2) + y1*(x3 - x2);
-		double second_angle = (x2*y4 - x4*y2) - x1*(y4 - y2) + y1*(x4 - x2);
+		long long first_angle = (x2*y3 - x3*y2) - x1*(y3 - y2) + y1*(x3 - x2);
+		long long second_angle = (x2*y4 - x4*y2) - x1*(y4 - y2) + y1*(x4 - x2);
 
 		return first_angle * second_angle;
 	}
@@ -138,8 +138,8 @@ float maxDistancebtwLines(Line l1, Line l2) {
 
 bool isIntersecting(Line l1, Line l2) {
 
-	double rel_pos1 = l1.reltivePosition(l2);
-	double rel_pos2 = l2.reltivePosition(l1);
+	long long rel_pos1 = l1.reltivePosition(l2);
+	long long rel_pos2 = l2.reltivePosition(l1);
 	if ((rel_pos1 <= 0 && rel_pos2 <= 0) && !(rel_pos1 == 0 && rel_pos2 == 0))//one of them can be 0, not both
 		return true;
 
@@ -160,7 +160,7 @@ int main()
 	
 	for (int t = 0; t < test; t++) {
 
-		double xstart, ystart, xend, yend, xleft, ytop, xright, ybottom;
+		long long xstart, ystart, xend, yend, xleft, ytop, xright, ybottom;
 		cin >> xstart >> ystart >> xend >> yend >> xleft >> ytop >> xright >> ybottom;
 
 
