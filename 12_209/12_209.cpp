@@ -80,8 +80,25 @@ bool isColinear(Line l1, Line l2) {
 	return ((all_points[3].second - all_points[2].second) * (all_points[2].first - all_points[0].first) == (all_points[2].second - all_points[0].second) * (all_points[3].first - all_points[2].first));
 }
 
+bool checkBoundary(Line l1, Line l2) {
+	if (l1.x1 == l2.x1 && l1.y1 == l2.y1)
+		return true;
+	if (l1.x1 == l2.x2 && l1.y1 == l2.y2)
+		return true;
+	if (l1.x2 == l2.x1 && l1.y2 == l2.y1)
+		return true;
+	if (l1.x2 == l2.x2 && l1.y2 == l2.y2)
+		return true;
+	return false;
+}
+
+
 
 bool isIntersecting(Line l1, Line l2) {
+	
+	if (checkBoundary(l1, l2))
+		return true;
+
 	int rel_pos1 = l1.reltivePosition(l2);
 	int rel_pos2 = l2.reltivePosition(l1);
 	if ((rel_pos1 <= 0 && rel_pos2 <= 0) && !(rel_pos1 == 0 && rel_pos2 == 0))//one of them can be 0, not both
