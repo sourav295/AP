@@ -18,8 +18,8 @@ const int rect_n_sides = 4;
 
 struct Point
 {
-	int x;
-	int y;
+	long long x;
+	long long y;
 
 	Point(int ax, int ay) {
 		x = ax;
@@ -54,7 +54,7 @@ bool sameSegment(Point p, Point q, Point r)
 
 int orient(Point p, Point q, Point r)
 {
-	int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+	long long val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 	if (val == 0) return 0;
 	return (val > 0) ? 1 : 2; // clock or counterclock wise
 }
