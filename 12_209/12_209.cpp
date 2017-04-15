@@ -10,6 +10,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
+#include <math.h>
 using namespace std;
 
 const int m_limit = 100;
@@ -86,10 +87,10 @@ bool isIntersecting(Line l1, Line l2) {
 	if ((rel_pos1 <= 0 && rel_pos2 <= 0) && !(rel_pos1 == 0 && rel_pos2 == 0))//one of them can be 0, not both
 		return true;
 
-	bool distance_ok  = (maxDistancebtwLines(l1, l2) <= l1.dist + l2.dist);
+	bool distance_ok  = (maxDistancebtwLines(l1, l2) <= (l1.dist + l2.dist));
 	bool are_colinear = isColinear(l1, l2);
 
-	if (rel_pos1 == 0 && rel_pos2 == 0 && distance_ok && are_colinear) {
+	if (rel_pos1 == 0 && rel_pos2 == 0 && are_colinear && distance_ok) {
 		return true;
 	}
 	return false;
