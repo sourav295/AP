@@ -17,8 +17,8 @@ using namespace std;
 /*
 struct Point
 {
-	long long x;
-	long long y;
+	double x;
+	double y;
 
 	Point(int ax, int ay) {
 		x = ax;
@@ -53,7 +53,7 @@ bool sameSegment(Point p, Point q, Point r)
 
 int orient(Point p, Point q, Point r)
 {
-	long long val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+	double val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 	if (val == 0) return 0;
 	return (val > 0) ? 1 : 2; // clock or counterclock wise
 }
@@ -91,7 +91,7 @@ float distance(int ax1, int ay1, int ax2, int ay2) {
 }
 
 struct Line {
-	long long x1, y1, x2, y2;
+	double x1, y1, x2, y2;
 
 	float dist;
 
@@ -105,14 +105,14 @@ struct Line {
 	}
 	Line() {}
 
-	long long reltivePosition(Line other) {
-		long long x3 = other.x1;
-		long long x4 = other.x2;
-		long long y3 = other.y1;
-		long long y4 = other.y2;
+	double reltivePosition(Line other) {
+		double x3 = other.x1;
+		double x4 = other.x2;
+		double y3 = other.y1;
+		double y4 = other.y2;
 
-		long long first_angle = (x2*y3 - x3*y2) - x1*(y3 - y2) + y1*(x3 - x2);
-		long long second_angle = (x2*y4 - x4*y2) - x1*(y4 - y2) + y1*(x4 - x2);
+		double first_angle = (x2*y3 - x3*y2) - x1*(y3 - y2) + y1*(x3 - x2);
+		double second_angle = (x2*y4 - x4*y2) - x1*(y4 - y2) + y1*(x4 - x2);
 
 		return first_angle * second_angle;
 	}
@@ -138,8 +138,8 @@ float maxDistancebtwLines(Line l1, Line l2) {
 
 bool isIntersecting(Line l1, Line l2) {
 
-	long long rel_pos1 = l1.reltivePosition(l2);
-	long long rel_pos2 = l2.reltivePosition(l1);
+	double rel_pos1 = l1.reltivePosition(l2);
+	double rel_pos2 = l2.reltivePosition(l1);
 	if ((rel_pos1 <= 0 && rel_pos2 <= 0) && !(rel_pos1 == 0 && rel_pos2 == 0))//one of them can be 0, not both
 		return true;
 
@@ -160,7 +160,7 @@ int main()
 	
 	for (int t = 0; t < test; t++) {
 
-		long long xstart, ystart, xend, yend, xleft, ytop, xright, ybottom;
+		double xstart, ystart, xend, yend, xleft, ytop, xright, ybottom;
 		cin >> xstart >> ystart >> xend >> yend >> xleft >> ytop >> xright >> ybottom;
 
 
