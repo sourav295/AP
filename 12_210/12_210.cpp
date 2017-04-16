@@ -94,9 +94,6 @@ int main()
 			N--;
 		}
 
-
-		cin >> minus1;
-
 		sort(input.begin(), input.begin() + N);
 		for (int i = 0; i < N; i++) {
 			points[i] = Point(input[i].second, input[i].first);
@@ -123,6 +120,7 @@ int main()
 		cout << p0.x << " " << p0.y << "\n";
 
 		if (k != K - 1) {
+			cin >> minus1;
 			cout << "-1\n";
 		}
 	}
