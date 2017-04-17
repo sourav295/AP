@@ -18,7 +18,7 @@ char x[100001];
 int main()
 {
 	string input;
-	while (cin >> input) {
+	while (getline(cin, input)) {
 
 		int n = input.length();
 		strcpy(x, input.c_str());
