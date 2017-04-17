@@ -51,12 +51,13 @@ int main()
 	while (getline(cin, line)) {
 		stringstream ss(line);
 		while (ss >> word) {
+			
 			while (!isalnum(word[0])) {
 				word = word.substr(1, word.length());
 			}
 
 			while (!isalnum(word[word.length()- 1])) {
-				word = word.substr(0, word.length()-2);
+				word = word.substr(0, word.length()-1);
 			}
 			
 			if (max_wordSize < word.length())
@@ -72,7 +73,8 @@ int main()
 	);
 	
 	for (int i = 0; i < allwords.size(); i++)
-		cout << allwords[i].text << "\n";
+		if(i == 0 || (i > 0 && allwords[i].text != allwords[i-1].text))
+			cout << allwords[i].text << "\n";
 
 
     return 0;
