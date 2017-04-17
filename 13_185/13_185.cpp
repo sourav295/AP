@@ -41,7 +41,8 @@ struct Word{
 
 
 vector<Word> allwords;
-
+int pos = 0;
+bool isAlphabeticallySmaller(const Word& x, const Word& y) { return x.w[pos]< y.w[pos]; }
 
 int main()
 {
@@ -66,11 +67,16 @@ int main()
 		}
 	}
 
+	/*
 	for (int pos = max_wordSize - 1; pos >= 0; pos--)
 		sort(allwords.begin(), allwords.end(),
 			[pos](const Word& x, const Word& y)
 					{return (x.w[pos] < y.w[pos]);}
 	);
+	*/
+
+	for (pos = max_wordSize - 1; pos >= 0; pos--)
+		sort(allwords.begin(), allwords.end(), isAlphabeticallySmaller);
 	
 	for (int i = 0; i < allwords.size(); i++)
 		if(i == 0 || (i > 0 && allwords[i].text != allwords[i-1].text))
