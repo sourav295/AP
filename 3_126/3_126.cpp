@@ -11,14 +11,34 @@
 #include <limits>
 using namespace std;
 
-int minDistance(int dist[], bool sptSet[])
+const int n = 20;
+bool world[n][n];
+int dist[n];
+bool sptSet[n];
+
+pair<int, int> input[100];
+int output[100];
+
+bool srcExist(int srcId, int lastInputIndex) {
+	bool ex = false;
+	for (int i = 0; i < lastInputIndex; i++)
+		if (input[i].first == srcId)
+			return true;
+	return false;
+}
+
+
+int minDistance()
 {
 	// Initialize min value
-	int min = INT_MAX, min_index;
+	int min = numeric_limits<int>::max();
+	int min_index;
 
-	for (int v = 0; v < V; v++)
-		if (sptSet[v] == false && dist[v] <= min)
-			min = dist[v], min_index = v;
+	for (int v = 0; v < n; v++)
+		if (sptSet[v] == false && dist[v] <= min) {
+			min = dist[v];
+			min_index = v;
+		}
 
 	return min_index;
 }
@@ -26,12 +46,8 @@ int minDistance(int dist[], bool sptSet[])
 
 
 
-int dijkstra(Country world[], int src, int dest)
-{
-	const int n = 20;
-	int dist[n];
-	bool sptSet[n];
-	
+int dijkstra(int src)
+{	
 	for (int i = 0; i < n; i++){
 		dist[i] = numeric_limits<int>::max();
 		sptSet[i] = false;
@@ -41,316 +57,82 @@ int dijkstra(Country world[], int src, int dest)
 
 	for (int count = 0; count < n; count++)
 	{
-		int u = minDistance(dist, sptSet);
-		
-		if (dest == u)
-			return dist[u];
-		
+		int u = minDistance();
 		sptSet[u] = true;
-		Country c = world[u];
 		
-		for (int i = 0; i < c.neighbour_id.size; i++) {
-			int other_id = c.neighbour_id[i];
-			if (!sptSet[other_id] && dist[u] != numeric_limits<int>::max() && dist[u] + 1 < dist[other_id])
-				dist[other_id] = dist[u] + 1;
-		}
+		for (int v = 0; v < n; v++)
+			if (!sptSet[v] && world[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + world[u][v] < dist[v])
+				dist[v] = dist[u] + 1;
 	}
 
 	return 0;
 }
 
-
-struct Country {
-	vector<int> neighbour_id;
-};
-
-int main() {
-	Country world[20];
-	string line;
-	
-	int count = 1;
-	while (getline(cin, line)) {
-		
-		//init the country
-		if (count == 1)
-			for (int i = 0; i < 20; i++)
-				world[i] = Country();
-		//read the 19 neighbour data lines
-		if (1 <= count && count <= 19) {
-			stringstream ss(line);
-			int degree;
-			ss >> degree;
-
-			for (int i = 0; i < degree; i++) {
-				int nodeA = count-1;
-				int nodeB;
-				ss >> nodeB;
-				nodeB--;
-				world[nodeA].neighbour_id.push_back(nodeB);
-				world[nodeB].neighbour_id.push_back(nodeA);
-			}
-		}
-
-		count++;
-		//execute
-		if (count == 20){
-			//get src and dest
-			int testCases;
-			cin >> testCases;
-			for (int i = 0; i < testCases; i++) {
-				int src, dest;
-				cin >> src;
-				cin >> dest;
-				src--;
-				dest--;
-
-				Country copy_world[20];
-				for(int j = 0; j < 20; j++)
-					copy_world[j] = world[j];
-
-				int dist = dijkstra(copy_world, src, dest);
-
-
-			}
-
-
-
-			count = 1;
-		}
-
-	}
+void clearWorld() {
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			world[i][j] = false;
 }
 
 
+int main() {
+	int count = 0;
+	int test  = 0;
 
+	string line;
+	clearWorld();
 
+	int N, x, y;
 
-/*
-struct Country
-{
-	int id = 0;
-	int dist_src = 20;
-	queue<int> all_neighbours;
-
-	void insert_neighbour(int id) {
-		//cout << (*neighbour).dist_src;
-		all_neighbours.push(id);
-	}
-
-	Country(int identity) {
-		id = identity;
-	}
-
-	Country() {}
-
-	void displayNeighbours() {
-		queue<int> temp = all_neighbours;
-		for (temp; !temp.empty(); temp.pop()) {
-			cout <<","<< temp.front();
-		}
-	}
-	
-};
-
-struct CompareDistance {
-	bool operator()(Country const & c1, Country const & c2) const {
-		return c1.dist_src < c2.dist_src;
-	}
-}comparator_distance;
-
-struct World {
-
-	Country countries[20];
-
-	World() {
-		for (int i = 0; i < 20; i++) {
-			countries[i] = (Country(i + 1));
-		}
-	}
-
-	Country findCountryById(int id) {
-		return countries[id - 1];
-	}
-
-	void constructGraph(queue<string> graphInput) {
+	while (getline(cin, line)) {
 		
-		int curr_id = 1;
-		for (graphInput; !graphInput.empty(); graphInput.pop()) {
-			//cout << graphInput.front() << "\n";
-			readInputLine(graphInput.front(), curr_id);
-			curr_id++;
-			//cout << "\n=======\n";
-		}
-		
-	}
+		stringstream ss(line);
+		int n_neightbours;
+		ss >> n_neightbours;
 
-	void linkCountries(Country *a, Country *b) {
-		(*a).insert_neighbour((*b).id);
-		(*b).insert_neighbour((*a).id);
-	}
-	
-	void connect(int c1_Id, int c2_Id) {
-		linkCountries(&(countries[c1_Id-1]), &(countries[c2_Id-1]));
-	}
-
-	void readInputLine(string input, int curr_id) {
-		int n = input.at(0) - '0';
-		int len = input.length();
-		int pos = 2;
-		int hit = 0;
-		
-		if (curr_id == 18) {
-			cout << "";
+		int neightbour;
+		for (int i = 0; i < n_neightbours; i++) {
+			ss >> neightbour;
+			neightbour--;
+			world[neightbour][count] = true;
+			world[count][neightbour] = true;
 		}
 
-		while (pos < len && hit < n) {
-			if (isdigit(input.at(pos))) {
-				hit++;
-				if ((pos+1) < len && isdigit(input.at(pos + 1))) {
-					connect(curr_id, ((input.at(pos) - '0') * 10 + (input.at(pos + 1) - '0')));
-					pos++;
-				}
-				else{
-					connect(curr_id, ((input.at(pos) - '0')));
-				}
+
+		count++;
+		if (count == n - 1) {
+			
+			count = 0;
+
+			cin >> N;
+			for (int i = 0; i < N; i++) {
+				cin >> x >> y;
+				x--;
+				y--;
+				input[i] = { x, y };
 			}
-			pos++;
-		}
-	}
 
-	
-	void display() {
-		for (int i = 0; i < 20; i++) {
-			cout << "\n" << (i+1) << " "<< countries[i].dist_src;
-			countries[i].displayNeighbours();
-		}
-	}
-	
-
-	int execute(int src_id, int dest_id) {
-		
-		countries[src_id-1].dist_src = 0;
-		
-		vector<Country> country_vec;
-		for (int i = 0; i < 20; i++)
-			country_vec.push_back(countries[i]);
-		
-		while (!country_vec.empty()) {
-			//sort, extract min and pop front
-			sort(country_vec.begin(), country_vec.end(), comparator_distance);
-			Country u = (*country_vec.begin());
-			
-			if (u.id == dest_id)
-				return u.dist_src;
-			
-			
-			country_vec.erase(country_vec.begin());
-			int potential_dist = u.dist_src + 1;
-			
-			for (u.all_neighbours; !u.all_neighbours.empty(); u.all_neighbours.pop()) {
-				int v = u.all_neighbours.front();
-				//find vector
-				for (int i = 0; i < country_vec.size(); i++) {
-					if (country_vec[i].id == v) {
-						if (country_vec[i].dist_src > potential_dist) {
-							country_vec[i].dist_src = potential_dist;
-						}
-						break;
+			for (int i = 0; i < n; i++) {
+				if (srcExist(i, N)) {
+					dijkstra(i);
+					for (int j = 0; j < n; j++) {
+						if (input[j].first == i)
+							output[j] = dist[input[j].second];
 					}
 				}
 			}
+			
+			cout << "Test Set #" << ++test << "\n";
+			for (int i = 0; i < N; i++) {
+				printf("%2d to %2d: %2d\n", input[i].first + 1, input[i].second + 1, output[i]);
+			}
+			getline(cin, line);
+			clearWorld();
 		}
-
-		return NULL;
 	}
 
-};
 
-int main()
-{
-	string blank;
-	int test_case = 1;
 
-	while(true) {
-		
-		bool do_exit = false;
-		
-		queue<string> graphInput;
-		string line;
-
-		for (int i = 1; i <= 19; i++) {
-			if (!getline(cin, line)) {
-				do_exit = true;
-				break;
-			}
-			graphInput.push(line);
-		}
-
-		if (do_exit)
-			break;
-
-		int n;
-		cin >> n;
-		
-		printf("Test Set #%d", test_case);
-
-		for (int i = 0; i < n; i++) {
-			int srcid, destid;
-			cin >> srcid >> destid;
-
-			World w;
-			w.constructGraph(graphInput);
-			int requiredHops = w.execute(srcid, destid);
-			printf("%2d to %2d: %2d\n", srcid, destid, requiredHops);
-		}
-
-		test_case++;
-	} 
-	
-	
-    return 0;
 }
-*/
-/*
-
-Country c1;
-Country c2;
-
-linkCountries(&c1, &c2);
-
-Country * cTemp = c2.all_neighbours.front();
-
-cout << &c1 << " " << cTemp << "\n";
-
-cTemp = c1.all_neighbours.front();
-
-cout << &c2 << " " << cTemp;
 
 
-queue<string> graphInput;
-graphInput.push("1 3");
-graphInput.push("2 3 4");
-graphInput.push("3 4 5 6");
-graphInput.push("1 6");
-graphInput.push("1 7");
-graphInput.push("2 12 13");
-graphInput.push("1 8");
-graphInput.push("2 9 10");
-graphInput.push("1 11");
-graphInput.push("1 11");
-graphInput.push("2 12 17");
-graphInput.push("1 14");
-graphInput.push("2 14 15");
-graphInput.push("2 15 16");
-graphInput.push("1 16");
-graphInput.push("1 19");
-graphInput.push("2 18 19");
-graphInput.push("1 20");
-graphInput.push("1 20");
-
-World w;
-w.constructGraph(graphInput);
-cout<< w.execute(2, 9);
-
-
-*/
