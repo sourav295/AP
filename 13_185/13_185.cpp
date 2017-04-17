@@ -54,6 +54,32 @@ int main()
 	string word;
 	int max_wordSize = 0;
 	while (getline(cin, line)) {
+		
+		int i = 0;
+		while(i < line.length()) {
+			if (!isalnum(line[i])) {
+				i++;;
+				continue;
+			}
+			int start = i;
+			int end = i;
+			while (isalnum(line[end])) {
+				end++;
+			}
+			i = end;
+
+			word = line.substr(start, end - start);
+			if (max_wordSize < word.length())
+				max_wordSize = word.length();
+
+			if (uniqueWords.find(word) == uniqueWords.end()) {
+				allwords.push_back(Word(word));
+				uniqueWords[word] = true;
+			}
+		}
+		
+	}
+		/*
 		stringstream ss(line);
 		while (ss >> word) {
 			
@@ -74,7 +100,8 @@ int main()
 			}
 			
 		}
-	}
+		*/
+	
 
 	/*
 	for (int pos = max_wordSize - 1; pos >= 0; pos--)
