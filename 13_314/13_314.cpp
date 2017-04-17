@@ -13,7 +13,7 @@
 #include <iomanip>
 using namespace std;
 
-char x[100001];
+char* x = new char[100001];
 
 int main()
 {
@@ -21,8 +21,8 @@ int main()
 	while (getline(cin, input)) {
 
 		int n = input.length();
-		//strcpy(x, input.c_str());
-		string x = input;
+		strcpy(x, input.c_str());
+		
 		int i, j;
 
 		i = 0;
@@ -39,7 +39,7 @@ int main()
 				j--;
 			}else {
 				//reset
-				if (palBegin > -1)
+				if (palBegin > -1 && x[palBegin] == x[palBegin + 1])
 					i = palBegin;
 				j = n - 1;
 				found = false;
