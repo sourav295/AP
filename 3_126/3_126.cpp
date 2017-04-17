@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <sstream>
 #include <limits>
+#include <iomanip>
 using namespace std;
 
 const int n = 20;
@@ -122,16 +123,16 @@ int main() {
 				}
 			}
 			
-			if (test != 0)
-				cout << "\n";
-
-			cout << "Test Set #" << ++test;
+			cout << "Test Set #" << ++test << "\n";
 			for (int i = 0; i < N; i++) {
-				printf("\n%2d to %2d: %2d", input[i].first + 1, input[i].second + 1, output[i]);
+				printf("%2d to %2d: ", input[i].first + 1, input[i].second + 1);
+				cout << setprecision(2) << output[i]<<"\n";
 			}
 			getline(cin, line);
 			clearWorld();
+			cout << "\n";
 		}
+		
 	}
 
 
