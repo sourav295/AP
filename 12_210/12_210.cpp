@@ -26,8 +26,18 @@ struct Point {
 
 }points[n_limit], p0;
 
+
+bool selected[n_limit];
 vector<Point> pointStack;
 vector<pair<int, int>> input(n_limit);
+
+int dist_square(Point p1, Point p2)
+{
+	return (p1.x - p2.x)*(p1.x - p2.x) +
+		(p1.y - p2.y)*(p1.y - p2.y);
+}
+
+
 
 int getOrientation(int ax1, int ay1, int ax2, int ay2, int ax3, int ay3) {
 	long long x1, x2, x3, y1, y2, y3;
@@ -54,6 +64,11 @@ int compare(const void *vp1, const void *vp2)
 	Point *p2 = (Point *)vp2;
 
 	int o = getOrientation(p0.x, p0.y, (*p1).x, (*p1).y, (*p2).x, (*p2).y);
+	if (o == 0)
+		if(dist_square(p0, *p2) >= dist_square(p0, *p1))
+			return -1;
+		else
+			return +1;
 	
 	return (o > 0) ? -1 : 1;
 }
@@ -81,9 +96,9 @@ int comparePoints(const void *vp1, const void *vp2)
 	// Find orientation
 	if ((*p1).y == (*p2).y) {
 		if ((*p1).x >= (*p2).x)
-			return +1;
-		else 
 			return -1;
+		else 
+			return +1;
 	}
 
 	if ((*p1).y >= (*p2).y)
@@ -116,9 +131,43 @@ int main()
 		sort(input.begin(), input.begin() + N);
 		for (int i = 0; i < N; i++) {
 			points[i] = Point(input[i].second, input[i].first);
+			selected[i] = true;
 		}
 		p0 = points[0];
 		qsort(&points[1], N - 1, sizeof(Point), compare);
+
+
+		int m = 1;
+		for (int i = 1; i<N; i++)
+		{
+			while (i < N - 1 && getOrientation(p0.x, p0.y, points[i].x, points[i].y, points[i + 1].x, points[i + 1].y) == 0)
+				i++;
+			points[m++] = points[i];
+		}
+		N = m;
+
+		
+		m = 0;
+		for (int i = 0; i + 1 < N; i++) {
+			Point p_1 = points[i];
+			Point p_2 = points[i + 1];
+			int j = i + 2;
+			while (j < N && getOrientation(p_1.x, p_1.y, p_2.x, p_2.y, points[j].x, points[j].y) == 0) {
+				selected[j - 1] = false;
+				j++;
+			}
+			i = j - 2;
+		}
+
+
+		for (int i = 0; i < N; i++) {
+			if (selected[i]) {
+				points[m++] = points[i];
+			}
+		}
+		N = m;
+		
+		
 
 		pointStack.clear();
 		for (int i = 0; i < 3; i++) {
