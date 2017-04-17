@@ -39,6 +39,8 @@ int main()
 				j--;
 			}else {
 				//reset
+				if (palBegin > -1)
+					i = palBegin;
 				j = n - 1;
 				found = false;
 			}
