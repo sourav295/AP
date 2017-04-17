@@ -22,7 +22,7 @@ const int n_lines = 5000;
 const int n_words_in_line = 200;
 const int n_dist_word = 5000;
 
-int max_word = 0;//'z' - 'a' + 1;
+int max_word = -1;//'z' - 'a' + 1;
 map<string, bool> uniqueWords;
 
 struct Word{
