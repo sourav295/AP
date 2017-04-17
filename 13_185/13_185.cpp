@@ -11,7 +11,10 @@
 #include <sstream>
 #include <algorithm>
 #include <ctype.h>
+#include <map>
 #include <iomanip>
+
+
 using namespace std;
 
 
@@ -20,6 +23,7 @@ const int n_words_in_line = 200;
 const int n_dist_word = 5000;
 
 int max_word = 0;//'z' - 'a' + 1;
+map<string, bool> uniqueWords;
 
 struct Word{
 	int w[n_words_in_line];
@@ -63,7 +67,12 @@ int main()
 			
 			if (max_wordSize < word.length())
 				max_wordSize = word.length();
-			allwords.push_back(Word(word));
+			
+			if (uniqueWords.find(word) == uniqueWords.end()) {
+				allwords.push_back(Word(word));
+				uniqueWords[word] = true;
+			}
+			
 		}
 	}
 
@@ -79,8 +88,9 @@ int main()
 		sort(allwords.begin(), allwords.end(), isAlphabeticallySmaller);
 	
 	for (int i = 0; i < allwords.size(); i++)
-		if(i == 0 || (i > 0 && allwords[i].text != allwords[i-1].text))
-			cout << allwords[i].text << "\n";
+		cout << allwords[i].text << "\n";
+		//if(i == 0 || (i > 0 && allwords[i].text != allwords[i-1].text))
+			
 
 
     return 0;
