@@ -21,8 +21,8 @@ int main()
 	while (getline(cin, input)) {
 
 		int n = input.length();
-		strcpy(x, input.c_str());
-
+		//strcpy(x, input.c_str());
+		string x = input;
 		int i, j;
 
 		i = 0;
