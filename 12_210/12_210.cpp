@@ -22,6 +22,7 @@ struct Point {
 	}
 	Point(){}
 
+	
 
 }points[n_limit], p0;
 
@@ -72,6 +73,24 @@ bool doPop(int i) {
 	return o < 0;
 }
 
+int comparePoints(const void *vp1, const void *vp2)
+{
+	Point *p1 = (Point *)vp1;
+	Point *p2 = (Point *)vp2;
+
+	// Find orientation
+	if ((*p1).y == (*p2).y) {
+		if ((*p1).x >= (*p2).x)
+			return +1;
+		else 
+			return -1;
+	}
+
+	if ((*p1).y >= (*p2).y)
+		return +1;
+	else
+		return -1;
+}
 
 
 int main()
@@ -79,7 +98,7 @@ int main()
 	int K, N, x, y, minus1;
 	
 	cin >> K;
-	cout << K;
+	cout << K << "\n";
 
 	for (int k = 0; k < K; k++) {
 		input.clear();
@@ -113,6 +132,7 @@ int main()
 			pointStack.push_back(points[i]);
 		}
 
+		
 		cout << pointStack.size() + 1 << "\n";
 		for (int i = 0; i < pointStack.size(); i++) {
 			cout << pointStack[i].x << " " << pointStack[i].y << "\n";
