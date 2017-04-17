@@ -122,9 +122,12 @@ int main() {
 				}
 			}
 			
-			cout << "Test Set #" << ++test << "\n";
+			if (test != 0)
+				cout << "\n";
+
+			cout << "Test Set #" << ++test;
 			for (int i = 0; i < N; i++) {
-				printf("%2d to %2d: %2d\n", input[i].first + 1, input[i].second + 1, output[i]);
+				printf("\n%2d to %2d: %2d", input[i].first + 1, input[i].second + 1, output[i]);
 			}
 			getline(cin, line);
 			clearWorld();
