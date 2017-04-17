@@ -4,7 +4,7 @@
 #include <vector>
 #include <utility>
 #include <queue> 
-#include<string>
+#include <string.h>
 #include <stack>
 #include <limits>
 #include <sstream>
