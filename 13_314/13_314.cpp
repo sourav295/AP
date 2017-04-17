@@ -5,6 +5,7 @@
 #include <utility>
 #include <queue> 
 #include <string.h>
+#include <string>
 #include <stack>
 #include <limits>
 #include <sstream>
@@ -12,6 +13,7 @@
 #include <iomanip>
 using namespace std;
 
+char x[100001];
 
 int main()
 {
@@ -19,7 +21,6 @@ int main()
 	while (cin >> input) {
 
 		int n = input.length();
-		char *x = new char[n + 1];
 		strcpy(x, input.c_str());
 
 		int i, j;
