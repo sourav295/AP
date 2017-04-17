@@ -79,38 +79,7 @@ int main()
 		}
 		
 	}
-		/*
-		stringstream ss(line);
-		while (ss >> word) {
-			
-			while (!isalnum(word[0])) {
-				word = word.substr(1, word.length());
-			}
-
-			while (!isalnum(word[word.length()- 1])) {
-				word = word.substr(0, word.length()-1);
-			}
-			
-			if (max_wordSize < word.length())
-				max_wordSize = word.length();
-			
-			if (uniqueWords.find(word) == uniqueWords.end()) {
-				allwords.push_back(Word(word));
-				uniqueWords[word] = true;
-			}
-			
-		}
-		*/
 	
-
-	/*
-	for (int pos = max_wordSize - 1; pos >= 0; pos--)
-		sort(allwords.begin(), allwords.end(),
-			[pos](const Word& x, const Word& y)
-					{return (x.w[pos] < y.w[pos]);}
-	);
-	*/
-
 	for (pos = max_wordSize - 1; pos >= 0; pos--)
 		sort(allwords.begin(), allwords.end(), isAlphabeticallySmaller);
 	
