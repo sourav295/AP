@@ -17,17 +17,20 @@ int n;
 int sptSet[n_limit], dist[n_limit];
 int park[n_limit][n_limit];
 
-int minDistance()
+int minDistance(bool firstCheck)
 {
 	// Initialize min value
 	int min = numeric_limits<int>::max();
-	int min_index;
+	int min_index = -1;
 
-	for (int v = 0; v < n; v++)
+	for (int v = 0; v < n; v++) {
 		if (sptSet[v] == false && dist[v] <= min) {
+			if (firstCheck && v == n - 1)
+				continue;
 			min = dist[v];
 			min_index = v;
 		}
+	}
 
 	return min_index;
 }
@@ -43,7 +46,16 @@ int dijkstra(int src, int dest)
 
 	for (int count = 0; count < n; count++)
 	{
-		int u = minDistance();
+		int u;
+		
+		if(count == 1)
+			u = minDistance(true);
+		else
+			u = minDistance(false);
+
+		if (u == -1)
+			return 0;
+
 		sptSet[u] = true;
 
 		if (u == dest)
@@ -67,9 +79,6 @@ int main()
 		for (int i = 0; i < r; i++) {
 			int a, b, d;
 			cin >> a >> b >> d;
-
-			if (a == 0 && b == n - 1)
-				continue;
 
 			park[a][b] = d;
 			park[b][a] = d;
