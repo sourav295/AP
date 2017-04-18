@@ -10,6 +10,7 @@
 #include <sstream>
 #include <limits>
 #include <iomanip>
+#include <map>
 using namespace std;
 
 
@@ -22,12 +23,11 @@ bool visited[n];
 int dist[n];
 bool sptSet[n];
 
-
-
 int cap[n_bucks];
 
 int T;
-
+map<string, int> state_loc;
+int latest_id;
 
 int minDistance()
 {
@@ -77,14 +77,17 @@ void clearingredient() {
 
 
 int getId(vector<int> s) {
-	int sum = 0;
-	for (int i = 0; i < n_bucks; i++)
-		sum += (s[i]);
-	for (int i = 1; i < n_bucks; i++)
-		sum += (max_cap + 1);
+	string stateString = "";
+	for (int i = 0; i < n_bucks; i++) {
+		stateString += s[i];
+	}
 	
-	return sum;
+	if (state_loc.find(stateString) == state_loc.end())
+		state_loc[stateString] = latest_id++;
+	
+	return state_loc[stateString];
 }
+
 
 bool can_fill(vector<int> s, int bucket) {
 	return s[bucket] < cap[bucket];
@@ -147,6 +150,8 @@ int main() {
 				ingredient[i][j] = false;
 			visited[i] = false;
 		}
+		latest_id = 0;
+		state_loc.clear();
 
 		vector<int> state(n_bucks);
 
