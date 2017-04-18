@@ -11,107 +11,80 @@
 #include <sstream>
 using namespace std;
 
-struct Junction {
+const int n_limit = 501;
+int n;
 
-	
-	int id;
-	
-	queue<pair<int, int>> neighbours;//id-distance
-	
-	Junction(int identity) {
-		id = identity;
-	}
+int sptSet[n_limit], dist[n_limit];
+int park[n_limit][n_limit];
 
-};
-
-int minDistance(vector<int> dist, vector<bool> sptSet, int n)
+int minDistance()
 {
-	int min = numeric_limits<int>::max(), min_index;
+	// Initialize min value
+	int min = numeric_limits<int>::max();
+	int min_index;
 
 	for (int v = 0; v < n; v++)
-		if (sptSet[v] == false && dist[v] <= min)
-			min = dist[v], min_index = v;
+		if (sptSet[v] == false && dist[v] <= min) {
+			min = dist[v];
+			min_index = v;
+		}
 
 	return min_index;
 }
 
-
-void execute(vector<Junction> all_junctions) {
-
-	//dijkstra
-	vector<int> dist;
-	vector<bool> sptSet;
-
-	int n = all_junctions.size();
-
+int dijkstra(int src, int dest)
+{
 	for (int i = 0; i < n; i++) {
-		dist.push_back(numeric_limits<int>::max());
-		sptSet.push_back(false);
+		dist[i] = numeric_limits<int>::max();
+		sptSet[i] = false;
 	}
 
-	dist[0] = 0;
-	bool found = false;
+	dist[src] = 0;
 
-	for (int i = 0; i < n; i++) {
-
-		int u = minDistance(dist, sptSet, n);
+	for (int count = 0; count < n; count++)
+	{
+		int u = minDistance();
 		sptSet[u] = true;
 
-		if (dist[u] == numeric_limits<int>::max())
-			break;
-		
-		if (u == n - 1) {
-			cout << dist[u]<<"\n";
-			found = true;
-			break;
-		}
-	
+		if (u == dest)
+			return dist[dest];
 
-		Junction j = all_junctions[u];
-		for(j.neighbours; !j.neighbours.empty(); j.neighbours.pop()){
-			pair<int, int> id_dist = j.neighbours.front();
-			int id = id_dist.first;
-			int d = id_dist.second;
-
-			if (!sptSet[id] && dist[u] + d < dist[id])
-				dist[id] = dist[u] + d;
-		}
-
+		for (int v = 0; v < n; v++)
+			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v])
+				dist[v] = dist[u] + park[u][v];
 	}
 
-	if (found != true)
-		cout << "?\n";
+	return 0;
 }
-
-
 
 int main()
 {
 	string line;
 	int count = 1;
-	while (getline(cin, line)) {
+	int r;
 
-		stringstream ss(line);
-		int n, r;
-		ss >> n;
-		ss >> r;
-
-		vector<Junction> all_junctions;
-		for (int i = 0; i < n; i++)
-			all_junctions.push_back(Junction(i));
-
+	while (cin >> n >> r) {
 		for (int i = 0; i < r; i++) {
-			int a, b, dist;
-			cin >> a >> b >> dist;
+			int a, b, d;
+			cin >> a >> b >> d;
 
-			all_junctions[a].neighbours.push({ b, dist });
-			all_junctions[b].neighbours.push({ a, dist });
+			if (a == 0 && b == n - 1)
+				continue;
+
+			park[a][b] = d;
+			park[b][a] = d;
+			
 		}
 
-		cout << "Set #" << count<<"\n";
-		execute(all_junctions);
-		getline(cin, line);
-		count++;
+		int res = dijkstra(0, n - 1);
+		cout << "Set #" << count++ << "\n";
+		if(res != numeric_limits<int>::max() && res != 0){
+			cout << res << "\n";
+		}
+		else {
+			cout << "?\n";
+		}
+
 	}
 
 
