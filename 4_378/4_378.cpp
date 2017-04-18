@@ -11,6 +11,9 @@
 #include <sstream>
 using namespace std;
 
+const int n_limit = 101;
+int cost[n_limit];
+
 
 int main()
 {
@@ -19,7 +22,9 @@ int main()
 	int T, V;
 
 	while (cin >> M >> N) {
-		while()
+		for (int i = 1; i <= N; i++) {
+			
+		}
 	}
 
 
