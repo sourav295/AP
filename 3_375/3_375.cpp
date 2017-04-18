@@ -16,9 +16,10 @@ using namespace std;
 
 const int max_cap = 25;
 const int n_bucks = 4;
-const int n = (max_cap +1) * n_bucks;
+const int n = max_cap*max_cap;
 
 bool ingredient[n][n];
+bool hasTarget[n];
 bool visited[n];
 int dist[n];
 bool sptSet[n];
@@ -29,13 +30,13 @@ int T;
 map<string, int> state_loc;
 int latest_id;
 
-int minDistance()
+int minDistance(int V)
 {
 	// Initialize min value
 	int min = numeric_limits<int>::max();
 	int min_index;
 
-	for (int v = 0; v < n; v++)
+	for (int v = 0; v < V; v++)
 		if (sptSet[v] == false && dist[v] <= min) {
 			min = dist[v];
 			min_index = v;
@@ -47,26 +48,29 @@ int minDistance()
 
 
 
-int dijkstra(int src)
+int dijkstra(int src, int V)
 {
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < V; i++) {
 		dist[i] = numeric_limits<int>::max();
 		sptSet[i] = false;
 	}
 
 	dist[src] = 0;
 
-	for (int count = 0; count < n; count++)
+	for (int count = 0; count < V; count++)
 	{
-		int u = minDistance();
+		int u = minDistance(V);
 		sptSet[u] = true;
 
-		for (int v = 0; v < n; v++)
+		if (hasTarget[u])
+			return dist[u];
+
+		for (int v = 0; v < V; v++)
 			if (!sptSet[v] && ingredient[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + ingredient[u][v] < dist[v])
 				dist[v] = dist[u] + 1;
 	}
 
-	return 0;
+	return -1;
 }
 
 void clearingredient() {
@@ -79,12 +83,15 @@ void clearingredient() {
 int getId(vector<int> s) {
 	string stateString = "";
 	for (int i = 0; i < n_bucks; i++) {
+		if (s[i] / 10 == 0)
+			stateString += "0";
+		
 		stateString += s[i];
 	}
 	
 	if (state_loc.find(stateString) == state_loc.end())
 		state_loc[stateString] = latest_id++;
-	
+
 	return state_loc[stateString];
 }
 
@@ -108,6 +115,28 @@ void transition(vector<int> s) {
 		return;
 	visited[id] = true;
 
+	/*
+	for (int i = 0; i < n_bucks; i++) {
+		for (int j = i; j < n_bucks; j++) {
+			int sum = 0;
+			for (int k = i; k <= j; k++) {
+				sum += s[k];
+				if (sum == T) {
+					hasTarget[id] = true;
+					return;
+				}
+			}
+		}
+	}*/
+
+	for (int i = 0; i < n_bucks; i++) {
+		if (s[i] == T) {
+			hasTarget[id] = true;
+			return;
+		}
+	}
+
+
 	vector<int> temp;
 
 	for (int i = 0; i < n_bucks; i++) {
@@ -115,7 +144,8 @@ void transition(vector<int> s) {
 			temp = s;
 			temp[i] = cap[i];
 			transition(temp);
-			ingredient[id][getId(temp)] = true;
+			int opp_id = getId(temp);
+			ingredient[id][opp_id] = true;
 		}
 
 		if(can_empty(s, i)) {
@@ -149,14 +179,26 @@ int main() {
 			for (int j = 0; j < n; j++)
 				ingredient[i][j] = false;
 			visited[i] = false;
+			hasTarget[i] = false;
 		}
 		latest_id = 0;
 		state_loc.clear();
 
 		vector<int> state(n_bucks);
+		int max_cap = 0;
+		for (int i = 0; i < n_bucks; i++) {
+			if (cap[i] > max_cap) {
+				max_cap = cap[i];
+			}
+		}
+
+		if (max_cap < T) {
+			cout << "-1\n";
+			continue;
+		}
 
 		transition(state);
-		int y = 0;
+		cout << dijkstra(0, latest_id) << "\n";
 
 
 	}
