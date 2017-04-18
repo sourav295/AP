@@ -10,86 +10,82 @@
 using namespace std;
 
 
+const int n_limit = 300;
+bool  visited[n_limit], sptSet[n_limit], dist[n_limit];
+bool  chamber[n_limit][n_limit];
+int a, b, c, n;
 
-struct Chamber {
-	int id;
 
-	//State variables
-	bool involved_in_graph = false;
-	
+int minDistance()
+{
+	// Initialize min value
+	int min = numeric_limits<int>::max();
+	int min_index;
 
-	bool updated = false;
-	bool taken = false;
-	int  benefit;
+	for (int v = 0; v < n; v++)
+		if (sptSet[v] == false && dist[v] <= min) {
+			min = dist[v];
+			min_index = v;
+		}
 
-	Chamber* next;
-	
-	Chamber(int identity) {
-		id = identity;
-		//involved_in_graph = true;
-	}
-	Chamber(){}
-};
-
-int calculate_benefit(Chamber *c) {
-
-	if ((*c).updated)
-		return (*c).benefit;
-	if ((*c).taken)
-		return 0;
-
-	(*c).taken = true;
-	(*c).benefit = calculate_benefit((*c).next) + 1;
-	(*c).updated = true;
-
-	return (*c).benefit;
+	return min_index;
 }
 
 
 
-int execute(int a, int b, int c, int n) {
 
-	vector<Chamber> chambers;
+int dijkstra(int src)
+{
+	int max_coins = 0;
 	for (int i = 0; i < n; i++) {
-		chambers.push_back(Chamber(i));
+		dist[i] = 0;
+		sptSet[i] = false;
 	}
 
-	//set next pointers
-	for (int i = 0; i < chambers.size(); i++) {
-		if (chambers[i].involved_in_graph)
-			continue;
-
-		Chamber *root = &(chambers[i]);
-		do {
-			(*root).involved_in_graph = true;
-
-			int id = (*root).id;
-			int next_id = (a*id*id + b*id + c)%n;
-			(*root).next = &(chambers[next_id]);
-			
-			root = (*root).next;
-
-		} while (!(*root).involved_in_graph);
+	int count = 0;
+	int v = src;
+	while (!sptSet[v]) {
+		count++;
+		sptSet[v] = true;
+		v = (a*v*v + b*v + c) % n;
 	}
 
-	int max = 0;
-	int curr = 0;
+	return count;
+}
 
-	for (int i = 0; i < chambers.size(); i++) {
-		curr = calculate_benefit(&(chambers[i]));
-		if (curr > max)
-			max = curr;
+void connect(int v) {
+	int next = (a*v*v + b*v + c) % n;
+	
+	chamber[v][next] = true;
+	
+
+}
+
+int execute() {
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++)
+			chamber[i][j] = false;
 	}
-	
-	
-	return max;
-	
 
+	for(int i = 0; i < n; i++)
+		connect(i);
+	
+	int max_coins = 0;
+	for (int i = 0; i < n; i++) {
+		int res = dijkstra(i);
+		if (res > max_coins) {
+			max_coins = res;
+		}
+	}
+
+	return max_coins;
 }
 
 
 int main()
 {
+	
+	
 	int n_test;
 	cin >> n_test;
 
@@ -97,11 +93,11 @@ int main()
 
 	for (int i = 0; i < n_test; i++) {
 		getline(cin, blank);
-		int a, b, c, n;
+		
 		cin >> a >> b >> c >> n;
-		cout << execute(a, b, c, n) << "\n";
+		cout << execute() << "\n";
 	}
-
+	
     return 0;
 }
 

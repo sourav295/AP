@@ -45,6 +45,12 @@ int minDistance(int V)
 	return min_index;
 }
 
+int gcd(int a, int b)
+{
+	if (b == 0)
+		return a;
+	return gcd(b, a%b);
+}
 
 
 
@@ -115,20 +121,7 @@ void transition(vector<int> s) {
 		return;
 	visited[id] = true;
 
-	/*
-	for (int i = 0; i < n_bucks; i++) {
-		for (int j = i; j < n_bucks; j++) {
-			int sum = 0;
-			for (int k = i; k <= j; k++) {
-				sum += s[k];
-				if (sum == T) {
-					hasTarget[id] = true;
-					return;
-				}
-			}
-		}
-	}*/
-
+	
 	for (int i = 0; i < n_bucks; i++) {
 		if (s[i] == T) {
 			hasTarget[id] = true;
@@ -143,16 +136,19 @@ void transition(vector<int> s) {
 		if (can_fill(s, i)) {
 			temp = s;
 			temp[i] = cap[i];
+			
+			ingredient[id][getId(temp)] = true;
+
 			transition(temp);
-			int opp_id = getId(temp);
-			ingredient[id][opp_id] = true;
 		}
 
 		if(can_empty(s, i)) {
 			temp = s;
 			temp[i] = 0;
-			transition(temp);
+			
 			ingredient[id][getId(temp)] = true;
+
+			transition(temp);
 		}
 	}
 
@@ -165,8 +161,9 @@ void transition(vector<int> s) {
 				temp[i] -= m;
 				temp[j] += m;
 				
-				transition(temp);
 				ingredient[id][getId(temp)] = true;
+
+				transition(temp);
 			}
 		}
 
@@ -196,6 +193,11 @@ int main() {
 			cout << "-1\n";
 			continue;
 		}
+		/*
+		if(T % gcd(gcd(gcd(cap[0], cap[1]), cap[2]), cap[3]) != 0) {
+			cout << "-1\n";
+			continue;
+		}*/
 
 		transition(state);
 		cout << dijkstra(0, latest_id) << "\n";
