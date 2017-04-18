@@ -11,13 +11,13 @@
 #include <sstream>
 using namespace std;
 
-const int n_limit = 501;
+const int n_limit = 506;
 int n;
 
 int sptSet[n_limit], dist[n_limit];
 int park[n_limit][n_limit];
 
-int minDistance(bool firstCheck)
+int minDistance()
 {
 	// Initialize min value
 	int min = numeric_limits<int>::max();
@@ -25,8 +25,7 @@ int minDistance(bool firstCheck)
 
 	for (int v = 0; v < n; v++) {
 		if (sptSet[v] == false && dist[v] <= min) {
-			if (firstCheck && v == n - 1)
-				continue;
+			
 			min = dist[v];
 			min_index = v;
 		}
@@ -46,12 +45,7 @@ int dijkstra(int src, int dest)
 
 	for (int count = 0; count < n; count++)
 	{
-		int u;
-		
-		if(count == 1)
-			u = minDistance(true);
-		else
-			u = minDistance(false);
+		int u = minDistance();
 
 		if (u == -1)
 			return 0;
@@ -62,8 +56,10 @@ int dijkstra(int src, int dest)
 			return dist[dest];
 
 		for (int v = 0; v < n; v++)
-			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v])
+			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v]) {
 				dist[v] = dist[u] + park[u][v];
+			}
+				
 	}
 
 	return 0;
@@ -76,16 +72,44 @@ int main()
 	int r;
 
 	while (cin >> n >> r) {
+		bool connected_to_src = false;
+		int distance_dest = 0;
+		
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				park[i][j] = 0;
+
 		for (int i = 0; i < r; i++) {
 			int a, b, d;
 			cin >> a >> b >> d;
 
-			park[a][b] = d;
-			park[b][a] = d;
+			if (a == 0 && b == n - 1) {
+				connected_to_src = true;
+				distance_dest = d;
+			}
+			else {
+				park[a][b] = d;
+				park[b][a] = d;
+			}
 			
 		}
+		int dest = n - 1;
+		if (connected_to_src) {
+			for (int i = 0; i < n; i++) {
+				if (park[0][i] > 0) {
+					int t = n;
+					park[i][t] = park[0][i];
+					park[t][i] = park[0][i];
+					
+					park[t][n-1] = distance_dest;
+					park[n-1][t] = distance_dest;
+					
+					n++;
+				}
+			}
+		}
 
-		int res = dijkstra(0, n - 1);
+		int res = dijkstra(0, dest);
 		cout << "Set #" << count++ << "\n";
 		if(res != numeric_limits<int>::max() && res != 0){
 			cout << res << "\n";
