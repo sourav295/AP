@@ -73,7 +73,7 @@ int dijkstra(int src, int V)
 
 		for (int v = 0; v < V; v++)
 			if (!sptSet[v] && ingredient[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + ingredient[u][v] < dist[v])
-				dist[v] = dist[u] + 1;
+				dist[v] = dist[u] + ingredient[u][v];
 	}
 
 	return -1;
