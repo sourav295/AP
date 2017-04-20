@@ -97,6 +97,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3_375", "3_375\3_375.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4_378", "4_378\4_378.vcxproj", "{2CB6B077-243A-4D5F-A705-304EE04AF9C4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DC559D90-578F-461D-980C-7FECCC11F85F}"
+	ProjectSection(SolutionItems) = preProject
+		TextFile1.xlsx = TextFile1.xlsx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
