@@ -15,10 +15,11 @@ using namespace std;
 
 
 
-bool  *flag = new bool[100000001];
-long int *prime = new long int[100000001];
 
-void createPrimeArray(long int n) {
+
+bool* createPrimeArray(long int n) {
+	bool  *flag = new bool[n];
+	long int *prime = new long int[n];
 	
 	for (long int i = 0; i <= n; i++) {
 		flag[i] = true;
@@ -35,12 +36,10 @@ void createPrimeArray(long int n) {
 			break;
 		}
 	}
+
+	return flag;
 }
 
-
-bool isPrime(long int n){
-	return flag[n];
-}
 
 
 int main()
@@ -54,7 +53,7 @@ int main()
 			max_n = n;
 		input.push(n);
 	}
-	createPrimeArray(max_n);
+	bool *flag = createPrimeArray(max_n);
 
 	for (input; !input.empty(); input.pop()){
 		n = input.front();
@@ -68,7 +67,7 @@ int main()
 		
 		if (n & 1){
 			//number is odd
-			if (isPrime(n - 2))
+			if (flag[n - 2])
 				if(n-2 != 1)
 					cout << n << " is the sum of " << "2 and " << n - 2 << ".\n";
 				else
@@ -81,7 +80,7 @@ int main()
 			for (long int i = n / 2; i <= n; i++){
 				p2 = i;
 				p1 = n - p2;
-				if (isPrime(p1) && isPrime(p2)){
+				if (flag[p1] && flag[p2]){
 					cout << n << " is the sum of " << p1 << " and " << p2 << ".\n";
 					break;
 				}
