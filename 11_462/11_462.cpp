@@ -44,20 +44,13 @@ bool* createPrimeArray(long int n) {
 
 int main()
 {
-	long int n, max_n;
-	queue<long int> input;
+	long int n;
 
-	max_n = 0;
-	while (cin >> n){
-		if (n > max_n)
-			max_n = n;
-		input.push(n);
-	}
-	bool *flag = createPrimeArray(max_n);
+	
 
-	for (input; !input.empty(); input.pop()){
-		n = input.front();
-
+	while(cin >> n){
+		//n = input.front();
+		bool *flag = createPrimeArray(n);
 		if (n == 0 || n == 1) {
 			cout << n << " is not the sum of two primes!\n";
 			continue;
