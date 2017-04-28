@@ -13,23 +13,33 @@
 #include <bitset>
 using namespace std;
 
-bitset<100000000> prime;
 
-void createPrimeArray(long int n){
-	for (long int p = 2; p*p <= n; p++)
-	{
-		// If prime[p] is not changed, then it is a prime
-		if (prime[p] == false)
-		{
-			// Update all multiples of p
-			for (int i = p * 2; i <= n; i += p)
-				prime[i] = true;
+
+bool  *flag = new bool[100000001];
+long int *prime = new long int[100000001];
+
+void createPrimeArray(long int n) {
+	
+	for (long int i = 0; i <= n; i++) {
+		flag[i] = true;
+	}
+
+	int  count = 0;		   //total number found now
+	for (long int i = 2; i <= n; i++) {
+		if (flag[i] == true)
+			prime[count++] = i;     //not filtered, then prime
+									// prime[j], the j-th prime	
+		for(long int j=0 ; j<count  &&  i*prime[j] <= n ; j++)	{
+			flag[i*prime[j]] = false;   //i*prime[j] is filtered. 					    			    	                              
+			if (i%prime[j] == 0)
+			break;
 		}
 	}
 }
 
+
 bool isPrime(long int n){
-	return !prime[n];
+	return flag[n];
 }
 
 
@@ -48,10 +58,21 @@ int main()
 
 	for (input; !input.empty(); input.pop()){
 		n = input.front();
+
+		if (n == 0 || n == 1) {
+			cout << n << " is not the sum of two primes!\n";
+			continue;
+		}
+
+		
+		
 		if (n & 1){
 			//number is odd
 			if (isPrime(n - 2))
-				cout << n << " is the sum of " << "2 and " << n - 2 << ".\n";
+				if(n-2 != 1)
+					cout << n << " is the sum of " << "2 and " << n - 2 << ".\n";
+				else
+					cout << n << " is the sum of " << "1 and 2"<< ".\n";
 			else
 				cout << n << " is not the sum of two primes!\n";
 		}
