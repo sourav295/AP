@@ -13,104 +13,60 @@
 #include <bitset>
 using namespace std;
 
-const long n_limit = 100000000 + 1;
-const long largestPrime = 5761455;
+bitset<100000000> prime;
 
-
-const long bit_size = 64;
-const long bins = (n_limit/bit_size) + 1;
-
-bitset<bit_size> flag[bins];
-long prime[largestPrime];
-
-long primeNumbers_calculated;
-
-long count_prime = 0;
-
-void updateFlag(long pos, bool value) {
-	(flag[(pos / bit_size)])[(pos % bit_size)] = value;
-}
-
-bool getFlag(long pos) {
-	return (flag[(pos / bit_size)])[(pos % bit_size)];
-}
-
-
-void getPrime(long n) {
-	
-	if (n <= primeNumbers_calculated)
-		return;
-	else
-		primeNumbers_calculated = n;//new value
-	
-	for (long i = 0; i <= n; i++) {
-		updateFlag(i, true);
-	}
-
-	count_prime = 0;
-	for (long i = 2; i <= n; i++) {
-		if (getFlag(i)) {
-			prime[count_prime++] = i;
+void createPrimeArray(long int n){
+	for (long int p = 2; p*p <= n; p++)
+	{
+		// If prime[p] is not changed, then it is a prime
+		if (prime[p] == false)
+		{
+			// Update all multiples of p
+			for (int i = p * 2; i <= n; i += p)
+				prime[i] = true;
 		}
-		
-		for (int j = 0; j<count_prime && i*prime[j] <= n; j++) {
-			updateFlag(i*prime[j], false);   //i*prime[j] is filtered. 					    			    	                              
-			if (i%prime[j] == 0)
-				break;
-		}
-
 	}
-	updateFlag(1, true);
 }
+
+bool isPrime(long int n){
+	return !prime[n];
+}
+
 
 int main()
 {
+	long int n, max_n;
+	queue<long int> input;
 
-	
-	primeNumbers_calculated = 0;
-	
-
-	long in;
-	long half_input, best_p1;
-	
-	queue<long> input;
-	long max_input = 0;
-	while (cin >> in) {
-		
-		
-
-		if (in > max_input)
-			max_input = in;
-		input.push(in);
-
-		
-
+	max_n = 0;
+	while (cin >> n){
+		if (n > max_n)
+			max_n = n;
+		input.push(n);
 	}
-	getPrime(max_input);
+	createPrimeArray(max_n);
 
-	for (input; !input.empty(); input.pop()) {
-		long in = input.front();
-		half_input = in / 2;
-
-		bool found = false;
-		long best;
-		for (long i = 0; prime[i] <= half_input && i < count_prime; i++) {
-			if (getFlag(in - prime[i])) {
-				found = true;
-				best = prime[i];
+	for (input; !input.empty(); input.pop()){
+		n = input.front();
+		if (n & 1){
+			//number is odd
+			if (isPrime(n - 2))
+				cout << n << " is the sum of " << "2 and " << n - 2 << ".\n";
+			else
+				cout << n << " is not the sum of two primes!\n";
+		}
+		else{
+			long int p1, p2;
+			for (long int i = n / 2; i <= n; i++){
+				p2 = i;
+				p1 = n - p2;
+				if (isPrime(p1) && isPrime(p2)){
+					cout << n << " is the sum of " << p1 << " and " << p2 << ".\n";
+					break;
+				}
 			}
 		}
-
-		if (found) {
-			cout << in << " is the sum of " << best << " and " << in - best << ".\n";
-		}
-		else {
-			cout << in << " is not the sum of two primes!\n";
-		}
 	}
 
-
-	
 	return 0;
 }
-
