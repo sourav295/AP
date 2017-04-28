@@ -9,186 +9,101 @@
 
 using namespace std;
 
-struct MemorySegment{
+const int n_limit = 32;
+unsigned int pc, acc;
 
-	uint8_t value;
+const int oprt_mask = (1 << 5) + (1 << 6) + (1 << 7);
+const int oprd_mask = (1 << 5) - 1;
 
-	uint8_t instruction;
-	uint8_t content;
+struct Instruction{
+	unsigned int overall;
+	unsigned int oprt;
+	unsigned int oprd;
 
-	MemorySegment(uint8_t segment) {
-		
-		value = segment;
+	Instruction(){}
 
-		instruction = 0;
-		content = 0;
-		
-		//extract content
-		uint8_t count = 0;
-		for (segment; count < 5; segment = segment >> 1){
-			//content[count++] = segment & 1;
-			if (segment & 1)
-				content += (1 << count);
-			count++;
-		}
-		
-		count = 0;
-		for (segment; count < 3; segment = segment >> 1) {
-			//instruction[count++] = segment & 1;
-			if (segment & 1)
-				instruction += (1 << count);
-			count++;
-		}
+	Instruction(int x){
+		overall = x;
+		oprt = x & oprt_mask;
+		oprd = x & oprd_mask;
 	}
+
 	
-	MemorySegment() {
 
+}mem[n_limit];
+
+bool run(Instruction i){
+	switch (i.oprt)
+	{
+	case 0: mem[i.oprd] = Instruction(acc);
+		break;
+	case 1: acc = i.overall;
+		break;
+	case 2: pc  = acc == 0 ? i.oprd : pc;
+		break;
+	case 3:
+		break;
+	case 4:acc--;
+		break;
+	case 5:acc++;
+		break;
+	case 6:pc = i.oprd;
+		break;
+	case 7:return true;
+		break;
+
+
+	default:
+		break;
 	}
 
+	return false;
+}
 
-};
-
-
-struct Memory{
-	
-	MemorySegment memorySegment[32];
-	uint8_t len;
-
-	uint8_t counter;
-	uint8_t acc;
-	
-	Memory(queue<string> input) {
+int execute(){
+	bool terminate = false;
+	while(!terminate){
+		pc = 0;
+		Instruction inst = mem[pc];
+		pc++;
+		terminate = run(inst);
 		
-		counter = 0;
-		acc = 0;
-
-		uint8_t count = 0;
-		for (input; !input.empty(); input.pop())
-			memorySegment[count++] = MemorySegment((bitset<8>(input.front())).to_ulong());
-			//memorySegment[count++] = MemorySegment(stoi(input.front(), nullptr, 2));
-		len = count;
-	};
-
-	void start() {
-		bool terminate = false;
-		do {
-			executeInstruction(counter, terminate);
-		} while (!terminate);
 	}
-	
-	void executeInstruction(uint8_t &index, bool &terminate) {
-
-		//FETCH INSTRUCTION
-		uint8_t instr = memorySegment[index].instruction;
-		uint8_t cont  = memorySegment[index].content;
-
-		//INCREMENT COUNTER
-		index++;
-		
-		//EXCUTE INSTRUCTION
-		switch (unsigned(instr))
-		{
-		case 0://STA
-			memorySegment[cont] = MemorySegment(acc);
-			break;
-		case 1://LDA
-			acc = memorySegment[cont].value;
-			break;
-		case 2://BEQ
-			if (acc == 0)
-				index = cont;
-			break;
-		case 3://NOP
-			break;
-		case 4://DEC
-			acc--;
-			break;
-		case 5://INC
-			acc++;
-			break;
-		case 6://JMP
-			index = cont;
-			break;
-		case 7://HLT
-			terminate = true;
-			break;
-		default:
-			break;
-		}
-
-	}
-
-
-	void display() {
-		cout << "\n";
-		for (uint8_t i = 0; i < len; i++)
-			cout << unsigned(memorySegment[i].instruction) << " " << unsigned(memorySegment[i].content) << " \n";
-	}
-};
+	return acc;
+}
 
 int main()
 {
-	queue<string> x;
-	string line;
-	
 	int count = 0;
-	while (getline(cin, line))
-	{
+	pc = 0;
+	acc = 0;
+
+	
+
+	unsigned int x, y;
+	while (cin >> x){
+		//convert binary to int
+		y = 0;
+		for (int i = 0; i < 8; i++){
+			if ((x >> i) & 1)
+				y += (1 << i);
+		}
+
+		mem[count] = Instruction(y);
 		count++;
-		x.push(line);
+
 
 		if (count == 32){
-			//execute
-			Memory m(x);
-			m.start();
-			cout << bitset<8>((unsigned)m.acc) << "\n";
-
+			
+			
+			int res = execute();
+			//convert to binary
 			count = 0;
-			x = queue<string>();
-
+			pc    = 0;
+			acc = 0;
+			
 		}
-		
 	}
-	
-
-	
-
-	
 	
     return 0;
 }
-
-/*
-	x.push("00111110");
-	x.push("10100000");
-	x.push("01010000");
-	x.push("11100000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00111111");
-	x.push("10000000");
-	x.push("00000010");
-	x.push("11000010");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("00000000");
-	x.push("11111111");
-	x.push("10001001");
-	*/
