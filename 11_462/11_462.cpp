@@ -14,9 +14,6 @@
 using namespace std;
 
 
-
-
-
 bool* createPrimeArray(long int n) {
 	bool  *flag = new bool[n];
 	long int *prime = new long int[n];
@@ -25,7 +22,7 @@ bool* createPrimeArray(long int n) {
 		flag[i] = true;
 	}
 
-	int  count = 0;		   //total number found now
+	long int count = 0;		   //total number found now
 	for (long int i = 2; i <= n; i++) {
 		if (flag[i] == true)
 			prime[count++] = i;     //not filtered, then prime
@@ -33,7 +30,7 @@ bool* createPrimeArray(long int n) {
 		for(long int j=0 ; j<count  &&  i*prime[j] <= n ; j++)	{
 			flag[i*prime[j]] = false;   //i*prime[j] is filtered. 					    			    	                              
 			if (i%prime[j] == 0)
-			break;
+				break;
 		}
 	}
 
@@ -70,7 +67,7 @@ int main()
 		}
 		else{
 			long int p1, p2;
-			for (long int i = n / 2; i <= n; i++){
+			for (long int i = n / 2; i < n; i++){
 				p2 = i;
 				p1 = n - p2;
 				if (flag[p1] && flag[p2]){
