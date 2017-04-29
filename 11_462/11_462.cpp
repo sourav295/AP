@@ -12,10 +12,10 @@
 #include <iomanip>
 using namespace std;
 
+bool  *flag = new bool[100000000];
+unsigned long int *prime = new unsigned long int[100000000];
 
-bool* createPrimeArray(unsigned long int n) {
-	bool  *flag = new bool[n];
-	unsigned long int *prime = new unsigned long int[n];
+void createPrimeArray(unsigned long int n) {
 	
 	for (unsigned long int i = 0; i <= n; i++) {
 		flag[i] = true;
@@ -32,8 +32,6 @@ bool* createPrimeArray(unsigned long int n) {
 				break;
 		}
 	}
-
-	return flag;
 }
 
 
@@ -42,7 +40,7 @@ int main()
 {
 	unsigned long int n;
 
-	bool *flag = createPrimeArray(100000000);
+	createPrimeArray(100000000);
 
 	while(cin >> n){
 		//n = input.front();
