@@ -10,6 +10,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
+#include <bitset>
 using namespace std;
 
 bool  *flag = new bool[100000000];

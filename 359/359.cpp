@@ -12,7 +12,7 @@ using namespace std;
 const int n_limit = 32;
 unsigned int pc, acc;
 
-const int oprt_mask = (1 << 5) + (1 << 6) + (1 << 7);
+const int oprt_mask = (1 << 3) - 1;
 const int oprd_mask = (1 << 5) - 1;
 
 struct Instruction{
@@ -24,7 +24,7 @@ struct Instruction{
 
 	Instruction(int x){
 		overall = x;
-		oprt = x & oprt_mask;
+		oprt = (x >> 5) & oprt_mask;
 		oprd = x & oprd_mask;
 	}
 
@@ -37,15 +37,15 @@ bool run(Instruction i){
 	{
 	case 0: mem[i.oprd] = Instruction(acc);
 		break;
-	case 1: acc = i.overall;
+	case 1: acc = mem[i.oprd].overall;
 		break;
 	case 2: pc  = acc == 0 ? i.oprd : pc;
 		break;
 	case 3:
 		break;
-	case 4:acc--;
+	case 4:acc = acc == 0 ? 255 : acc - 1;
 		break;
-	case 5:acc++;
+	case 5:acc = acc == 255 ? 0 : acc + 1;
 		break;
 	case 6:pc = i.oprd;
 		break;
@@ -62,8 +62,8 @@ bool run(Instruction i){
 
 int execute(){
 	bool terminate = false;
+	pc = 0;
 	while(!terminate){
-		pc = 0;
 		Instruction inst = mem[pc];
 		pc++;
 		terminate = run(inst);
@@ -79,28 +79,24 @@ int main()
 	acc = 0;
 
 	
-
-	unsigned int x, y;
+	bitset<8> x;
+	unsigned int y;
 	while (cin >> x){
 		//convert binary to int
-		y = 0;
-		for (int i = 0; i < 8; i++){
-			if ((x >> i) & 1)
-				y += (1 << i);
-		}
+		y = (unsigned int)x.to_ulong();
 
 		mem[count] = Instruction(y);
 		count++;
 
 
 		if (count == 32){
-			
-			
 			int res = execute();
-			//convert to binary
+			bitset<8> output(res);
+			cout << output << "\n";
+			
 			count = 0;
 			pc    = 0;
-			acc = 0;
+			acc   = 0;
 			
 		}
 	}
