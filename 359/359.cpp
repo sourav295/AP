@@ -43,9 +43,9 @@ bool run(Instruction i){
 		break;
 	case 3:
 		break;
-	case 4:acc = acc == 0 ? 255 : acc - 1;
+	case 4:acc = (acc == 0 ? 255 : acc - 1);
 		break;
-	case 5:acc = acc == 255 ? 0 : acc + 1;
+	case 5:acc = (acc == 255 ? 0 : acc + 1);
 		break;
 	case 6:pc = i.oprd;
 		break;
