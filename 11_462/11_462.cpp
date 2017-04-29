@@ -13,7 +13,7 @@
 using namespace std;
 
 bool  *flag = new bool[100000000];
-unsigned long int *prime = new unsigned long int[100000000];
+unsigned long int *prime = new unsigned long int[5761455];
 
 void createPrimeArray(unsigned long int n) {
 	
