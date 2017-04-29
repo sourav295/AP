@@ -71,8 +71,8 @@ void dijkstra(int src, int dest, int n)
 int main()
 {
 	int n, m;
-	int dist1, dist2, indA, indB;
-
+	int indA, indB;
+	int distance;
 
 	while (cin >> n) {
 		
@@ -82,29 +82,57 @@ int main()
 		
 		
 		string place, link;
-		cin >> place;
+		
+		getline(cin, place);
 		for (int i = 0; i < n; i++) {
+			getline(cin, place);
 			place_id[place] = i;
 			place_array[i] = place;
 		}
 		cin >> m;
+		getline(cin, link);
 		for (int i = 0; i < m; i++) {
-			cin >> link;
-			stringstream ss(link);
-			ss >> place;
-			ss >> dist1;
+			getline(cin, link);
+			
+			int j = 0;
+			while (!(isdigit(link.at(j + 1)) && link.at(j) == ' ')) {
+				j++;
+			}
+			
+			place = link.substr(0, j);
+		
+			stringstream ss_distance(link.substr(j+1, link.length()));
+			ss_distance >> distance;
 		
 			indA = place_id[place.substr(0, place.find(":"))];
-			indB = place_id[place.substr(place.find(":") + 1, place.length())];
+			indB = place_id[place.substr(place.find(":")+1, place.length())];
 
-			college[indA][indB] = dist1;
-			if (ss >> dist2) {
-				college[indB][indA] = dist2;
+			college[indA][indB] = distance;
+			if (ss_distance >> distance) {
+				college[indB][indA] = distance;
 			}
 
 		}
-		dijkstra(place_id["office"], place_id["hall"], N);
+		
+		dijkstra(place_id["office"], place_id["hall"], n);
 
+		string output = "";
+		int u = place_id["hall"];
+		while (u != place_id["office"]) {
+			output = " -> " + place_array[u] + output;
+			u      = backTrack[u];
+		}
+		output = "office" + output;
+		cout << output;
+
+		output = "";
+		dijkstra(place_id["hall"], place_id["office"], n);
+		u = place_id["office"];
+		while (u != place_id["hall"]) {
+			output = " -> " + place_array[u] + output;
+			u = backTrack[u];
+		}
+		cout << output << "\n";
 	}
 	
     return 0;
