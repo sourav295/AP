@@ -95,11 +95,8 @@ int main()
 
 		lvl[0] = lvl[1];
 		getCost(0, destination, visited, path, index, numeric_limits<int>::max(), M);
-		cout << min_cost << "\n";
-
-		
+		cout << min_cost << "\n";	
 	}
-
 
     return 0;
 }
