@@ -85,7 +85,7 @@ int main()
 			park[a][b] = d;
 			park[b][a] = d;
 
-			if (a == 0 && b == n - 1 && d < minDirect_d) {
+			if ((a == 0 && b == n - 1 && d < minDirect_d) || (a == n - 1 && b == 0 && d < minDirect_d)) {
 				minDirect_d = d;
 			}
 
