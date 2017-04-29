@@ -10,24 +10,23 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
-#include <bitset>
 using namespace std;
 
 
-bool* createPrimeArray(long int n) {
+bool* createPrimeArray(unsigned long long n) {
 	bool  *flag = new bool[n];
-	long int *prime = new long int[n];
+	unsigned long long *prime = new unsigned long long[n];
 	
-	for (long int i = 0; i <= n; i++) {
+	for (unsigned long long i = 0; i <= n; i++) {
 		flag[i] = true;
 	}
 
-	long int count = 0;		   //total number found now
-	for (long int i = 2; i <= n; i++) {
+	unsigned long long count = 0;		   //total number found now
+	for (unsigned long long i = 2; i <= n; i++) {
 		if (flag[i] == true)
 			prime[count++] = i;     //not filtered, then prime
 									// prime[j], the j-th prime	
-		for(long int j=0 ; j<count  &&  i*prime[j] <= n ; j++)	{
+		for(unsigned long long j=0 ; j<count  &&  i*prime[j] <= n ; j++)	{
 			flag[i*prime[j]] = false;   //i*prime[j] is filtered. 					    			    	                              
 			if (i%prime[j] == 0)
 				break;
@@ -41,7 +40,7 @@ bool* createPrimeArray(long int n) {
 
 int main()
 {
-	long int n;
+	unsigned long long n;
 
 	
 
@@ -66,8 +65,8 @@ int main()
 				cout << n << " is not the sum of two primes!\n";
 		}
 		else{
-			long int p1, p2;
-			for (long int i = n / 2; i < n; i++){
+			unsigned long long p1, p2;
+			for (unsigned long long i = n / 2; i < n; i++){
 				p2 = i;
 				p1 = n - p2;
 				if (flag[p1] && flag[p2]){
