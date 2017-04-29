@@ -42,11 +42,11 @@ int main()
 {
 	unsigned long long n;
 
-	
+	bool *flag = createPrimeArray(100000000);
 
 	while(cin >> n){
 		//n = input.front();
-		bool *flag = createPrimeArray(n);
+		
 		if (n == 0 || n == 1) {
 			cout << n << " is not the sum of two primes!\n";
 			continue;
