@@ -22,7 +22,7 @@ struct Instruction{
 
 	Instruction(){}
 
-	Instruction(int x){
+	Instruction(unsigned int x){
 		overall = x;
 		oprt = (x >> 5) & oprt_mask;
 		oprd = x & oprd_mask;
