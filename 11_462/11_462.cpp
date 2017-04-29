@@ -13,20 +13,20 @@
 using namespace std;
 
 
-bool* createPrimeArray(unsigned long long n) {
+bool* createPrimeArray(unsigned long int n) {
 	bool  *flag = new bool[n];
-	unsigned long long *prime = new unsigned long long[n];
+	unsigned long int *prime = new unsigned long int[n];
 	
-	for (unsigned long long i = 0; i <= n; i++) {
+	for (unsigned long int i = 0; i <= n; i++) {
 		flag[i] = true;
 	}
 
-	unsigned long long count = 0;		   //total number found now
-	for (unsigned long long i = 2; i <= n; i++) {
+	unsigned long int count = 0;		   //total number found now
+	for (unsigned long int i = 2; i <= n; i++) {
 		if (flag[i] == true)
 			prime[count++] = i;     //not filtered, then prime
 									// prime[j], the j-th prime	
-		for(unsigned long long j=0 ; j<count  &&  i*prime[j] <= n ; j++)	{
+		for(unsigned long int j=0 ; j<count  &&  i*prime[j] <= n ; j++)	{
 			flag[i*prime[j]] = false;   //i*prime[j] is filtered. 					    			    	                              
 			if (i%prime[j] == 0)
 				break;
@@ -40,7 +40,7 @@ bool* createPrimeArray(unsigned long long n) {
 
 int main()
 {
-	unsigned long long n;
+	unsigned long int n;
 
 	bool *flag = createPrimeArray(100000000);
 
@@ -65,8 +65,8 @@ int main()
 				cout << n << " is not the sum of two primes!\n";
 		}
 		else{
-			unsigned long long p1, p2;
-			for (unsigned long long i = n / 2; i < n; i++){
+			unsigned long int p1, p2;
+			for (unsigned long int i = n / 2; i < n; i++){
 				p2 = i;
 				p1 = n - p2;
 				if (flag[p1] && flag[p2]){
