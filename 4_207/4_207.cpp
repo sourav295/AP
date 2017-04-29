@@ -9,208 +9,104 @@
 #include <stack>
 #include <limits>
 #include <sstream>
+#include <map>
 using namespace std;
 
-struct Place {
+map<string, int> place_id;
 
-	int id;
-	string name;
-	vector<pair<int, int>> id_dist;
 
-	Place(string n, int identity) {
-		name = n;
-		id = identity;
-	}
-};
+const int n_limit = 100;
 
-int minDistance(vector<int> dist, vector<bool> sptSet)
+int sptSet[n_limit], dist[n_limit];
+int college[n_limit][n_limit];
+int backTrack[n_limit];
+
+string place_array[n_limit];
+
+int minDistance(int n)
 {
-	// Initialize min value
 	int min = numeric_limits<int>::max();
-	int min_index;
+	int min_index = -1;
 
-	for (int v = 0; v < dist.size(); v++)
-		if (sptSet[v] == false && dist[v] <= min){
-			min = dist[v]; 
+	for (int v = 0; v < n; v++) {
+		if (sptSet[v] == false && dist[v] <= min) {
+
+			min = dist[v];
 			min_index = v;
 		}
+	}
 
 	return min_index;
 }
 
-
-stack<Place> execute(vector<Place> &nodes, int index_src, int index_dest, int &distance) {
-	int n = nodes.size();
-
-	vector<int> dist;
-	vector<bool> sptSet;
-	vector<int> preceeding_id;
-	for (int i = 0; i < n; i++){
-		dist.push_back(numeric_limits<int>::max());
-		sptSet.push_back(false);
-		preceeding_id.push_back(0);
+void dijkstra(int src, int dest, int n)
+{
+	for (int i = 0; i < n; i++) {
+		dist[i] = numeric_limits<int>::max();
+		sptSet[i] = false;
 	}
-	dist[index_src] = 0;
 
-	// Find shortest path for all vertices
-	for (int count = 0; count < n ; count++)
+	dist[src] = 0;
+
+	for (int count = 0; count < n; count++)
 	{
-		int u = minDistance(dist, sptSet);
+		int u = minDistance(n);
 		sptSet[u] = true;
+		if (u == dest)
+			return;
 
-		if (u == index_dest) {
-			distance = dist[u];
-			stack<Place> path;
-			int currentId = u;
-
-			while (currentId != index_src) {
-				path.push(nodes[currentId]);
-				currentId = preceeding_id[currentId];
+		for (int v = 0; v < n; v++)
+			if (!sptSet[v] && college[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + college[u][v] < dist[v]) {
+				dist[v] = dist[u] + college[u][v];
+				backTrack[v] = u;
 			}
 
-			path.push(nodes[currentId]);
-
-			return path;
-		}
-		
-		Place p = nodes[u];
-		
-		//Relaxation
-		for (int k = 0; k < p.id_dist.size(); k++) {
-			int other_nodeId = p.id_dist[k].first;
-			int dist_toNode  = p.id_dist[k].second;
-
-			if (!sptSet[other_nodeId] && dist[u] != numeric_limits<int>::max() && dist[u] + dist_toNode < dist[other_nodeId]) {
-				dist[other_nodeId] = dist[u] + dist_toNode;
-				preceeding_id[other_nodeId] = u;
-			}
-
-		}
 	}
 
-	stack<Place> empty;
-	return empty;
-
+	
 }
 
 
 
 int main()
 {
-	bool first = true;
-	string start = "office";
-	string end = "hall";
+	int n, m;
+	int dist1, dist2, indA, indB;
 
-	string input;
-	while(getline(cin, input)){
 
-		if (first)
-			first = false;
-		else
-			cout << "\n";
+	while (cin >> n) {
 		
-		int n;
-		stringstream node_count(input);
-		node_count >> n;
-	
-		string place;
-		int index_src = 0;
-		int index_dest = 0;
-
-		//getline(cin, place);//blank
-	
-		vector<Place> nodes;
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				college[i][j] = 0;
+		
+		
+		string place, link;
+		cin >> place;
 		for (int i = 0; i < n; i++) {
-			getline(cin, place);
-			nodes.push_back(Place(place, i));
-
-			if (!place.compare(start))
-				index_src = i;
-			if (!place.compare(end))
-				index_dest = i;
+			place_id[place] = i;
+			place_array[i] = place;
 		}
-	
-		int n_roads;
-		cin >> n_roads;
-
-		getline(cin, place);//blank
-
-		for (int i = 0; i < n_roads; i++) {
-			string road;
-			getline(cin, road);
+		cin >> m;
+		for (int i = 0; i < m; i++) {
+			cin >> link;
+			stringstream ss(link);
+			ss >> place;
+			ss >> dist1;
 		
-			int indexOfDigit = -1;
-			for (int j = 0; j < road.length(); j++)
-			{
-				if (isdigit(road.at(j)))
-				{
-					indexOfDigit = j;
-					break;
-				}
+			indA = place_id[place.substr(0, place.find(":"))];
+			indB = place_id[place.substr(place.find(":") + 1, place.length())];
+
+			college[indA][indB] = dist1;
+			if (ss >> dist2) {
+				college[indB][indA] = dist2;
 			}
-			string places = road.substr(0, indexOfDigit - 1);
-			string num = road.substr(indexOfDigit, road.length() - indexOfDigit);
-		
-			stringstream ss_places(places);
-			stringstream ss_nums(num);
-			string p1 = "";
-			string p2 = "";
-			int d1;
-			int d2;
-
-			getline(ss_places, p1, ':');
-			getline(ss_places, p2);
-		
-			int index_p1 = 0;
-			int index_p2 = 0;
-			bool found_p1 = false;
-			bool found_p2 = false;
-
-			for (int j = 0; j < n; j++) {
-				if (!found_p1 && !p1.compare(nodes[j].name)) {
-					index_p1 = j;
-					found_p1 = true;
-				}
-				if (!found_p2 && !p2.compare(nodes[j].name)){
-					index_p2 = j;
-					found_p2 = true;
-				}
-
-				if (found_p1 && found_p2)
-					break;
-			}
-		
-		
-			ss_nums >> d1;
-		
-			if (ss_nums >> d2) {
-				//bi-directional
-				nodes[index_p2].id_dist.push_back({ index_p1, d2 });
-			}
-			nodes[index_p1].id_dist.push_back({index_p2, d1});
 
 		}
+		dijkstra(place_id["office"], place_id["hall"], N);
 
-		int distance_to = 0;
-		int distance_fro = 0;
-		stack<Place> path_to  = execute(nodes, index_src, index_dest, distance_to);
-		stack<Place> path_fro = execute(nodes, index_dest, index_src, distance_fro);
-		
-		cout << distance_to + distance_fro<<"\n";
-		cout << path_to.top().name;
-		path_to.pop();
-		while (!path_to.empty()) {
-			cout << " -> " << path_to.top().name;
-			path_to.pop();
-		}
-		path_fro.pop();
-		while (!path_fro.empty()) {
-			cout << " -> " << path_fro.top().name;
-			path_fro.pop();
-		}
-		cout << "\n";
-	
 	}
+	
     return 0;
 }
 
