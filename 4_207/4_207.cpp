@@ -116,23 +116,27 @@ int main()
 		
 		dijkstra(place_id["office"], place_id["hall"], n);
 
-		string output = "";
+		int ans = dist[place_id["hall"]];
+
+		string output1 = "";
+		string output2 = "";
+
 		int u = place_id["hall"];
 		while (u != place_id["office"]) {
-			output = " -> " + place_array[u] + output;
+			output1 = " -> " + place_array[u] + output1;
 			u      = backTrack[u];
 		}
-		output = "office" + output;
-		cout << output;
+		output1 = "office" + output1;
 
-		output = "";
 		dijkstra(place_id["hall"], place_id["office"], n);
+		ans+= dist[place_id["office"]];
+
 		u = place_id["office"];
 		while (u != place_id["hall"]) {
-			output = " -> " + place_array[u] + output;
+			output2 = " -> " + place_array[u] + output2;
 			u = backTrack[u];
 		}
-		cout << output << "\n";
+		cout << ans << "\n" << output1 << output2 << "\n\n";
 	}
 	
     return 0;
