@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <limits>
 #include <sstream>
+#include <cmath>        // std::abs
 using namespace std;
 
 const int n_limit = 105;
@@ -21,10 +22,11 @@ int min_cost;
 
 
 
-void getCost(int u, int d, bool visited[], int path[], int &indx, int min_lvl ,int M, int N, int cost_intermediate) {
+void getCost(int u, int d, bool visited[], int path[], int &indx, int min_lvl , int max_lvl,int M, int N, int cost_intermediate) {
 	visited[u] = true;
 	path[indx] = u;
 	min_lvl    = min(min_lvl, lvl[u]);
+	max_lvl    = max(max_lvl, lvl[u]);
 	
 	indx++;
 
@@ -38,8 +40,8 @@ void getCost(int u, int d, bool visited[], int path[], int &indx, int min_lvl ,i
 	}
 	else {
 		for (int v = 0; v <= N; v++) {
-			if (cost[u][v] > 0 && !visited[v] && (lvl[v] - min_lvl <= M) && cost_intermediate + cost[u][v] < min_cost) {
-				getCost(v, d, visited, path, indx, min_lvl, M, N, cost_intermediate + cost[u][v]);
+			if (cost[u][v] > 0 && !visited[v] && (abs(lvl[v] - min_lvl) <= M) && (abs(lvl[v] - max_lvl) <= M) && cost_intermediate + cost[u][v] < min_cost) {
+				getCost(v, d, visited, path, indx, min_lvl, max_lvl, M, N, cost_intermediate + cost[u][v]);
 			}
 		}
 	}
@@ -90,7 +92,7 @@ int main()
 		int index = 0;
 		int cost_intermediate = 0;
 		lvl[0] = lvl[1];
-		getCost(0, destination, visited, path, index, numeric_limits<int>::max(), M, N, cost_intermediate);
+		getCost(0, destination, visited, path, index, numeric_limits<int>::max(), numeric_limits<int>::min(), M, N, cost_intermediate);
 		cout << min_cost << "\n";	
 	}
 
