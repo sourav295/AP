@@ -13,53 +13,46 @@ using namespace std;
 
 const int n_limit = 105;
 int cost[n_limit][n_limit];
-int lvl[n_limit], sptSet[n_limit], dist[n_limit], minLvl[n_limit];
+int lvl[n_limit];
 
-int minDistance(int V)
-{
-	// Initialize min value
-	int min = numeric_limits<int>::max();
-	int min_index;
 
-	for (int v = 0; v < V; v++)
-		if (sptSet[v] == false && dist[v] <= min) {
-			min = dist[v];
-			min_index = v;
+int destination;
+int min_cost;
+
+
+
+void getCost(int u, int d, bool visited[], int path[], int &indx, int min_lvl ,int M) {
+	visited[u] = true;
+	path[indx] = u;
+	min_lvl    = min(min_lvl, lvl[u]);
+	
+	indx++;
+
+	if (u == destination) {
+		//find cost
+		int v = destination;
+		int total_cost = 0;
+		for (int i = 0; i < indx - 1; i++) {
+			total_cost += cost[path[i]][path[i + 1]];
 		}
 
-	return min_index;
-}
-
-
-
-int dijkstra(int src, int V, int M)
-{
-	for (int i = 0; i < V; i++) {
-		dist[i] = numeric_limits<int>::max();
-		sptSet[i] = false;
-		minLvl[i] = numeric_limits<int>::max();
+		if (total_cost < min_cost) {
+			min_cost = total_cost;
+		}
 	}
-
-	dist[src] = 0;
-	minLvl[src] = lvl[1];//destination monster
-
-	for (int count = 0; count < V; count++)
-	{
-		int u = minDistance(V);
-		sptSet[u] = true;
-
-		if (u == 1)
-			return dist[u];
-		
-		for (int v = 0; v < V; v++)
-			if (!sptSet[v] && cost[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + cost[u][v] < dist[v] && abs(lvl[v] - minLvl[u])<=M ) {
-				dist[v]   = dist[u] + cost[u][v];
-				minLvl[v] = lvl[v] < minLvl[u] ? lvl[v] : minLvl[u];
+	else {
+		for (int v = 0; v < n_limit; v++) {
+			if (cost[u][v] > 0 && !visited[v] && (lvl[v] - min_lvl <= M)) {
+				getCost(v, d, visited, path, indx, min_lvl, M);
 			}
+		}
 	}
 
-	return -1;
+	indx--;
+	visited[u] = false;
 }
+
+
 
 int main()
 {
@@ -69,6 +62,13 @@ int main()
 
 
 	while (cin >> M >> N) {
+		for (int i = 0; i <= N; i++) {
+			for (int j = 0; j <= N; j++) {
+				cost[i][j] = 0;
+			}
+			lvl[i] = 0;
+		}
+		
 		for (int i = 1; i <= N; i++) {
 			cin >> P >> L >> X;
 			
@@ -81,15 +81,23 @@ int main()
 			}
 		}
 
-		for (int i = 1; i <= N; i++) {
-			if (abs(lvl[1] - lvl[i]) > M)
-				for (int j = 0; j <= N; j++) {
-					cost[i][j] = 0;
-					cost[j][i] = 0;
-				}
+		destination = 1;
+		min_cost = numeric_limits<int>::max();
+		
+		bool visited[n_limit];
+		int  path[n_limit];
+		for (int i = 0; i < n_limit; i++) {
+			visited[i] = false;
+			path[i] = 0;
 		}
 
-		cout << dijkstra(0, N + 1, M) <<"\n";
+		int index = 0;
+
+		lvl[0] = lvl[1];
+		getCost(0, destination, visited, path, index, numeric_limits<int>::max(), M);
+		cout << min_cost << "\n";
+
+		
 	}
 
 
