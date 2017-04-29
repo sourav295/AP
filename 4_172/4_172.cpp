@@ -56,13 +56,13 @@ int dijkstra(int src, int dest)
 			return dist[dest];
 
 		for (int v = 0; v < n; v++)
-			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v]) {
+			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v] && !(u == src && v == dest)) {
 				dist[v] = dist[u] + park[u][v];
 			}
 				
 	}
 
-	return 0;
+	return numeric_limits<int>::max();
 }
 
 int main()
@@ -72,9 +72,8 @@ int main()
 	int r;
 
 	while (cin >> n >> r) {
-		bool connected_to_src = false;
-		int distance_dest = 0;
 		
+		int minDirect_d = numeric_limits<int>::max();
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++)
 				park[i][j] = 0;
@@ -83,36 +82,31 @@ int main()
 			int a, b, d;
 			cin >> a >> b >> d;
 
-			if (a == 0 && b == n - 1) {
-				connected_to_src = true;
-				distance_dest = d;
+			park[a][b] = d;
+			park[b][a] = d;
+
+			if (a == 0 && b == n - 1 && d < minDirect_d) {
+				minDirect_d = d;
 			}
-			else {
-				park[a][b] = d;
-				park[b][a] = d;
-			}
-			
+
 		}
 		int dest = n - 1;
-		if (connected_to_src) {
+
+		int candidate1 = numeric_limits<int>::max();
+		if (minDirect_d < candidate1) {//there is a link between src and dest
+			int minlink_intermediate = candidate1;
 			for (int i = 0; i < n; i++) {
-				if (park[0][i] > 0) {
-					int t = n;
-					park[i][t] = park[0][i];
-					park[t][i] = park[0][i];
-					
-					park[t][n-1] = distance_dest;
-					park[n-1][t] = distance_dest;
-					
-					n++;
-				}
+				if (park[0][i] > 0 && park[0][i] < minlink_intermediate)
+					minlink_intermediate = park[0][i];
 			}
+			candidate1 = minDirect_d + 2 * minlink_intermediate;
 		}
 
+		
 		int res = dijkstra(0, dest);
 		cout << "Set #" << count++ << "\n";
-		if(res != numeric_limits<int>::max() && res != 0){
-			cout << res << "\n";
+		if((res != numeric_limits<int>::max() && res != 0) || candidate1 != numeric_limits<int>::max()){
+			cout << (res < candidate1 ? res:candidate1) << "\n";
 		}
 		else {
 			cout << "?\n";
