@@ -21,7 +21,7 @@ int min_cost;
 
 
 
-void getCost(int u, int d, bool visited[], int path[], int &indx, int min_lvl ,int M) {
+void getCost(int u, int d, bool visited[], int path[], int &indx, int min_lvl ,int M, int N, int cost_intermediate) {
 	visited[u] = true;
 	path[indx] = u;
 	min_lvl    = min(min_lvl, lvl[u]);
@@ -31,19 +31,15 @@ void getCost(int u, int d, bool visited[], int path[], int &indx, int min_lvl ,i
 	if (u == destination) {
 		//find cost
 		int v = destination;
-		int total_cost = 0;
-		for (int i = 0; i < indx - 1; i++) {
-			total_cost += cost[path[i]][path[i + 1]];
-		}
-
+		int total_cost = cost_intermediate;
 		if (total_cost < min_cost) {
 			min_cost = total_cost;
 		}
 	}
 	else {
-		for (int v = 0; v < n_limit; v++) {
-			if (cost[u][v] > 0 && !visited[v] && (lvl[v] - min_lvl <= M)) {
-				getCost(v, d, visited, path, indx, min_lvl, M);
+		for (int v = 0; v <= N; v++) {
+			if (cost[u][v] > 0 && !visited[v] && (lvl[v] - min_lvl <= M) && cost_intermediate + cost[u][v] < min_cost) {
+				getCost(v, d, visited, path, indx, min_lvl, M, N, cost_intermediate + cost[u][v]);
 			}
 		}
 	}
@@ -92,9 +88,9 @@ int main()
 		}
 
 		int index = 0;
-
+		int cost_intermediate = 0;
 		lvl[0] = lvl[1];
-		getCost(0, destination, visited, path, index, numeric_limits<int>::max(), M);
+		getCost(0, destination, visited, path, index, numeric_limits<int>::max(), M, N, cost_intermediate);
 		cout << min_cost << "\n";	
 	}
 
