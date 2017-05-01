@@ -15,7 +15,7 @@ using namespace std;
 map<string, int> place_id;
 
 
-const int n_limit = 100;
+const int n_limit = 201;
 
 int sptSet[n_limit], dist[n_limit];
 int college[n_limit][n_limit];
