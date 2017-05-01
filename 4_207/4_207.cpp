@@ -107,9 +107,11 @@ int main()
 			indA = place_id[place.substr(0, place.find(":"))];
 			indB = place_id[place.substr(place.find(":")+1, place.length())];
 
-			college[indA][indB] = distance;
+			if(college[indA][indB] == 0 || (college[indA][indB] > 0 && college[indA][indB] > distance))
+				college[indA][indB] = distance;
 			if (ss_distance >> distance) {
-				college[indB][indA] = distance;
+				if (college[indB][indA] == 0 || (college[indB][indA] > 0 && college[indB][indA] > distance))
+					college[indB][indA] = distance;
 			}
 
 		}
