@@ -15,48 +15,39 @@
 
 using namespace std;
 
-struct suffix {
-
-	int index;
-	string suff;
-
-	suffix(){}
-
+struct suffix
+{
+	char *suff;
 };
 
-vector<suffix> suffixes(1000000);
+struct suffix suffixes[1000000];
 
-int cmp(suffix a, suffix b)
+int cmp(struct suffix a, struct suffix b)
 {
-	return a.suff.compare(b.suff) < 0 ? 1 : 0;
+	return strcmp(a.suff, b.suff) < 0 ? 1 : 0;
 }
 
-string buildSuffixArray(string txt, int n, int L)
+void buildSuffixArray(string txt, int n, int L)
 {
-	struct suffix ;
-
+	
 	int count = 0;
 	for (int i = 0; i < n; i++)
 	{
-		
-		string suffix_txt = txt.substr(i);
-		if (suffix_txt.length() >= L) {
-			suffixes[i].index = i;
-			suffixes[i].suff = suffix_txt;
+		string x = txt.substr(i);
+		if (x.length > L) {
+			suffixes[i].suff = &x[0];
 			count++;
 		}
 	}
 
-	string minString = suffixes[0].suff;
-	for (int i = 0; i < count; i++) {
-		if (suffixes[i].suff.compare(minString) < 0) {
-			minString = suffixes[i].suff;
-		}
-	}
+	sort(suffixes, suffixes + count, cmp);
 
-
-	return minString.substr(0, L);
+	
+	for (int i = 0; i < L; i++)
+		cout << (suffixes[0].suff[i]);
+	cout << "\n";
 }
+
 
 
 int main()
@@ -67,7 +58,7 @@ int main()
 		stringstream ss(line);
 		ss >> x;
 		ss >> L;
-		cout << buildSuffixArray(x, x.length(), L) << "\n";
+		buildSuffixArray(x, x.length(), L);
 
 
 	}
