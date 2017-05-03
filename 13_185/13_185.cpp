@@ -108,8 +108,7 @@ int main()
 			cout << (all_words[i])[j];
 			j++;
 		}
-		if(i < all_words.size() -1)
-			cout << "\n";
+		cout << "\n";
 	}
 
 			
