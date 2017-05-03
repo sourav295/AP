@@ -105,6 +105,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quiz3_2016_Q1", "Quiz3_2016
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quiz3_Q2_2016", "Quiz3_Q2_2016\Quiz3_Q2_2016.vcxproj", "{58DE0C75-ABEE-40A9-BD59-80FA82AD090D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12_385", "12_385\12_385.vcxproj", "{079CEE15-3888-46BE-8FB7-E337EAF5DBD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -521,6 +523,14 @@ Global
 		{58DE0C75-ABEE-40A9-BD59-80FA82AD090D}.Release|x64.Build.0 = Release|x64
 		{58DE0C75-ABEE-40A9-BD59-80FA82AD090D}.Release|x86.ActiveCfg = Release|Win32
 		{58DE0C75-ABEE-40A9-BD59-80FA82AD090D}.Release|x86.Build.0 = Release|Win32
+		{079CEE15-3888-46BE-8FB7-E337EAF5DBD6}.Debug|x64.ActiveCfg = Debug|x64
+		{079CEE15-3888-46BE-8FB7-E337EAF5DBD6}.Debug|x64.Build.0 = Debug|x64
+		{079CEE15-3888-46BE-8FB7-E337EAF5DBD6}.Debug|x86.ActiveCfg = Debug|Win32
+		{079CEE15-3888-46BE-8FB7-E337EAF5DBD6}.Debug|x86.Build.0 = Debug|Win32
+		{079CEE15-3888-46BE-8FB7-E337EAF5DBD6}.Release|x64.ActiveCfg = Release|x64
+		{079CEE15-3888-46BE-8FB7-E337EAF5DBD6}.Release|x64.Build.0 = Release|x64
+		{079CEE15-3888-46BE-8FB7-E337EAF5DBD6}.Release|x86.ActiveCfg = Release|Win32
+		{079CEE15-3888-46BE-8FB7-E337EAF5DBD6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
