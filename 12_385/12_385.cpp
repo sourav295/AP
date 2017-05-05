@@ -47,8 +47,8 @@ int getTriArea(Point origin, Point v1, Point v2) {
 	int bx = v2.x - origin.x;
 	int by = v2.y - origin.y;
 
-	int res  = abs(ax.by - bx.ay)/2;
-
+	int res  = abs(ax*by - bx*ay)/2;
+	
 	return res;
 
 }
@@ -126,7 +126,7 @@ int main()
 {
 	int K, N, x, y, minus1;
 	
-	K =0;
+	K =1;
 	while(cin >> N) {
 		input.clear();
 		for (int i = 0; i < N; i++) {
@@ -198,10 +198,10 @@ int main()
 			pointStack.push_back(points[i]);
 		}
 
-		
+		/*
 		for (int i = 0; i < pointStack.size(); i++) {
 			cout << pointStack[i].x << " " << pointStack[i].y << "\n";
-		}
+		}*/
 		
 		int i, j, k;
 		int start, end;
@@ -220,7 +220,7 @@ int main()
 			i++;
 			j++;
 
-			while (j < N && !dist_square(pointStack[i], point_copy[j]))
+			while (j < N && dist_square(pointStack[i], point_copy[j])!=0)
 				j++;
 			end = j;
 			//calculate the oustracized area
@@ -231,6 +231,11 @@ int main()
 			i = end;
 			j = end;
 		}
+
+		cout << "Tile #" << K++;
+		cout << "\nWasted Space = ";
+		printf("%.2f %%\n\n", (float)sum_ousted*100/sum_con);
+
 		
 	}
 
