@@ -127,7 +127,12 @@ int main()
 	int K, N, x, y, minus1;
 	
 	K =1;
-	while(cin >> N) {
+	while(true) {
+		cin >> N;
+
+		if (N == 0)
+			break;
+
 		input.clear();
 		for (int i = 0; i < N; i++) {
 			cin >> x >> y;
