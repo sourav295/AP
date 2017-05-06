@@ -14,7 +14,7 @@
 using namespace std;
 
 const int max_coord = 100;
-const int n_limit   = (2* max_coord) + 2;//2 more for source and destination
+const int n_limit   = (2* max_coord) + 10;//2 more for source and destination
 
 vector<pair<int, int>> coordinates(max_coord);
 bool graph[n_limit][n_limit];
@@ -97,10 +97,6 @@ void connect(int a, int b, int d) {
 
 }
 
-void connect_to_edge(int a, int b, int d) {
-	graph[a][b] = true;
-	capacities[a][b] = d;
-}
 
 /*
 void connect(int a, int b, int d) {
@@ -142,8 +138,11 @@ int main()
 		clear(n);
 
 		int north_id	= 0;
-		int south_id	= 1;
+		int south_id	= n+1;
 		int four_d_sq	= 4*d*d;
+
+		generateNode(north_id, numeric_limits<int>::max());
+		generateNode(south_id, numeric_limits<int>::max());
 
 		for (int i = 0; i <n; i++) {
 			cin >> x >> y;
@@ -160,11 +159,11 @@ int main()
 			if (u_x == -1 && u_y == -1)//duplicate coordinate
 				continue;
 
-			connect(2 * u, 2 * u + 1, 1);
+			generateNode(u, 1);
 			if (u_y + d >= W)
-				connect(north_id, 2 * u + 1, numeric_limits<int>::max());
+				connect(north_id, u, numeric_limits<int>::max());
 			if (u_y - d <= 0)
-				connect(south_id, 2 * u, numeric_limits<int>::max());
+				connect(south_id, u, numeric_limits<int>::max());
 
 			for (int j = i + 1; j < n; j++) {
 				v = j + 1;
@@ -183,7 +182,7 @@ int main()
 						capacities[2 * u + 1][2 * u] = capacities[2 * u + 1][2 * u] + 1;
 						coordinates[j] = { -1, -1 };
 					}else{
-						connect(2 * u + 1, 2 * v, numeric_limits<int>::max());
+						connect(u, v, numeric_limits<int>::max());
 					}
 				}
 			}
