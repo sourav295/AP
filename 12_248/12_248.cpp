@@ -13,8 +13,10 @@
 using namespace std;
 
 
+long long xstart, ystart, xend, yend, xleft, ytop, xright, ybottom;
+pair<long long, long long> line_range_x;
+pair<long long, long long> line_range_y;
 
-/*
 struct Point
 {
 	double x;
@@ -28,170 +30,73 @@ struct Point
 	Point(){}
 };
 
-struct Line {
-	Point p, q;
-
-	Line(Point ap, Point aq) {
-		p = ap;
-		q = aq;
-	}
-	Line(){}
-};
-
-Line rect[rect_n_sides];
-Line objective;
-
-
-bool sameSegment(Point p, Point q, Point r)
-{
-	if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) &&
-		q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y))
-		return true;
-
-	return false;
-}
 
 int orient(Point p, Point q, Point r)
 {
 	double val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 	if (val == 0) return 0;
-	return (val > 0) ? 1 : 2; // clock or counterclock wise
+	return (val > 0) ? 1 : -1; // clock or counterclock wise
 }
 
-bool doIntersect(Line a, Line b)
-{
-	Point p1 = a.p;
-	Point q1 = a.q;
-	Point p2 = b.p;
-	Point q2 = b.q;
 
-	int o1 = orient(p1, q1, p2);
-	int o2 = orient(p1, q1, q2);
-	int o3 = orient(p2, q2, p1);
-	int o4 = orient(p2, q2, q1);
 
-	if (o1 != o2 && o3 != o4)
+bool inBetween(int lowerLim, int upperLim, int val) {
+	if (val >= lowerLim && val <= upperLim)
 		return true;
-
-	if (o1 == 0 && sameSegment(p1, p2, q1)) return true;
-	if (o2 == 0 && sameSegment(p1, q2, q1)) return true;
-	if (o3 == 0 && sameSegment(p2, p1, q2)) return true;
-	if (o4 == 0 && sameSegment(p2, q1, q2)) return true;
-
-	return false;
-}
-*/
-
-
-const int rect_n_sides = 4;
-float distance(int ax1, int ay1, int ax2, int ay2) {
-	float x_diffsq = pow(ax1 - ax2, 2);
-	float y_diffsq = pow(ay1 - ay2, 2);
-	return sqrt(x_diffsq + y_diffsq);
-}
-
-struct Line {
-	double x1, y1, x2, y2;
-
-	float dist;
-
-	Line(int ax1, int ay1, int ax2, int ay2) {
-		x1 = ax1;
-		x2 = ax2;
-		y1 = ay1;
-		y2 = ay2;
-
-		dist = distance(x1, y1, x2, y2);
-	}
-	Line() {}
-
-	double reltivePosition(Line other) {
-		double x3 = other.x1;
-		double x4 = other.x2;
-		long long y3 = other.y1;
-		long long y4 = other.y2;
-
-		long long first_angle = (x2*y3 - x3*y2) - x1*(y3 - y2) + y1*(x3 - x2);
-		long long second_angle = (x2*y4 - x4*y2) - x1*(y4 - y2) + y1*(x4 - x2);
-
-		return first_angle * second_angle;
-	}
-
-}rect[rect_n_sides];
-
-Line objective;
-
-float maxDistancebtwLines(Line l1, Line l2) {
-
-	vector<pair<int, int>> all_points;
-	all_points.push_back({ l1.x1, l1.y1 });
-	all_points.push_back({ l1.x2, l1.y2 });
-	all_points.push_back({ l2.x1, l2.y1 });
-	all_points.push_back({ l2.x2, l2.y2 });
-
-	sort(all_points.begin(), all_points.begin() + 4);
-
-	return distance(all_points[0].first, all_points[0].second, all_points[3].first, all_points[3].second);
-}
-
-
-
-bool isIntersecting(Line l1, Line l2) {
-
-	long long rel_pos1 = l1.reltivePosition(l2);
-	long long rel_pos2 = l2.reltivePosition(l1);
-	if ((rel_pos1 <= 0 && rel_pos2 <= 0) && !(rel_pos1 == 0 && rel_pos2 == 0))//one of them can be 0, not both
-		return true;
-
-	bool distance_ok = (maxDistancebtwLines(l1, l2) < (l1.dist + l2.dist));
-	//bool are_colinear = isColinear(l1, l2);
-
-	if (rel_pos1 == 0 && rel_pos2 == 0 && distance_ok) {
-		return true;
-	}
 	return false;
 }
 
-// Driver program to test above functions
+bool inRangeOfLine(long long x[], long long y[]) {
+
+	for(int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++) {
+			if (inBetween(line_range_x.first, line_range_x.second, x[i]) && inBetween(line_range_y.first, line_range_y.second, y[j]))
+				return true;
+		}
+
+	return false;
+}
+
 int main()
 {
 	int test;
 	cin >> test;
+
+
 	
 	for (int t = 0; t < test; t++) {
 
-		long long xstart, ystart, xend, yend, xleft, ytop, xright, ybottom;
+		
 		cin >> xstart >> ystart >> xend >> yend >> xleft >> ytop >> xright >> ybottom;
 
 
-		objective = Line(xstart, ystart, xend, yend);
-
-		rect[0] = Line(xleft, ytop          , xright, ytop     );
-		rect[1] = Line(xleft, ytop          , xleft , ybottom  );
-		rect[2] = Line(xright, ybottom      , xright, ytop     );
-		rect[3] = Line(xright, ybottom      , xleft, ybottom   );
-
-		bool liesInside_1 = xstart >= xleft && ystart >= ybottom && xstart <= xright && ystart <= ytop;
-		bool liesInside_2 = xend >= xleft && yend >= ybottom && xend <= xright && yend <= ytop;
-
-		if (liesInside_1 || liesInside_2) {
-			cout << "T\n";
-			continue;
-		}
+		line_range_x = { min(xstart, xend), max(xstart, xend)};
+		line_range_y = { min(ystart, yend), max(ystart, yend)};
 		
-		bool intersect = false;
-		for (int i = 0; i < rect_n_sides; i++) {
-			if (isIntersecting(objective, rect[i])) {
-				intersect = true;
-				break;
-			}
+		long long rect_range_x[] = { min(xleft, xright), max(xleft, xright) };
+		long long rect_range_y[] = { min(ytop, ybottom), max(ytop, ybottom) };
+
+		if (inRangeOfLine(rect_range_x, rect_range_y)) {
+			Point a(xstart, ystart);
+			Point b(xend, yend);
+			
+			int sum = 0;
+
+			for (int i = 0; i < 2; i++)
+				for (int j = 0; j < 2; j++) {
+					Point c(rect_range_x[i], rect_range_y[j]);
+					sum += orient(a, b, c);
+				}
+
+			if(sum == 4 || sum == -4)
+				cout << "F\n";
+			else
+				cout << "T\n";
+
 		}
-		if (intersect) {
-			cout << "T\n";
-			continue;
+		else {
+			cout << "F\n";
 		}
-	
-		cout << "F\n";
 
 	}
 
