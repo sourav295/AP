@@ -14,6 +14,41 @@
 #include <map>
 using namespace std;
 
+
+
+string dna_seq;
+
+struct Edge {
+
+	int start;
+	int end;
+
+	Edge* next;
+
+	Edge(int s, int e) {
+		start = s;
+		end = e;
+		next = NULL;
+	}
+};
+
+
+
+
+
+int main() {
+
+	dna_seq = "GATTACA$";
+	Edge e(0, dna_seq.length());
+	cout << (e.next == NULL);
+
+	return 0;
+}
+
+
+
+
+/*
 int max_depth = 0;
 int occurences = 0;
 string output;
@@ -110,3 +145,4 @@ int main()
     return 0;
 }
 
+*/
