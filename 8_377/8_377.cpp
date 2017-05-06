@@ -11,12 +11,13 @@
 #include <algorithm>
 #include <iomanip>
 #include <cmath>
+#include <map>
 using namespace std;
 
 const int n_limit = 5002;
-long long max_profit = 0;
-int n_peopleToFire = 0;
 
+
+//map<int, pair<long int, int>> idCost_cache;
 
 struct Node {
 	int cost;
@@ -33,33 +34,35 @@ struct Node {
 };
 vector<Node*> all_nodes(n_limit);
 
-void findPeopleToFire(int u, int d, bool visited[], int path[], int &path_index, long long profit)
+pair<long int, int> findPeopleToFire(int u, bool visited[])//returns profit realized and no. of people fired
 {
+	
 	visited[u] = true;
-	path[path_index] = u;
-	path_index++;
 
-	if (u == d)
-	{
-		if (profit > max_profit) {
-			max_profit = profit;
-			n_peopleToFire = path_index - 2;
-		}
-	}
-	else
-	{
-		for (int i = 0; i < all_nodes[u]->subordinates.size(); i++) {
-			int id_subordinate = (all_nodes[u]->subordinates)[i]->id;
-			if (!visited[id_subordinate]) {
-				findPeopleToFire(id_subordinate, d, visited, path, path_index, profit + all_nodes[id_subordinate]->cost);
-			}
+
+	long int sum_profit = all_nodes[u]->cost;
+	int n_fired = 1;
+	for (int i = 0; i < all_nodes[u]->subordinates.size(); i++) {
+		int id_subordinate = (all_nodes[u]->subordinates)[i]->id;
+		if (!visited[id_subordinate]) {
+			pair<long int, int> profitNuser_pair = findPeopleToFire(id_subordinate, visited);
+			
+			sum_profit += profitNuser_pair.first;
+			n_fired += profitNuser_pair.second;
 		}
 	}
 
-	path_index--;
-	visited[u] = false;
+	//idCost_cache[u] = { sum_profit, n_fired };
+
+	
+
+	return { sum_profit, n_fired };
 }
 
+void clearVisited(bool visited[], int n) {
+	for (int j = 0; j < n + 2; j++)
+		visited[j] = false;
+}
 
 int main()
 {
@@ -67,41 +70,42 @@ int main()
 	int n, m, cost;
 	int a, b;
 	while (cin >> n >> m) {
-		//all_nodes.clear();
+		
+		//idCost_cache.clear();
+		long int max_profit = 0;
+		int min_fired = 0;
 
-		Node *start = new Node(0, 0);
-		Node *end   = new Node(0, n+1);
-
-		all_nodes[0]   = start;
-		all_nodes[n+1] = end;
 
 		for (int i = 1; i <= n; i++) {
 			cin >> cost;
 			Node *node = new Node(cost, i);
 			all_nodes[i] = node;
-			all_nodes[0]->subordinates.push_back(node);
 		}
 
 		for (int i = 0; i < m; i++) {
 			cin >> a >> b;
 			all_nodes[a]->subordinates.push_back(all_nodes[b]);
 		}
-		//join end to all last ones
+		
 		for (int i = 1; i <= n; i++) {
-			if(all_nodes[i]->subordinates.size() == 0)
-				all_nodes[i]->subordinates.push_back(all_nodes[n+1]);
+			bool *visited = new bool[n + 2];
+			clearVisited(visited, n);
+			pair<long int, int> profitNuser_pair = findPeopleToFire(i, visited);
+
+			long int sum_profit = profitNuser_pair.first;
+			int n_fired = profitNuser_pair.second;
+
+			if (sum_profit > max_profit) {
+				max_profit = sum_profit;
+				min_fired = n_fired;
+			}
+			else if (sum_profit == max_profit && n_fired < min_fired) {
+				min_fired = n_fired;
+			}
 		}
-
-		bool *visited = new bool[n+2];
-		int *path = new int[n+2];
-		int path_index = 0;
-		for (int i = 0; i < n+2; i++)
-			visited[i] = false;
-		max_profit = 0;
-		n_peopleToFire = 0;
-
-		findPeopleToFire(0, n+1, visited, path, path_index, 0);
-		cout << n_peopleToFire << " " << max_profit << "\n";
+		
+		
+		cout << min_fired << " " << max_profit << "\n";
 	}
 
 
