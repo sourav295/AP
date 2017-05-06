@@ -99,8 +99,8 @@ int main()
 			}
 		}
 		
-		
 		cout << min_fired << " " << max_profit << "\n";
+		break;
 	}
 
 
