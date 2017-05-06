@@ -17,8 +17,6 @@ using namespace std;
 const int n_limit = 5002;
 
 
-//map<int, pair<long long, int>> idCost_cache;
-
 struct Node {
 	long int cost;
 	int id;
@@ -32,6 +30,7 @@ struct Node {
 	Node(){}
 
 };
+
 vector<Node*> all_nodes(n_limit);
 
 pair<long long, int> findPeopleToFire(int u, bool visited[])//returns profit realized and no. of people fired
@@ -100,7 +99,7 @@ int main()
 		}
 		
 		cout << min_fired << " " << max_profit << "\n";
-		break;
+		
 	}
 
 
