@@ -83,6 +83,26 @@ int maxFlow(int start, int end, int n) {
 	return maxFlow;
 }
 
+void generateNode(int a, int cost) {
+	graph[2 * a][2 * a + 1] = true;
+	capacities[2 * a][2 * a + 1] = cost;
+}
+
+void connect(int a, int b, int d) {
+	graph[2 * a + 1][2 * b] = true;
+	graph[2 * b + 1][2 * a] = true;
+
+	capacities[2 * a + 1][2 * b] = d;
+	capacities[2 * b + 1][2 * a] = d;
+
+}
+
+void connect_to_edge(int a, int b, int d) {
+	graph[a][b] = true;
+	capacities[a][b] = d;
+}
+
+/*
 void connect(int a, int b, int d) {
 	graph[a][b] = true;
 	graph[b][a] = true;
@@ -90,7 +110,8 @@ void connect(int a, int b, int d) {
 	capacities[a][b] = d;
 	capacities[b][a] = d;
 
-}
+}*/
+
 
 void clear(int n) {
 	int dimension = 2 * n + 2;
