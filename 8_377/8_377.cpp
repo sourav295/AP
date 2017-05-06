@@ -17,10 +17,10 @@ using namespace std;
 const int n_limit = 5002;
 
 
-//map<int, pair<long int, int>> idCost_cache;
+//map<int, pair<long long, int>> idCost_cache;
 
 struct Node {
-	int cost;
+	long int cost;
 	int id;
 	vector<Node*> subordinates;
 
@@ -34,27 +34,22 @@ struct Node {
 };
 vector<Node*> all_nodes(n_limit);
 
-pair<long int, int> findPeopleToFire(int u, bool visited[])//returns profit realized and no. of people fired
+pair<long long, int> findPeopleToFire(int u, bool visited[])//returns profit realized and no. of people fired
 {
 	
 	visited[u] = true;
 
-
-	long int sum_profit = all_nodes[u]->cost;
+	long long sum_profit = all_nodes[u]->cost;
 	int n_fired = 1;
 	for (int i = 0; i < all_nodes[u]->subordinates.size(); i++) {
 		int id_subordinate = (all_nodes[u]->subordinates)[i]->id;
 		if (!visited[id_subordinate]) {
-			pair<long int, int> profitNuser_pair = findPeopleToFire(id_subordinate, visited);
+			pair<long long, int> profitNuser_pair = findPeopleToFire(id_subordinate, visited);
 			
 			sum_profit += profitNuser_pair.first;
 			n_fired += profitNuser_pair.second;
 		}
 	}
-
-	//idCost_cache[u] = { sum_profit, n_fired };
-
-	
 
 	return { sum_profit, n_fired };
 }
@@ -72,7 +67,7 @@ int main()
 	while (cin >> n >> m) {
 		
 		//idCost_cache.clear();
-		long int max_profit = 0;
+		long long max_profit = 0;
 		int min_fired = 0;
 
 
@@ -90,9 +85,9 @@ int main()
 		for (int i = 1; i <= n; i++) {
 			bool *visited = new bool[n + 2];
 			clearVisited(visited, n);
-			pair<long int, int> profitNuser_pair = findPeopleToFire(i, visited);
+			pair<long long, int> profitNuser_pair = findPeopleToFire(i, visited);
 
-			long int sum_profit = profitNuser_pair.first;
+			long long sum_profit = profitNuser_pair.first;
 			int n_fired = profitNuser_pair.second;
 
 			if (sum_profit > max_profit) {
