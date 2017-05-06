@@ -37,29 +37,33 @@ struct Edge {
 	int start;
 	int end;
 
-	Node nextNode;
+	Node *nextNode;
 
 	Edge(int s, int e) {
 		start = s;
 		end = e;
 		
+		nextNode = new Node();
 	}
 
 	void insert_edge(int other_start, int other_end) {
-		int index_deviate = other_end; // index where the other deviates from this string
 		
+		Node *copy_node = nextNode;
+
 		int j = start;
-		for (int i = other_start; i <= other_end; i++, j++) {
+		int i;
+		for (i = other_start; i <= other_end; i++, j++) {
 			if (dna_seq[i] != dna_seq[j]) {
-				index_deviate = i;
 				break;
 			}
 		}
 
-		((Node)nextNode).insert_node(index_deviate, other_end);
-		((Node)nextNode).insert_node(index_deviate, end);
+		nextNode->insert_node(i, end);
+		nextNode->insert_node(j, end);
 
-		end = index_deviate - 1;
+
+
+		end = j - 1;
 
 	}
 };
@@ -90,7 +94,7 @@ int main() {
 	}
 
 
-	//cout << (e.nextNode == NULL);
+	cout << 5;
 
 	return 0;
 }
