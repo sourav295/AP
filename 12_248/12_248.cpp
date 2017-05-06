@@ -57,6 +57,15 @@ bool inRangeOfLine(long long x[], long long y[]) {
 	return false;
 }
 
+bool inRangeOfRect(long long x[], long long y[]) {
+
+	if (inBetween(x[0], x[1], xstart) && inBetween(y[0], y[1], ystart))
+		return true;
+	if (inBetween(x[0], x[1], xend) && inBetween(y[0], y[1], yend))
+		return true;
+	return false;
+}
+
 int main()
 {
 	int test;
@@ -76,7 +85,7 @@ int main()
 		long long rect_range_x[] = { min(xleft, xright), max(xleft, xright) };
 		long long rect_range_y[] = { min(ytop, ybottom), max(ytop, ybottom) };
 
-		if (inRangeOfLine(rect_range_x, rect_range_y)) {
+		if (inRangeOfLine(rect_range_x, rect_range_y) || inRangeOfRect(rect_range_x, rect_range_y)) {
 			Point a(xstart, ystart);
 			Point b(xend, yend);
 			
