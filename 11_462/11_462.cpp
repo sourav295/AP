@@ -14,7 +14,10 @@
 #include <bitset>
 using namespace std;
 
-bool  *flag = new bool[50000001];
+unsigned int last_prime = 100000007;
+
+
+bool  *flag = new bool[(100000007 + 1)/2];
 //bitset<100000001>  flag;
 //vector<bool> flag(100000000/2 + 1, true);
 unsigned int *prime = new unsigned int[5761455/2];
@@ -48,6 +51,7 @@ void createPrimeArray(unsigned int n) {
 	}
 
 	//i = 1 contains 2
+	/*
 	for (i = 1; i <= n_sqrt_index; i++) {
 		if (flag[i]) {
 
@@ -61,12 +65,11 @@ void createPrimeArray(unsigned int n) {
 			}
 		}
 	}
-	
+	*/
 
 
-	/*
 	unsigned int count = 0;		   //total number found now
-	for (unsigned int i = 2; i <= n; i++) {
+	for (unsigned int i = 2; i <= value_to_index(n); i++) {
 		if (flag[i] == true)
 			prime[count++] = i;     //not filtered, then prime
 									// prime[j], the j-th prime	
@@ -75,13 +78,13 @@ void createPrimeArray(unsigned int n) {
 			if (i%prime[j] == 0)
 				break;
 		}
-	}*/
+	}
 }
 
 int main()
 {
 	unsigned int n;
-	createPrimeArray(100000000);
+	createPrimeArray(100000007);
 
 	while(cin >> n){
 		//n = input.front();
