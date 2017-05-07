@@ -16,7 +16,9 @@ using namespace std;
 
 struct Edge;
 
-
+int max_depth;
+string final_answer;
+int occurences = 0;
 string dna_seq;
 
 struct Node {
@@ -101,31 +103,43 @@ void Node::insert_edge(int start, int end) {
 	}
 }
 
-int search(Node *x, int depth) {
+void search(Node *x, int depth, string ans) {
+	
 	if (x->firstCharacter_Edge.size() == 0)
-		return depth;
+		return;
+
+	if (x->firstCharacter_Edge.size() > 1 && max_depth < depth) {
+		occurences = x->firstCharacter_Edge.size();
+		max_depth = depth;
+		final_answer = ans;
+	}else if (x->firstCharacter_Edge.size() > 1 && max_depth == depth && ans.compare(final_answer) < 0) {
+		occurences = x->firstCharacter_Edge.size();
+		final_answer = ans;
+	}
 
 	map<char, Edge*>::iterator it;
 	for (it = x->firstCharacter_Edge.begin(); it != x->firstCharacter_Edge.end(); it++)
 	{
 		Edge *e = x->firstCharacter_Edge[it->first];
-		search(e->nextNode, e->getSize());
+		search(e->nextNode, depth + e->getSize(), ans + dna_seq.substr(e->start, e->getSize()));
 	}
 
 }
 
 int main() {
 
-	//dna_seq = "CAGTCAGG$";
-	dna_seq = "GKLGABXYGABMN$";
+	dna_seq = "CAGTCAGG$";
+	//dna_seq = "GKLGABXYGABMN$";
 	int end = dna_seq.length() - 1;
 	Node *base = new Node();
 	for (int start = dna_seq.length() - 2; start >= 0; start--) {
 		base->insert_edge(start, end);
 	}
-	
-
-	cout << 5;
+	max_depth = 0;
+	occurences = 0;
+	final_answer = "";
+	search(base, 0, "");
+	cout << final_answer;
 
 	return 0;
 }
