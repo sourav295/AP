@@ -13,25 +13,48 @@
 #include <iomanip>
 #include <bitset>
 using namespace std;
-
-bool  *flag = new bool[100000001];
+bool flag[50000001];
+//bool  *flag = new bool[50000001];
+//bitset<100000001>  flag;
+//vector<bool> flag(100000000/2 + 1, true);
 //unsigned long int *prime = new unsigned long int[5761455];
 
+unsigned long int index_to_value(unsigned long int index) {
+	if (index == 0)
+		return 1;
+	if (index == 1)
+		return 2;
+	
+	return 2 * index - 1;
+}
+
+unsigned long int value_to_index(unsigned long int value) {//eliminate the need of even numbers
+	if (value == 1)
+		return 0;
+	if (value == 2)
+		return 1;
+
+	return (value + 1) / 2;
+}
+
 void createPrimeArray(unsigned long int n) {
-	/*
-	for (unsigned long int i = 0; i <= n; i++) {
+
+	unsigned long int i, j, val_sq, val;
+	unsigned long int n_sqrt_index = value_to_index(unsigned long int(pow(n, 0.5)) + 1);
+
+	unsigned long int n_lim = value_to_index(n);
+	for (i = 0; i <= n_lim; i++) {
 		flag[i] = true;
-	}*/
-	fill(flag, flag + n, true);
+	}
 
-	unsigned long int i, j, i_sq;
-	unsigned long int n_sqrt = pow(n, 0.5);
-
-	for (i = 2; i <= n_sqrt; i++) {
+	//i = 1 contains 2
+	for (i = 1; i <= n_sqrt_index; i++) {
 		if (flag[i]) {
-			i_sq = i*i;
-			for (j = i_sq; j <= n; j += i) {
-				flag[j] = false;
+
+			unsigned long int val = index_to_value(i);
+			val_sq = val*val;
+			for (j = val_sq; j <= n; j += val) {
+				flag[value_to_index(j)] = false;
 			}
 		}
 	}
@@ -77,11 +100,17 @@ int main()
 				cout << n << " is not the sum of two primes!\n";
 		}
 		else{
-			unsigned long int p1, p2;
-			for (unsigned long int i = n / 2; i < n; i++){
-				p2 = i;
+			unsigned long int p1, p2, n_half, half_index;
+
+			n_half = n / 2;
+			if (!(n_half & 1))//even
+				n_half++;
+			half_index = value_to_index(n_half);
+
+			for (unsigned long int i = half_index; i < n; i++){
+				p2 = index_to_value(i);
 				p1 = n - p2;
-				if (flag[p1] && flag[p2]){
+				if (flag[value_to_index(p1)] && flag[value_to_index(p2)]){
 					cout << n << " is the sum of " << p1 << " and " << p2 << ".\n";
 					break;
 				}
