@@ -17,10 +17,11 @@ bool  *flag = new bool[100000000];
 unsigned long int *prime = new unsigned long int[5761455];
 
 void createPrimeArray(unsigned long int n) {
-	
+	/*
 	for (unsigned long int i = 0; i <= n; i++) {
 		flag[i] = true;
-	}
+	}*/
+	memset(flag, true, sizeof(bool) * n);
 
 	unsigned long int count = 0;		   //total number found now
 	for (unsigned long int i = 2; i <= n; i++) {
@@ -34,8 +35,6 @@ void createPrimeArray(unsigned long int n) {
 		}
 	}
 }
-
-
 
 int main()
 {
