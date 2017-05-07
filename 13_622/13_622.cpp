@@ -27,7 +27,7 @@ struct Node {
 
 	}
 
-	void insert_node(int start, int end);
+	void insert_edge(int start, int end);
 };
 
 
@@ -46,30 +46,49 @@ struct Edge {
 		nextNode = new Node();
 	}
 
-	void insert_edge(int other_start, int other_end) {
+	void insert(int other_start, int other_end) {
 		
-		Node *copy_node = nextNode;
+		//copy the decendants of the node following this edge
+		map<char, Edge*> temporary_map;
+		map<char, Edge*>::iterator it;
+		for (it = nextNode->firstCharacter_Edge.begin(); it != nextNode->firstCharacter_Edge.end(); it++)
+		{
+			temporary_map[it->first] = it->second;
+		}
+		
 
-		int j = start;
-		int i;
-		for (i = other_start; i <= other_end; i++, j++) {
+		int j = start;//this string
+		int i;//other string being inserted
+		for (i = other_start; i <= other_end, j <= end; i++, j++) {
 			if (dna_seq[i] != dna_seq[j]) {
 				break;
 			}
 		}
+		
+		//inserting new string related edge
+		nextNode->insert_edge(i, dna_seq.length()-1);
+		//remaining part of the base
+		if (j <= end) {
+			nextNode->insert_edge(j, end);
+			//transfer all edges that were pointed from this node to the newly generated node that consists of a part of the previous string
+			char newBranchBase_firstchar = dna_seq[j];
+			for (it = temporary_map.begin(); it != temporary_map.end(); it++)
+			{
+				//next node that consists a part of this string -> over that edge to the next node -> restore the previous branches here
+				nextNode->firstCharacter_Edge[newBranchBase_firstchar]->nextNode->firstCharacter_Edge[it->first] = it->second;
+				nextNode->firstCharacter_Edge.erase(it->first);
+			}
+			end = j - 1;
+		}
+	}
 
-		nextNode->insert_node(i, end);
-		nextNode->insert_node(j, end);
-
-
-
-		end = j - 1;
-
+	int getSize() {
+		return end - start + 1;
 	}
 };
 
 
-void Node::insert_node(int start, int end) {
+void Node::insert_edge(int start, int end) {
 	char first_char = dna_seq[start];
 
 	if (firstCharacter_Edge.count(first_char) == 0) {
@@ -78,21 +97,33 @@ void Node::insert_node(int start, int end) {
 		firstCharacter_Edge[first_char] = newEdge;
 	}
 	else {
-		firstCharacter_Edge[first_char]->insert_edge(start, end);
+		firstCharacter_Edge[first_char]->insert(start, end);
 	}
 }
 
+int search(Node *x, int depth) {
+	if (x->firstCharacter_Edge.size() == 0)
+		return depth;
+
+	map<char, Edge*>::iterator it;
+	for (it = x->firstCharacter_Edge.begin(); it != x->firstCharacter_Edge.end(); it++)
+	{
+		Edge *e = x->firstCharacter_Edge[it->first];
+		search(e->nextNode, e->getSize());
+	}
+
+}
 
 int main() {
 
-	dna_seq = "CAGTCAGG$";
-	
+	//dna_seq = "CAGTCAGG$";
+	dna_seq = "GKLGABXYGABMN$";
 	int end = dna_seq.length() - 1;
 	Node *base = new Node();
 	for (int start = dna_seq.length() - 2; start >= 0; start--) {
-		base->insert_node(start, end);
+		base->insert_edge(start, end);
 	}
-
+	
 
 	cout << 5;
 
