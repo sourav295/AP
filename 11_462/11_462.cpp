@@ -14,13 +14,11 @@
 #include <bitset>
 using namespace std;
 
-unsigned int last_prime = 100000007;
-
+const unsigned int last_prime = 100000007;
+const unsigned int no_prime   = 5761456;
 
 bool  *flag = new bool[(100000007 + 1)/2];
-//bitset<100000001>  flag;
-//vector<bool> flag(100000000/2 + 1, true);
-unsigned int *prime = new unsigned int[5761455/2];
+unsigned int *prime = new unsigned int[no_prime];
 
 unsigned int index_to_value(unsigned int index) {
 	if (index == 0)
@@ -42,59 +40,43 @@ unsigned int value_to_index(unsigned int value) {//eliminate the need of even nu
 
 void createPrimeArray(unsigned int n) {
 
-	unsigned int i, j, val_sq, val;
-	unsigned int n_sqrt = (unsigned int)pow(n, 0.5) + 1;
-
-	unsigned int n_lim = value_to_index(n);
-	fill(flag, flag + n_lim, true);
+	unsigned int i, j;
+	fill(flag, flag + (n*sizeof(bool)+1)/2, true);
 
 	//i = 1 contains 2
-	
+	/*
 	for (i = 3; i <= n_sqrt; i+=2) {
 		if (flag[value_to_index(i)]) {
-			unsigned int val = i;
-			val_sq = val*val;
-			for (j = val_sq; j <= n; j += 2*val) {
+			for (j = i*i; j <= n; j += 2*val) {
 				flag[value_to_index(j)] = false;
 			}
 		}
 	}
 	
-	/*
-	unsigned int count = 0;		   //total number found now
-	unsigned int composite_num = 0;		   //total number found now
-	for (unsigned int i = 3; i <= n; i+= 2) {
+	*/
+
+	unsigned int  count = 0;		   //total number found now
+	for (i = 3; i <= n; i+=2) {
 		if (flag[value_to_index(i)] == true)
-			count++;     
-		
-		unsigned int j = 0;
-		unsigned int k = 2;//start from no. 3
-		
-		while (j < count) {
-			if (flag[k] && i*index_to_value(k) > n)
-				break;
-			if (flag[k]) {
-				j++;
-				composite_num = index_to_value(k);
-				flag[value_to_index(composite_num*i)] = false;
-
-				if (i%composite_num == 0)
-					break;
-			}
-
-			k++;
+			prime[count++] = i;     //not filtered, then prime
+									// prime[j], the j-th prime	
+		for( j=0 ; j<count  &&  i*prime[j] <= n ; j++)	{
+		flag[value_to_index(i*prime[j])] = false;   //i*prime[j] is filtered. 					    			    	                              
+		if (i%prime[j] == 0)
+			break;
 		}
-	}*/
+	}
+
 }
 
 int main()
 {
 	unsigned int n;
-	//createPrimeArray(100000007);
+	createPrimeArray(100000007);
 
 	while(cin >> n){
 		//n = input.front();
-		createPrimeArray(n);
+		
 		if (n == 0 || n == 1) {
 			cout << n << " is not the sum of two primes!\n";
 			continue;
