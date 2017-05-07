@@ -52,9 +52,12 @@ void createPrimeArray(unsigned long int n) {
 		if (flag[i]) {
 
 			unsigned long int val = index_to_value(i);
-			val_sq = val*val;
-			for (j = val_sq; j <= n; j += val) {
-				flag[value_to_index(j)] = false;
+			if (val&1) {
+				val_sq = val*val;
+				for (j = val_sq; j <= n; j += val) {
+					if (j & 1)
+						flag[value_to_index(j)] = false;
+				}
 			}
 		}
 	}
@@ -91,7 +94,7 @@ int main()
 
 		if (n & 1){
 			//number is odd
-			if (flag[n - 2])
+			if (flag[value_to_index(n - 2)])
 				if(n-2 != 1)
 					cout << n << " is the sum of " << "2 and " << n - 2 << ".\n";
 				else
