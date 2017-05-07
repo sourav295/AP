@@ -90,11 +90,11 @@ void createPrimeArray(unsigned int n) {
 int main()
 {
 	unsigned int n;
-	createPrimeArray(100000007);
+	//createPrimeArray(100000007);
 
 	while(cin >> n){
 		//n = input.front();
-		
+		createPrimeArray(n);
 		if (n == 0 || n == 1) {
 			cout << n << " is not the sum of two primes!\n";
 			continue;
