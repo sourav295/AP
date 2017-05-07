@@ -61,7 +61,7 @@ struct Edge {
 
 		int j = start;//this string
 		int i;//other string being inserted
-		for (i = other_start; i <= other_end, j <= end; i++, j++) {
+		for (i = other_start; i <= other_end && j <= end; i++, j++) {
 			if (dna_seq[i] != dna_seq[j]) {
 				break;
 			}
@@ -129,7 +129,7 @@ void search(Node *x, int depth, string ans) {
 int main() {
 
 	int n;
-	string line, str;
+	string line;
 	cin >> n;
 	getline(cin, line);
 	for (int i = 0; i < n; i++) {
