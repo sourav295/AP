@@ -21,7 +21,7 @@ void createPrimeArray(unsigned long int n) {
 	for (unsigned long int i = 0; i <= n; i++) {
 		flag[i] = true;
 	}*/
-	memset(flag, true, sizeof(bool) * n);
+	fill(flag, flag + n, true);
 
 	unsigned long int count = 0;		   //total number found now
 	for (unsigned long int i = 2; i <= n; i++) {
