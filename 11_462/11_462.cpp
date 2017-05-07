@@ -17,7 +17,7 @@ using namespace std;
 bool  *flag = new bool[50000001];
 //bitset<100000001>  flag;
 //vector<bool> flag(100000000/2 + 1, true);
-//unsigned int *prime = new unsigned int[5761455];
+unsigned int *prime = new unsigned int[5761455/2];
 
 unsigned int index_to_value(unsigned int index) {
 	if (index == 0)
@@ -81,7 +81,7 @@ void createPrimeArray(unsigned int n) {
 int main()
 {
 	unsigned int n;
-	
+	createPrimeArray(100000000);
 
 	while(cin >> n){
 		//n = input.front();
