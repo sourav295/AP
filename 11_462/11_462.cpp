@@ -43,42 +43,48 @@ unsigned int value_to_index(unsigned int value) {//eliminate the need of even nu
 void createPrimeArray(unsigned int n) {
 
 	unsigned int i, j, val_sq, val;
-	unsigned int n_sqrt_index = value_to_index((unsigned int)pow(n, 0.5) + 1);
+	unsigned int n_sqrt = (unsigned int)pow(n, 0.5) + 1;
 
 	unsigned int n_lim = value_to_index(n);
-	for (i = 0; i <= n_lim; i++) {
-		flag[i] = true;
-	}
+	fill(flag, flag + n_lim, true);
 
 	//i = 1 contains 2
-	/*
-	for (i = 1; i <= n_sqrt_index; i++) {
-		if (flag[i]) {
-
-			unsigned int val = index_to_value(i);
-			if (val&1) {
-				val_sq = val*val;
-				for (j = val_sq; j <= n; j += val) {
-					if (j & 1)
-						flag[value_to_index(j)] = false;
-				}
+	
+	for (i = 3; i <= n_sqrt; i+=2) {
+		if (flag[value_to_index(i)]) {
+			unsigned int val = i;
+			val_sq = val*val;
+			for (j = val_sq; j <= n; j += 2*val) {
+				flag[value_to_index(j)] = false;
 			}
 		}
 	}
-	*/
-
-
+	
+	/*
 	unsigned int count = 0;		   //total number found now
-	for (unsigned int i = 2; i <= value_to_index(n); i++) {
-		if (flag[i] == true)
-			prime[count++] = i;     //not filtered, then prime
-									// prime[j], the j-th prime	
-		for(unsigned int j=0 ; j<count  &&  i*prime[j] <= n ; j++)	{
-			flag[i*prime[j]] = false;   //i*prime[j] is filtered. 					    			    	                              
-			if (i%prime[j] == 0)
+	unsigned int composite_num = 0;		   //total number found now
+	for (unsigned int i = 3; i <= n; i+= 2) {
+		if (flag[value_to_index(i)] == true)
+			count++;     
+		
+		unsigned int j = 0;
+		unsigned int k = 2;//start from no. 3
+		
+		while (j < count) {
+			if (flag[k] && i*index_to_value(k) > n)
 				break;
+			if (flag[k]) {
+				j++;
+				composite_num = index_to_value(k);
+				flag[value_to_index(composite_num*i)] = false;
+
+				if (i%composite_num == 0)
+					break;
+			}
+
+			k++;
 		}
-	}
+	}*/
 }
 
 int main()
