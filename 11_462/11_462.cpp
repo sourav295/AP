@@ -16,9 +16,10 @@ using namespace std;
 
 const unsigned int last_prime = 100000007;
 const unsigned int no_prime   = 5761456;
+const unsigned int n_sqrt = 10001;
 
 bool  *flag = new bool[(100000007 + 1)/2];
-unsigned int *prime = new unsigned int[no_prime];
+//unsigned int *prime = new unsigned int[no_prime];
 
 unsigned int index_to_value(unsigned int index) {
 	if (index == 0)
@@ -41,20 +42,20 @@ unsigned int value_to_index(unsigned int value) {//eliminate the need of even nu
 void createPrimeArray(unsigned int n) {
 
 	unsigned int i, j;
-	fill(flag, flag + (n*sizeof(bool)+1)/2, true);
+	fill(flag, flag + (n_sqrt *sizeof(bool)+1)/2, true);
 
 	//i = 1 contains 2
-	/*
+	
 	for (i = 3; i <= n_sqrt; i+=2) {
 		if (flag[value_to_index(i)]) {
-			for (j = i*i; j <= n; j += 2*val) {
+			for (j = i*i; j <= n; j += 2*i) {
 				flag[value_to_index(j)] = false;
 			}
 		}
 	}
 	
-	*/
-
+	
+	/*
 	unsigned int  count = 0;		   //total number found now
 	for (i = 3; i <= n; i+=2) {
 		if (flag[value_to_index(i)] == true)
@@ -65,7 +66,7 @@ void createPrimeArray(unsigned int n) {
 		if (i%prime[j] == 0)
 			break;
 		}
-	}
+	}*/
 
 }
 
