@@ -128,18 +128,36 @@ void search(Node *x, int depth, string ans) {
 
 int main() {
 
-	dna_seq = "CAGTCAGG$";
-	//dna_seq = "GKLGABXYGABMN$";
-	int end = dna_seq.length() - 1;
-	Node *base = new Node();
-	for (int start = dna_seq.length() - 2; start >= 0; start--) {
-		base->insert_edge(start, end);
+	int n;
+	string line, str;
+	cin >> n;
+	getline(cin, line);
+	for (int i = 0; i < n; i++) {
+
+		getline(cin, line);
+		dna_seq = line + "$";
+
+		//dna_seq = "CAGTCAGG$";
+		//dna_seq = "GKLGABXYGABMN$";
+		int end = dna_seq.length() - 1;
+		Node *base = new Node();
+		for (int start = dna_seq.length() - 2; start >= 0; start--) {
+			base->insert_edge(start, end);
+		}
+		max_depth = 0;
+		occurences = 0;
+		final_answer = "";
+		search(base, 0, "");
+		//cout << final_answer;
+
+
+		if (max_depth == 0)
+			cout << "No repetitions found!\n";
+		else
+			cout << final_answer << " " << occurences << "\n";
+
 	}
-	max_depth = 0;
-	occurences = 0;
-	final_answer = "";
-	search(base, 0, "");
-	cout << final_answer;
+	
 
 	return 0;
 }
