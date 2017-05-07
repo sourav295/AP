@@ -40,7 +40,7 @@ unsigned long int value_to_index(unsigned long int value) {//eliminate the need 
 void createPrimeArray(unsigned long int n) {
 
 	unsigned long int i, j, val_sq, val;
-	unsigned long int n_sqrt_index = value_to_index(unsigned long int(pow(n, 0.5)) + 1);
+	unsigned long int n_sqrt_index = value_to_index((unsigned long int)pow(n, 0.5) + 1);
 
 	unsigned long int n_lim = value_to_index(n);
 	for (i = 0; i <= n_lim; i++) {
