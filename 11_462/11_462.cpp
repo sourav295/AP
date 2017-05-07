@@ -8,13 +8,14 @@
 #include <stack>
 #include <limits>
 #include <sstream>
+#include <math.h>
 #include <algorithm>
 #include <iomanip>
 #include <bitset>
 using namespace std;
 
-bool  *flag = new bool[100000000];
-unsigned long int *prime = new unsigned long int[5761455];
+bool  *flag = new bool[100000001];
+//unsigned long int *prime = new unsigned long int[5761455];
 
 void createPrimeArray(unsigned long int n) {
 	/*
@@ -23,6 +24,21 @@ void createPrimeArray(unsigned long int n) {
 	}*/
 	fill(flag, flag + n, true);
 
+	unsigned long int i, j, i_sq;
+	unsigned long int n_sqrt = pow(n, 0.5);
+
+	for (i = 2; i <= n_sqrt; i++) {
+		if (flag[i]) {
+			i_sq = i*i;
+			for (j = i_sq; j <= n; j += i) {
+				flag[j] = false;
+			}
+		}
+	}
+	
+
+
+	/*
 	unsigned long int count = 0;		   //total number found now
 	for (unsigned long int i = 2; i <= n; i++) {
 		if (flag[i] == true)
@@ -33,7 +49,7 @@ void createPrimeArray(unsigned long int n) {
 			if (i%prime[j] == 0)
 				break;
 		}
-	}
+	}*/
 }
 
 int main()
@@ -50,8 +66,6 @@ int main()
 			continue;
 		}
 
-		
-		
 		if (n & 1){
 			//number is odd
 			if (flag[n - 2])
