@@ -13,11 +13,11 @@
 #include <iomanip>
 #include <bitset>
 using namespace std;
-bool flag[50000001];
-//bool  *flag = new bool[50000001];
+
+bool  *flag = new bool[50000001];
 //bitset<100000001>  flag;
 //vector<bool> flag(100000000/2 + 1, true);
-unsigned int *prime = new unsigned int[5761455];
+//unsigned int *prime = new unsigned int[5761455];
 
 unsigned int index_to_value(unsigned int index) {
 	if (index == 0)
@@ -81,7 +81,6 @@ void createPrimeArray(unsigned int n) {
 int main()
 {
 	unsigned int n;
-	cout << numeric_limits<int>::max();
 	
 
 	while(cin >> n){
