@@ -34,7 +34,7 @@ int minDistance()
 	return min_index;
 }
 
-int dijkstra(int src, int dest)
+int dijkstra(int src, int dest, bool excld_direct = false)
 {
 	for (int i = 0; i < n; i++) {
 		dist[i] = numeric_limits<int>::max();
@@ -56,8 +56,9 @@ int dijkstra(int src, int dest)
 			return dist[dest];
 
 		for (int v = 0; v < n; v++)
-			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v] && !(u == src && v == dest)) {
-				dist[v] = dist[u] + park[u][v];
+			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v] ) {
+				if((!excld_direct) || (excld_direct && !(u == src && v == dest)))
+					dist[v] = dist[u] + park[u][v];
 			}
 				
 	}
@@ -73,7 +74,6 @@ int main()
 
 	while (cin >> n >> r) {
 		
-		int minDirect_d = numeric_limits<int>::max();
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++)
 				park[i][j] = 0;
@@ -85,28 +85,25 @@ int main()
 			park[a][b] = d;
 			park[b][a] = d;
 
-			if ((a == 0 && b == n - 1 && d < minDirect_d) || (a == n - 1 && b == 0 && d < minDirect_d)) {
-				minDirect_d = d;
-			}
-
+			
 		}
 		int dest = n - 1;
 
-		int candidate1 = numeric_limits<int>::max();
-		if (minDirect_d < candidate1) {//there is a link between src and dest
-			int minlink_intermediate = candidate1;
-			for (int i = 0; i < n; i++) {
-				if (park[0][i] > 0 && park[0][i] < minlink_intermediate)
-					minlink_intermediate = park[0][i];
+		int res = dijkstra(0, dest, true);
+
+		for (int i = 0; i < n; i++) {
+			if (park[0][i] > 0 && i != dest) {
+				int potential = park[0][i] + dijkstra(i, dest);
+				if (potential < res)
+					res = potential;
 			}
-			candidate1 = minDirect_d + 2 * minlink_intermediate;
+
 		}
 
-		
-		int res = dijkstra(0, dest);
+
 		cout << "Set #" << count++ << "\n";
-		if((res != numeric_limits<int>::max() && res != 0) || candidate1 != numeric_limits<int>::max()){
-			cout << (res < candidate1 ? res:candidate1) << "\n";
+		if(res != numeric_limits<int>::max()){
+			cout << res << "\n";
 		}
 		else {
 			cout << "?\n";

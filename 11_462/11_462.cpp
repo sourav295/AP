@@ -42,7 +42,7 @@ unsigned int value_to_index(unsigned int value) {//eliminate the need of even nu
 void createPrimeArray(unsigned int n) {
 
 	unsigned int i, j;
-	fill(flag, flag + (n_sqrt *sizeof(bool)+1)/2, true);
+	fill(flag, flag + (n *sizeof(bool)+1)/2, true);
 
 	//i = 1 contains 2
 	
