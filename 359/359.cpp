@@ -66,6 +66,8 @@ int execute(){
 	while(!terminate){
 		Instruction inst = mem[pc];
 		pc++;
+		if (pc == 32)
+			pc = 0;
 		terminate = run(inst);
 		
 	}
