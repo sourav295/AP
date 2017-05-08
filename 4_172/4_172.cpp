@@ -65,7 +65,7 @@ int dijkstra(int src, int dest, bool excld_direct = false)
 
 		for (int v = 0; v < n; v++)
 			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v] ) {
-				if ((!excld_direct) || (excld_direct && !(u == src && v == dest))) {
+				if ((!excld_direct && !(u == src && v == 0)) || (excld_direct && !(u == src && v == dest))) {
 					dist[v] = dist[u] + park[u][v];
 					hops[v] = hops[u] + 1;
 				}
