@@ -67,23 +67,35 @@ struct Node {
 		return new_state;
 	}
 
+	void relax(array<int, 4> new_state) {
+		if (distance + 1 < all_states[new_state]->distance)
+			all_states[new_state]->distance = distance + 1;
+	}
+
+
 	void addState(array<int, 4> new_state) {
 		if (!existInMap(new_state)) {
 			Node * newNode = new Node(new_state);
-			next.push_back(newNode);
 
 			all_states[new_state] = newNode;
 			all_nodes.push_back(newNode);
 
+			relax(new_state);
+
 			for (int i = 0; i < n_bucks; i++)
 				if (new_state[i] == T) {
 					newNode->target = true;
-					cout << "T";
+					if (newNode->distance < minimumDistance)
+						minimumDistance = newNode->distance;
 				}
 
-			if(!(newNode->target))
-				constructGraph(newNode);
+			if (!all_states[new_state]->target)
+				constructGraph(all_states[new_state]);
 		}
+		else {
+			relax(new_state);
+		}
+
 		next.push_back(all_states[new_state]);
 	}
 
@@ -112,28 +124,33 @@ int minDistance()
 
 
 void constructGraph(Node *n) {
-
-	array<int, 4> new_state;
+	if (n->distance > minimumDistance)
+		return;
+	
 	for (int i = 0; i < n_bucks; i++) {
 		if (n->can_fill(i)) {
-			new_state = n->copyState();
+			array<int, 4> new_state = n->copyState();
 			new_state[i] = capacities[i];
 			n->addState(new_state);
 		}
-		
+	}
+
+	for (int i = 0; i < n_bucks; i++) {
 		if (n->can_empty(i)) {
-			new_state = n->copyState();
+			array<int, 4> new_state = n->copyState();
 			new_state[i] = 0;
 			n->addState(new_state);
 		}
+	}
 
+	for (int i = 0; i < n_bucks; i++) {
 		for (int j = 0; j < n_bucks; j++) {
 			if (i == j)
 				continue;
 			
 			int measure = n->can_pour(i, j);
 			if (measure > 0) {
-				new_state = n->copyState();
+				array<int, 4> new_state = n->copyState();
 				new_state[i] -= measure;
 				new_state[j] += measure;
 				n->addState(new_state);
@@ -148,7 +165,7 @@ int dijkstra()
 	for (int count = 0; count < all_nodes.size(); count++)
 	{
 		int u = minDistance();
-		all_nodes[u]->visited == true;
+		all_nodes[u]->visited = true;
 
 		if (all_nodes[u]->distance > minimumDistance)
 			continue;
@@ -171,212 +188,24 @@ int main() {
 	array<int, 4> initial_arr = { 0, 0, 0, 0 };
 	Node *initial = new Node(initial_arr);
 	initial->distance = 0;
+	
 	all_states[initial_arr] = initial;
 	all_nodes.push_back(initial);
 
-	T = 4;
-	capacities = { 1, 2, 3, 5 };
-	constructGraph(initial);
+	T = 20;
+	capacities = { 22, 23, 5, 25 };
 	minimumDistance = numeric_limits<int>::max();
-	dijkstra();
-	cout << minimumDistance;
+	constructGraph(initial);
+	
+	if (minimumDistance == numeric_limits<int>::max())
+		cout << -1;
+	else {
+		dijkstra();
+		cout << minimumDistance;
+	}
 
-	cout << "!";
+
 
 	return 0;
 }
 
-
-/*
-const int max_cap = 25;
-const int n_bucks = 4;
-const int n = max_cap*max_cap;
-
-bool ingredient[n][n];
-bool hasTarget[n];
-bool visited[n];
-int dist[n];
-bool sptSet[n];
-
-
-struct Node{
-
-
-};
-
-int cap[n_bucks];
-
-int T;
-map<string, int> state_loc;
-int latest_id;
-
-int minDistance(int V)
-{
-	// Initialize min value
-	int min = numeric_limits<int>::max();
-	int min_index;
-
-	for (int v = 0; v < V; v++)
-		if (sptSet[v] == false && dist[v] <= min) {
-			min = dist[v];
-			min_index = v;
-		}
-
-	return min_index;
-}
-
-
-
-
-int dijkstra(int src, int V)
-{
-	for (int i = 0; i < V; i++) {
-		dist[i] = numeric_limits<int>::max();
-		sptSet[i] = false;
-	}
-
-	dist[src] = 0;
-
-	for (int count = 0; count < V; count++)
-	{
-		int u = minDistance(V);
-		sptSet[u] = true;
-
-		if (hasTarget[u])
-			return dist[u];
-
-		for (int v = 0; v < V; v++)
-			if (!sptSet[v] && ingredient[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + ingredient[u][v] < dist[v])
-				dist[v] = dist[u] + ingredient[u][v];
-	}
-
-	return -1;
-}
-
-void clearingredient() {
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
-			ingredient[i][j] = false;
-}
-
-
-int getId(vector<int> s) {
-	string stateString = "";
-	for (int i = 0; i < n_bucks; i++) {
-		if (s[i] / 10 == 0)
-			stateString += "0";
-		
-		stateString += s[i];
-	}
-	
-	if (state_loc.find(stateString) == state_loc.end())
-		state_loc[stateString] = latest_id++;
-
-	return state_loc[stateString];
-}
-
-
-bool can_fill(vector<int> s, int bucket) {
-	return s[bucket] < cap[bucket];
-}
-
-bool can_empty(vector<int> s, int bucket) {
-	return s[bucket] > 0;
-}
-
-int can_pour(vector<int> s, int from, int to) {
-	int measure = s[from] < (cap[to] - s[to]) ? s[from] : (cap[to] - s[to]);
-	return measure;
-}
-
-void transition(vector<int> s) {
-	int id = getId(s);
-	if (visited[id])
-		return;
-	visited[id] = true;
-
-	
-	for (int i = 0; i < n_bucks; i++) {
-		if (s[i] == T) {
-			hasTarget[id] = true;
-			return;
-		}
-	}
-
-
-	vector<int> temp;
-
-	for (int i = 0; i < n_bucks; i++) {
-		if (can_fill(s, i)) {
-			temp = s;
-			temp[i] = cap[i];
-			
-			ingredient[id][getId(temp)] = true;
-
-			transition(temp);
-		}
-
-		if(can_empty(s, i)) {
-			temp = s;
-			temp[i] = 0;
-			
-			ingredient[id][getId(temp)] = true;
-
-			transition(temp);
-		}
-	}
-
-	for(int i = 0; i < n_bucks; i++)
-		for (int j = 0; j < n_bucks; j++) {
-			if (i != j && can_pour(s, i, j) > 0) {
-				int m = can_pour(s, i, j);
-				
-				temp = s;
-				temp[i] -= m;
-				temp[j] += m;
-				
-				ingredient[id][getId(temp)] = true;
-
-				transition(temp);
-			}
-		}
-
-}
-
-int main() {
-	int id;
-	while (cin >> cap[0] >> cap[1] >> cap[2] >> cap[3] >> T) {
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++)
-				ingredient[i][j] = false;
-			visited[i] = false;
-			hasTarget[i] = false;
-		}
-		latest_id = 0;
-		state_loc.clear();
-
-		vector<int> state(n_bucks);
-		int max_cap = 0;
-		for (int i = 0; i < n_bucks; i++) {
-			if (cap[i] > max_cap) {
-				max_cap = cap[i];
-			}
-		}
-
-		if (max_cap < T) {
-			cout << "-1\n";
-			continue;
-		}
-		
-
-		transition(state);
-		cout << dijkstra(0, latest_id) << "\n";
-
-
-	}
-
-
-}
-
-
-*/

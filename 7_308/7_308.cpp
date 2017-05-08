@@ -17,6 +17,7 @@ const int n_limit = 500;
 const int m_limit = 124740; //(n*n-1)/2 with n = 500
 int A[n_limit];
 
+
 int diff(int a, int b){
 	if(b-a <= 10 - b + a)
 		return b - a;
@@ -115,18 +116,23 @@ int main()
 {
 	int T;
 	cin >> T;
-	int count = 0;
-	for (int i = 0; i < T; i++) {
+	
+	for (int test = 0; test < T; test++) {
 		int N;
+		int count = 0;
+		int maxdist_connectedToZero = 0;
+		int sumdist_connectedToZero = 0;
 		cin >> N;
+
+		
 		for (int j = 0; j < N; j++) {
 			int key;
 			cin >> key;
 			edges[count++] = Edge(0, key, 0, count + 1);//connect to 0000
 		}
 		//interconnections
-		for (int j = 0; j < N + 1; j++)
-			for (int k = j+1; k < N + 1; k++)
+		for (int j = 0; j < N; j++)
+			for (int k = j+1; k < N; k++)
 				edges[count++] = edges[j].generateEdgeOnIndexB(edges[k]);
 
 		qsort(edges, count, sizeof(Edge), compareEdge);
@@ -139,6 +145,13 @@ int main()
 			Edge e = edges[j];
 			if (Find(e.keyA_id) != Find(e.keyB_id)) {
 				Union(e.keyA_id, e.keyB_id);
+
+				if (e.keyA_id == 0 || e.keyB_id == 0) {
+					sumdist_connectedToZero += e.ppa;
+					if (e.ppa > maxdist_connectedToZero)
+						maxdist_connectedToZero = e.ppa;
+				}
+			
 				total_rolls += e.ppa;
 			}
 		}
@@ -146,7 +159,7 @@ int main()
 		//find maximum depth of the graph
 
 		//find out a way to roll across the tree
-		cout << total_rolls << "\n";
+		cout << total_rolls + sumdist_connectedToZero - maxdist_connectedToZero << "\n";
 		
 	}
 	
