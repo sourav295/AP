@@ -16,6 +16,7 @@ int n;
 
 int sptSet[n_limit], dist[n_limit];
 int park[n_limit][n_limit];
+int hops[n_limit];
 
 int minDistance()
 {
@@ -38,10 +39,12 @@ int dijkstra(int src, int dest, bool excld_direct = false)
 {
 	for (int i = 0; i < n; i++) {
 		dist[i] = numeric_limits<int>::max();
+		hops[i] = numeric_limits<int>::max();
 		sptSet[i] = false;
 	}
 
 	dist[src] = 0;
+	hops[src] = 0;
 
 	for (int count = 0; count < n; count++)
 	{
@@ -53,12 +56,19 @@ int dijkstra(int src, int dest, bool excld_direct = false)
 		sptSet[u] = true;
 
 		if (u == dest)
-			return dist[dest];
+			if(excld_direct && hops[u] % 2 == 0)
+				return dist[dest];
+			else if(!excld_direct && hops[u] % 2 == 1)
+				return dist[dest];
+			else
+				return numeric_limits<int>::max();
 
 		for (int v = 0; v < n; v++)
 			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v] ) {
-				if((!excld_direct) || (excld_direct && !(u == src && v == dest)))
+				if ((!excld_direct) || (excld_direct && !(u == src && v == dest))) {
 					dist[v] = dist[u] + park[u][v];
+					hops[v] = hops[u] + 1;
+				}
 			}
 				
 	}
@@ -75,8 +85,9 @@ int main()
 	while (cin >> n >> r) {
 		
 		for (int i = 0; i < n; i++)
-			for (int j = 0; j < n; j++)
+			for (int j = 0; j < n; j++) {
 				park[i][j] = 0;
+			}
 
 		for (int i = 0; i < r; i++) {
 			int a, b, d;
@@ -84,18 +95,17 @@ int main()
 
 			park[a][b] = d;
 			park[b][a] = d;
-
-			
 		}
+		
 		int dest = n - 1;
 
 		int res = dijkstra(0, dest, true);
 
 		for (int i = 0; i < n; i++) {
 			if (park[0][i] > 0 && i != dest) {
-				int potential = park[0][i] + dijkstra(i, dest);
-				if (potential < res)
-					res = potential;
+				int potential =  dijkstra(i, dest);
+				if (potential != numeric_limits<int>::max() && potential + park[0][i]< res)
+					res = potential + park[0][i];
 			}
 
 		}
