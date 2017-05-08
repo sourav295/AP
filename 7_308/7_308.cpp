@@ -14,7 +14,7 @@ using namespace std;
 
 
 const int n_limit = 500;
-const int m_limit = 124740; //(n*n-1)/2 with n = 500
+const int m_limit = (n_limit*n_limit + n_limit)/2 + 5; //(n*n-1)/2 with n = 500
 int A[n_limit];
 
 
