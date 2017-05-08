@@ -38,7 +38,7 @@ int main()
 		
 		b_copy = b;
 
-		int furthest_mutilation = -1;
+		unsigned long long furthest_mutilation = -1;
 		int count = 0;
 		while (b > 0) {
 			bool a_last = a & 1;
@@ -51,9 +51,10 @@ int main()
 			b = b >> 1;
 		}
 		
-		c = (1 << (furthest_mutilation + 1)) - 1;
-
-		cout << (b_copy|c) <<"\n";
+		c = b_copy;
+		for (unsigned long long i = 0; i <= furthest_mutilation; i++)
+			c =  ( c | ((unsigned long long)1 << i ));
+		cout << c <<"\n";
 
 	}
 	
