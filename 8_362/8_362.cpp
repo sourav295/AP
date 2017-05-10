@@ -164,7 +164,7 @@ int main()
 				}
 			}
 		}
-		cout << "Case "<< test_count++ <<": "<< maxFlow(south_id, north_id, 2 * n + 4) << "\n";
+		cout << "Case "<< test_count++ <<": "<< maxFlow(0, 2*n+3, 2 * n + 4) << "\n";
 	}
 
 	return 0;
