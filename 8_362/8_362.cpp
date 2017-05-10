@@ -125,8 +125,8 @@ int main()
 		
 		clear(n);
 
-		int north_id	= 0;
-		int south_id	= n+1;
+		int north_id	= n+1;
+		int south_id	= 0;
 		int four_d_sq	= 4*d*d;
 
 		generateNode(north_id, numeric_limits<int>::max());
