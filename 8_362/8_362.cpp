@@ -85,7 +85,10 @@ int maxFlow(int start, int end, int n) {
 
 void generateNode(int a, int cost) {
 	graph[2 * a][2 * a + 1] = true;
+	graph[2 * a+1][2 * a] = true;
+
 	capacities[2 * a][2 * a + 1] = cost;
+	capacities[2 * a + 1][2 * a] = cost;
 }
 
 void connect(int a, int b, int d) {
@@ -144,9 +147,7 @@ int main()
 			int u_x = coordinates[i].second;
 			int u_y = coordinates[i].first;
 
-
 			generateNode(u, 1);
-
 
 			if (u_y + d >= W)
 				connect(u, north_id, 1);
@@ -159,7 +160,7 @@ int main()
 				int v_y = coordinates[j].first;
 				
 				int dist_sq = pow((u_x - v_x), 2) + pow((u_y - v_y),2);
-				if (dist_sq < four_d_sq) {
+				if (dist_sq <= four_d_sq) {
 					connect(u, v, 1);
 				}
 			}
