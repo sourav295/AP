@@ -98,10 +98,10 @@ void connect(int a, int b, int d) {
 }
 
 void clear(int n) {
-	int dimension = 2 * n + 2;
+	int dimension = 2 * n + 5;
 
 	for (int i = 0; i < dimension; i++) {
-		for (int j = 0; j <= dimension; j++) {
+		for (int j = 0; j < dimension; j++) {
 			graph[i][j] = false;
 			flow_passed[i][j] = 0;
 			capacities[i][j] = 0;
