@@ -14,10 +14,12 @@
 #include <bitset>
 using namespace std;
 
-const unsigned long last_prime = 100000007;
+const unsigned long last_n = 100000000;
+const unsigned long last_n_sqrt = sqrt(100000000);
 
 
-unsigned long flag[(100000007 >> 6) + 1];
+
+unsigned long flag[(100000000 >> 6) + 1];
 
 void setAsComposite(unsigned long x) {
 	flag[(x >> 6)] |= (1 << (
@@ -33,14 +35,14 @@ bool isComposite(unsigned long x) {
 							);
 }
 
-void createPrimeArray(unsigned int n) {
+void createPrimeArray(unsigned long n) {
 
 	unsigned long i, j;
 	
 
 	//i = 1 contains 2
 	
-	for (i = 3; i <= n; i+=2) {
+	for (i = 3; i <= last_n_sqrt; i+=2) {
 		if (!isComposite(i)) {
 			for (j = i*i; j <= n; j += (i<<1)) {
 				setAsComposite(j);
@@ -62,8 +64,8 @@ bool checkPrime(unsigned long x) {
 
 int main()
 {
-	unsigned int n;
-	createPrimeArray(100000007);
+	unsigned long n;
+	createPrimeArray(100000000);
 
 	while(cin >> n){
 		//n = input.front();
@@ -84,15 +86,20 @@ int main()
 				cout << n << " is not the sum of two primes!\n";
 		}
 		else{
-			unsigned int p1, p2, n_pos, half_index;
-
+			unsigned long n_pos;
+			bool found = false;
 			n_pos = n / 2;
 			for (n_pos; n_pos < n; n_pos++) {
-				if (checkPrime(n - n_pos) && checkPrime(n_pos)) {
+				if (checkPrime(n - n_pos) && checkPrime(n_pos) && n - n_pos != n_pos && n_pos != 1 && n - n_pos != 1) {
 					cout << n << " is the sum of " << n-n_pos<<" and " << n_pos<< ".\n";
+					found = true;
 					break;
 				}
 			}
+
+			if(!found)
+				cout << n << " is not the sum of two primes!\n";
+
 		}
 	}
 
