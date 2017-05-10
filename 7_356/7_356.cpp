@@ -14,22 +14,7 @@ using namespace std;
 
 const int limit_n = 500;
 int min_val = 0;
-//const int limit_m = 1000000;
-/*
-struct Edge {
 
-	int indexA, indexB, ppa;
-
-	Edge(int a, int b, int dist) {
-		indexA = a;
-		indexB = b;
-		ppa = dist;
-	}
-
-	Edge() {}
-
-};
-*/
 
 int A[limit_n];
 //Edge edges[limit_n];
