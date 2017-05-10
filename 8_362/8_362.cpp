@@ -1,3 +1,4 @@
+/*
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <iostream>
@@ -167,6 +168,171 @@ int main()
 		}
 		cout << "Case "<< test_count++ <<": "<< maxFlow(0, 2*n+3, 2 * n + 4) << "\n";
 	}
+
+	return 0;
+}
+
+*/
+
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <queue> 
+#include<string>
+#include <stack>
+#include <limits>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <cmath>
+using namespace std;
+
+const int max_coord = 100 + 4;
+const int n_limit = (2 * max_coord);//2 more for source and destination
+
+bool graph[n_limit][n_limit];
+
+int capacities[n_limit][n_limit];
+int flow_passed[n_limit][n_limit];
+
+int parent_list[n_limit];
+int currentPathCapacity[n_limit];
+
+int bfs(int start, int end, int n) {
+
+	for (int i = 0; i < n; i++) {
+		parent_list[i] = -1;
+		currentPathCapacity[i] = 0;
+	}
+
+	queue<int> q;
+	q.push(start);
+
+	parent_list[start] = -2;
+	currentPathCapacity[start] = numeric_limits<int>::max();
+
+	while (!q.empty()) {
+		int u = q.front();
+		q.pop();
+
+		for (int v = 0; v < n; v++) {
+			if (graph[u][v] && parent_list[v] == -1) {
+				if (capacities[u][v] - flow_passed[u][v] > 0) {
+					parent_list[v] = u;
+					currentPathCapacity[v] = min(currentPathCapacity[u], capacities[u][v] - flow_passed[u][v]);
+
+					if (v == end) {
+						return currentPathCapacity[v];
+					}
+					q.push(v);
+				}
+			}
+		}
+	}
+
+	return 0;
+
+}
+
+int maxFlow(int start, int end, int n) {
+
+	int maxFlow = 0;
+	while (true) {
+		int flow = bfs(start, end, n);
+		if (flow == 0) {
+			break;
+		}
+		maxFlow += flow;
+		int u = end;
+		while (u != start) {
+			int v = parent_list[u];
+			flow_passed[v][u] += flow;
+			flow_passed[u][v] -= flow;
+			u = v;
+		}
+
+	}
+
+	return maxFlow;
+}
+
+
+void generateNode(int a, int cost) {
+	graph[2 * a][2 * a + 1] = true;
+	capacities[2 * a][2 * a + 1] = cost;
+
+	graph[2 * a + 1][2 * a] = true;
+	capacities[2 * a + 1][2 * a] = cost;
+}
+
+
+void connect(int a, int b, int d) {
+	graph[2 * a + 1][2 * b] = true;
+	graph[2 * b + 1][2 * a] = true;
+
+	capacities[2 * a + 1][2 * b] = d;
+	capacities[2 * b + 1][2 * a] = d;
+
+}
+
+int distance_sq(pair<int, int> a, pair<int, int> b) {
+	return (pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
+
+}
+
+int main()
+{
+	int L, W, N, d;
+	vector<pair<int, int>> input;
+	int n_case = 1;
+
+	while (true) {
+		cin >> L >> W >> N >> d;
+		if (L == 0 && W == 0 && N == 0 && d == 0)
+			break;
+
+		int  n = 2 * N + 4;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				graph[i][j] = false;
+				flow_passed[i][j] = 0;
+				capacities[i][j] = 0;
+			}
+		}
+
+		int sount_index = N;
+		int north_index = N + 1;
+		int four_d_sqr  = 4*d*d;
+
+		generateNode(sount_index, numeric_limits<int>::max());
+		generateNode(north_index, numeric_limits<int>::max());
+
+		for (int i = 0; i < N; i++) {
+			int x, y;
+			cin >> x >> y;
+			input.push_back({ x,y });
+
+			generateNode(i, 1);
+
+			if (y <= d)
+				connect(sount_index, i, 1);
+			if (W - y <= d)
+				connect(i, north_index, 1);
+
+		}
+
+		for(int i = 0; i < N; i++)
+			for (int j = i+1; j < N; j++) {
+				if (distance_sq(input[i], input[j]) <= four_d_sqr) {
+					connect(i, j, 1);
+				}
+			}
+
+		cout << "Case " << n_case++ << ": "<<maxFlow(2*N, 2*N + 3, n) << "\n";
+	}
+
 
 	return 0;
 }
