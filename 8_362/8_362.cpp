@@ -97,18 +97,6 @@ void connect(int a, int b, int d) {
 
 }
 
-
-/*
-void connect(int a, int b, int d) {
-	graph[a][b] = true;
-	graph[b][a] = true;
-
-	capacities[a][b] = d;
-	capacities[b][a] = d;
-
-}*/
-
-
 void clear(int n) {
 	int dimension = 2 * n + 2;
 
@@ -156,34 +144,23 @@ int main()
 			int u_x = coordinates[i].second;
 			int u_y = coordinates[i].first;
 
-			if (u_x == -1 && u_y == -1)//duplicate coordinate
-				continue;
 
 			generateNode(u, 1);
+
+
 			if (u_y + d >= W)
-				connect(north_id, u, numeric_limits<int>::max());
+				connect(u, north_id, 1);
 			if (u_y - d <= 0)
-				connect(south_id, u, numeric_limits<int>::max());
+				connect(south_id, u, 1);
 
 			for (int j = i + 1; j < n; j++) {
 				v = j + 1;
 				int v_x = coordinates[j].second;
 				int v_y = coordinates[j].first;
-				//check if out of range
-				if (v_y > u_y + 2*d)
-					break;
-				if (v_x > u_x + 2*d)
-					continue;
-				//check if actually in range
+				
 				int dist_sq = pow((u_x - v_x), 2) + pow((u_y - v_y),2);
 				if (dist_sq < four_d_sq) {
-					if (dist_sq == 0) {//duplicate coordinate
-						capacities[2 * u][2 * u + 1] = capacities[2 * u][2 * u + 1] + 1;
-						capacities[2 * u + 1][2 * u] = capacities[2 * u + 1][2 * u] + 1;
-						coordinates[j] = { -1, -1 };
-					}else{
-						connect(u, v, numeric_limits<int>::max());
-					}
+					connect(u, v, 1);
 				}
 			}
 		}
