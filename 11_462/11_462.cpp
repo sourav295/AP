@@ -14,11 +14,12 @@
 #include <bitset>
 using namespace std;
 
-const unsigned int last_prime = 100000007;
-const unsigned int no_prime   = 5761456;
-const unsigned int n_sqrt = 10001;
+const unsigned long last_prime = 100000007;
+const unsigned long n_sqrt = 10001;
 
-bool  *flag = new bool[(100000007 + 1)/2];
+//6 signifies 2^6 that is 64, 64 since int provides a space of 32 bits and even numbers can be ignored.
+//Therefore, the entire range is broken into sets of 64 bits
+int flag[(100000007 >> 6) + 1];
 //unsigned int *prime = new unsigned int[no_prime];
 
 unsigned int index_to_value(unsigned int index) {
@@ -39,36 +40,46 @@ unsigned int value_to_index(unsigned int value) {//eliminate the need of even nu
 	return (value + 1) / 2;
 }
 
+void setAsComposite(unsigned long x) {
+	flag[(x >> 6)] |= (1 << (
+								(x & 63) >> 1
+							) 
+						);
+}
+
+bool isComposite(unsigned long x) {
+	return	flag[(x >> 6)] & (1 <<	(
+										(x & 63) >> 1
+									)
+							);
+}
+
 void createPrimeArray(unsigned int n) {
 
-	unsigned int i, j;
-	fill(flag, flag + (n *sizeof(bool)+1)/2, true);
+	unsigned long i, j;
+	
 
 	//i = 1 contains 2
 	
 	for (i = 3; i <= n_sqrt; i+=2) {
-		if (flag[value_to_index(i)]) {
-			for (j = i*i; j <= n; j += 2*i) {
-				flag[value_to_index(j)] = false;
+		if (!isComposite(i)) {
+			for (j = i*i; j <= n; j += (i<<1)) {
+				setAsComposite(j);
 			}
 		}
 	}
-	
-	
-	/*
-	unsigned int  count = 0;		   //total number found now
-	for (i = 3; i <= n; i+=2) {
-		if (flag[value_to_index(i)] == true)
-			prime[count++] = i;     //not filtered, then prime
-									// prime[j], the j-th prime	
-		for( j=0 ; j<count  &&  i*prime[j] <= n ; j++)	{
-		flag[value_to_index(i*prime[j])] = false;   //i*prime[j] is filtered. 					    			    	                              
-		if (i%prime[j] == 0)
-			break;
-		}
-	}*/
 
 }
+
+bool checkPrime(unsigned long x) {
+	if (x == 1 || x == 2)
+		return true;
+	else if (x % 2 == 0)
+		return true;
+	else return !isComposite(x);
+
+}
+
 
 int main()
 {
@@ -85,7 +96,7 @@ int main()
 
 		if (n & 1){
 			//number is odd
-			if (flag[value_to_index(n - 2)])
+			if (checkPrime(n-2))
 				if(n-2 != 1)
 					cout << n << " is the sum of " << "2 and " << n - 2 << ".\n";
 				else
@@ -104,7 +115,7 @@ int main()
 			for (unsigned int i = half_index; i < n; i++){
 				p2 = index_to_value(i);
 				p1 = n - p2;
-				if (flag[value_to_index(p1)] && flag[value_to_index(p2)]){
+				if (checkPrime(p1) && checkPrime(p2)){
 					cout << n << " is the sum of " << p1 << " and " << p2 << ".\n";
 					break;
 				}
