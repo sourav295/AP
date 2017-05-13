@@ -16,42 +16,40 @@
 #include <map>
 using namespace std;
 
-vector<unsigned long long> x;
-map<unsigned long long, bool> dict;
+const unsigned long long x_lim = (unsigned long long)18446744073709551615;
+const unsigned long long x_lim_by_4 = x_lim >> 2;//x*2^2 <= 2^64 - 2^0
+
+
+
+
+void setAsSuperPower(unsigned long x) {
+	x = x - 2;
+	flag[(x >> 6)] |= (
+							1 << (x & 63) 
+					  );
+}
+
+bool isSuperPower(unsigned long x) {
+	x = x - 2;
+	return	flag[(x >> 6)] & (
+								1 << (x & 63) 
+							 );
+}
+
 
 int main()
 {
-	unsigned long long n = (1 << 64) - 1;
-	
+	for (unsigned long long i = 2; i <= x_lim; i++) {
+		if (!isSuperPower(i)) {
+			unsigned long long j    = i;
+			unsigned long long j_sq = i*i;
 
-	x.push_back(1);
-	
-	
-	unsigned long long i = 0;
-	unsigned long long prod = 0;
-	unsigned long long diff = 0;
-	unsigned long long lim = 0;
+			while(j <= x_lim)
 
-	for (i = 2; i <= n; i++) {
-		if (!dict.count(i)) {
-			diff = i*i;
-			prod = diff * diff;
-
-			lim = n / diff;
-
-			while (prod < n) {
-				x.push_back(prod);
-				dict[prod] = true;
-				cout << prod << "\n";
-
-				if (prod > lim)// in this case it will cross the limit
-					break;
-
-				prod *= diff;
-			}
 		}
 	}
-
+	
+	
     return 0;
 }
 

@@ -2,56 +2,48 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
-//#include <utility>
-#include <stack> 
+#include <utility>
+#include <queue> 
+#include<string>
+#include <stack>
+#include <limits>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <cmath>
+#include <map>
 using namespace std;
 
+const int n_lim = 50;
 
-struct OperandState
-{
-	char operand;
-	bool state;
-	OperandState(char op, bool val) {
-		operand = op;
-		state = val;
+struct Partial_Bool {
+
+	int n;
+	bool negation[n_lim];
+	char identity[n_lim];
+
+	Partial_Bool(string x) {
+		for(int i = 0; i < x.length(); i++)
+			identity[]
 	}
-	bool operator==(const OperandState other) const { return ((other.operand) == operand) && (other.state==state); }
-
-};
-
-class State {
-
-	vector<OperandState> constrained_operands;
-
-public:
-	bool checkConstraint(OperandState otherState) {
-			
-	}
-
-	
 
 };
 
 
+//infix to equation stack coverter
 
-
-
-void insert_operand(stack<char>& operator_stack, stack<int>& operand_stack, int o) {
-
-	
-}
-
-
-void insert_operator(stack<char>& operator_stack, stack<int>& operand_stack, char op) {
-
-	
-}
 
 
 
 int main()
 {
 
+	string line;
+	while (getline(cin, line)) {
+
+
+
+	}
 
 	return 0;
 }
