@@ -10,22 +10,14 @@
 #include <stdlib.h>
 using namespace std;
 
-int main()
-{
-	int n_samples;
-	cin >> n_samples;
-
-	for (int i = 0; i < n_samples; i++) {
-		int n;
+int main() {
+	
+	int n, t;
+	cin >> t;
+	while (t--) {
 		cin >> n;
-		if (n == 0 || n == 1)
-			cout << 0 << "\n";
-		else if (n % 2 == 0)
-			cout << n / 2 << "\n";
-		else
-			cout << (n - 1) / 2 << "\n";
+		cout << (n <= 2 ? 0 : n-2) << "\n";
 	}
 
-    return 0;
+	return 0;
 }
-

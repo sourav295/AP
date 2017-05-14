@@ -14,36 +14,17 @@
 #include <map>
 using namespace std;
 
-const int n_lim = 50;
 
-struct Partial_Bool {
-
-	int n;
-	bool negation[n_lim];
-	char identity[n_lim];
-
-	Partial_Bool(string x) {
-		for(int i = 0; i < x.length(); i++)
-			identity[]
-	}
-
-};
-
-
-//infix to equation stack coverter
 
 
 
 
 int main()
 {
+	char a = 'a';
+	bool x = !a;
 
-	string line;
-	while (getline(cin, line)) {
-
-
-
-	}
+	cout << x;
 
 	return 0;
 }
