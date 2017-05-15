@@ -19,21 +19,14 @@ int A[n_limit];
 
 
 int diff(int a, int b){
-	if(b-a <= 10 - b + a)
-		return b - a;
-	else
-		return 10- b + a;
+	return min(abs(a - b), 10 - abs(a - b));
 	
 }
 
 int distance(int A[], int B[]){
 	int distance = 0;
 	for(int i = 0; i < 4; i++){
-		if(A[i] <= B[i]){
-			distance += diff(A[i], B[i]);
-		}else{
-			distance += diff(B[i], A[i]);
-		}
+		distance += diff(A[i], B[i]);
 	}
 	
 	return distance;
@@ -67,9 +60,7 @@ struct Edge {
 		ppa = distance(indexA, indexB);
 	}
 
-	Edge generateEdgeOnIndexB(Edge other) {
-		return Edge(keyB, other.keyB, keyB_id, other.keyB_id);
-	}
+	
 
 	Edge() {}
 
@@ -117,27 +108,30 @@ int main()
 	int T;
 	cin >> T;
 	
+	
+
 	for (int test = 0; test < T; test++) {
+		vector<int> input_keys;
 		int N;
 		int count = 0;
-		int maxdist_connectedToZero = 0;
-		int sumdist_connectedToZero = 0;
 		cin >> N;
 
 		
 		for (int j = 0; j < N; j++) {
 			int key;
 			cin >> key;
-			edges[count++] = Edge(0, key, 0, count + 1);//connect to 0000
+			input_keys.push_back(key);
+			//edges[count++] = Edge(0, key, 0, count + 1);//connect to 0000
 		}
 		//interconnections
 		for (int j = 0; j < N; j++)
-			for (int k = j+1; k < N; k++)
-				edges[count++] = edges[j].generateEdgeOnIndexB(edges[k]);
+			for (int k = j + 1; k < N; k++)
+				edges[count++] = Edge(input_keys[j], input_keys[k], j, k);
+				//edges[count++] = edges[j].generateEdgeOnIndexB(edges[k]);
 
 		qsort(edges, count, sizeof(Edge), compareEdge);
 		//MST
-		for (int j = 0; j < N + 1; j++)
+		for (int j = 0; j < N; j++)
 			A[j] = -1;
 
 		int total_rolls = 0;
@@ -145,21 +139,18 @@ int main()
 			Edge e = edges[j];
 			if (Find(e.keyA_id) != Find(e.keyB_id)) {
 				Union(e.keyA_id, e.keyB_id);
-
-				if (e.keyA_id == 0 || e.keyB_id == 0) {
-					sumdist_connectedToZero += e.ppa;
-					if (e.ppa > maxdist_connectedToZero)
-						maxdist_connectedToZero = e.ppa;
-				}
-			
 				total_rolls += e.ppa;
 			}
 		}
 
-		//find maximum depth of the graph
-
-		//find out a way to roll across the tree
-		cout << total_rolls + sumdist_connectedToZero - maxdist_connectedToZero << "\n";
+		int min_weightFrom0 = numeric_limits<int>::max();
+		for (int j = 0; j < N; j++) {
+			Edge e(0, input_keys[j], 0, 0);
+			if (e.ppa < min_weightFrom0)
+				min_weightFrom0 = e.ppa;
+		}
+		
+		cout << total_rolls + min_weightFrom0 << "\n";
 		
 	}
 	
