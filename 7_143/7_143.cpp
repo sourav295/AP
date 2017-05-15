@@ -91,8 +91,6 @@ int main()
 			for (int j = 0; j < n; j++)
 				A[j] = -1;
 
-			int max_val = numeric_limits<int>::min();
-
 			int max_weight = numeric_limits<int>::min();
 			int min_weight = numeric_limits<int>::max();
 
@@ -109,13 +107,13 @@ int main()
 					if (e.ppa < min_weight)
 						min_weight = e.ppa;
 				}
-			}
 
-			if (n_edgesSelected == n - 1 && (max_weight - min_weight) < min_slimness) {
-				min_slimness = max_weight - min_weight;
-				isAdmissionable = true;
+				if (n_edgesSelected == n - 1 && (max_weight - min_weight) < min_slimness) {
+					min_slimness = max_weight - min_weight;
+					isAdmissionable = true;
+					break;
+				}
 			}
-
 		}
 		cout << (isAdmissionable ? min_slimness : -1) << "\n";
 	}
