@@ -11,12 +11,11 @@
 #include <sstream>
 using namespace std;
 
-const int n_limit = 506;
+const int n_limit = 506*2;
 int n;
 
 int sptSet[n_limit], dist[n_limit];
 int park[n_limit][n_limit];
-int hops[n_limit];
 
 int minDistance()
 {
@@ -35,16 +34,16 @@ int minDistance()
 	return min_index;
 }
 
-int dijkstra(int src, int dest, bool excld_direct = false)
+int dijkstra(int src, int dest)
 {
 	for (int i = 0; i < n; i++) {
 		dist[i] = numeric_limits<int>::max();
-		hops[i] = numeric_limits<int>::max();
+		
 		sptSet[i] = false;
 	}
 
 	dist[src] = 0;
-	hops[src] = 0;
+	
 
 	for (int count = 0; count < n; count++)
 	{
@@ -56,24 +55,18 @@ int dijkstra(int src, int dest, bool excld_direct = false)
 		sptSet[u] = true;
 
 		if (u == dest)
-			if(excld_direct && hops[u] % 2 == 0)
-				return dist[dest];
-			else if(!excld_direct && hops[u] % 2 == 1)
-				return dist[dest];
-			else
-				return numeric_limits<int>::max();
+			return dist[dest];
+			
 
-		for (int v = 0; v < n; v++)
+		for (int v = 0; v < n; v++){
 			if (!sptSet[v] && park[u][v] && dist[u] != numeric_limits<int>::max() && dist[u] + park[u][v] < dist[v] ) {
-				if ((!excld_direct && !(u == src && v == 0)) || (excld_direct && !(u == src && v == dest))) {
 					dist[v] = dist[u] + park[u][v];
-					hops[v] = hops[u] + 1;
 				}
-			}
+		}
 				
 	}
 
-	return numeric_limits<int>::max();
+	return dist[dest];
 }
 
 int main()
@@ -83,7 +76,8 @@ int main()
 	int r;
 
 	while (cin >> n >> r) {
-		
+		n = 2 * n;
+
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++) {
 				park[i][j] = 0;
@@ -93,24 +87,17 @@ int main()
 			int a, b, d;
 			cin >> a >> b >> d;
 
-			park[a][b] = d;
-			park[b][a] = d;
+			park[2 * a][2 * b + 1] = d;
+			park[2 * b + 1][2 * a] = d;
+			
+			
+			park[2 * a + 1][2 * b] = d;
+			park[2 * b][2 * a + 1] = d;
+
 		}
 		
 		int dest = n - 1;
-
-		int res = dijkstra(0, dest, true);
-
-		for (int i = 0; i < n; i++) {
-			if (park[0][i] > 0 && i != dest) {
-				int potential =  dijkstra(i, dest);
-				if (potential != numeric_limits<int>::max() && potential + park[0][i]< res)
-					res = potential + park[0][i];
-			}
-
-		}
-
-
+		int res = dijkstra(1, n - 1);
 		cout << "Set #" << count++ << "\n";
 		if(res != numeric_limits<int>::max()){
 			cout << res << "\n";
