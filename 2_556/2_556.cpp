@@ -46,6 +46,9 @@ bool evaluate(char operand_1, char operand_2, char operator_1) {
 
 int getPriority(char operator_ch) {
 	switch (operator_ch) {
+	case '(':
+	case ')':
+		return -1;
 	case '+':
 		return 0;
 	case '&':
