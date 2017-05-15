@@ -77,7 +77,7 @@ int main()
 		for (int j = 0; j < m; j++) {
 			int u, v, c;
 			cin >> u >> v >> c;
-			edges[j] = Edge(u, v, c);
+			edges[j] = Edge(u-1, v-1, c);
 		}
 
 		qsort(edges, m, sizeof(Edge), compareEdge);
