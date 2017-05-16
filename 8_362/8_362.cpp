@@ -96,6 +96,7 @@ int main()
 
 	while (true) {
 		cin >> L >> W >> N >> d;
+		input.clear();
 		if (L == 0 && W == 0 && N == 0 && d == 0)
 			break;
 

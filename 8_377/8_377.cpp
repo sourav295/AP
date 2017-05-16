@@ -33,7 +33,7 @@ struct Node {
 
 vector<Node*> all_nodes(n_limit);
 
-pair<long long, int> findPeopleToFire(int u, bool visited[])//returns profit realized and no. of people fired
+pair<long long, int> findPeopleToFire(int u, bool visited[] )//returns profit realized and no. of people fired
 {
 	
 	visited[u] = true;
@@ -49,6 +49,8 @@ pair<long long, int> findPeopleToFire(int u, bool visited[])//returns profit rea
 			n_fired += profitNuser_pair.second;
 		}
 	}
+
+	visited[u] = false;
 
 	return { sum_profit, n_fired };
 }
@@ -99,7 +101,7 @@ int main()
 		}
 		
 		cout << min_fired << " " << max_profit << "\n";
-		
+		break;
 	}
 
 
