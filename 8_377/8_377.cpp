@@ -16,6 +16,34 @@ using namespace std;
 
 const int n_limit = 5002;
 
+map<int, bool> nodeId_existinDJ;
+int A[n_limit];
+
+void Union(int element1, int element2);
+void UnionSet(int set1, int set2);
+int Find(int element);
+
+int Find(int element) {
+	if (A[element] < 0)
+		return element;
+	else
+		return Find(A[element]);
+}
+
+void Union(int element1, int element2) {
+	int root1 = Find(element1);
+	int root2 = Find(element2);
+	if (A[root1] < A[root2])
+		UnionSet(root1, root2);
+	else
+		UnionSet(root2, root1);
+}
+
+void UnionSet(int set1, int set2) {
+	A[set1] += A[set2];
+	A[set2] = set1;
+}
+
 
 struct Node {
 	long int cost;
@@ -50,8 +78,7 @@ pair<long long, int> findPeopleToFire(int u, bool visited[] )//returns profit re
 		}
 	}
 
-	visited[u] = false;
-
+	
 	return { sum_profit, n_fired };
 }
 
@@ -65,12 +92,10 @@ int main()
 	
 	int n, m, cost;
 	int a, b;
-	while (cin >> n >> m) {
-		
+	while (1) {
+		cin >> n >> m;
 		//idCost_cache.clear();
-		long long max_profit = 0;
-		int min_fired = 0;
-
+		
 
 		for (int i = 1; i <= n; i++) {
 			cin >> cost;
@@ -83,24 +108,68 @@ int main()
 			all_nodes[a]->subordinates.push_back(all_nodes[b]);
 		}
 		
+		for (int j = 1; j <= n; j++)
+			A[j] = -1;
+
 		for (int i = 1; i <= n; i++) {
-			bool *visited = new bool[n + 2];
-			clearVisited(visited, n);
-			pair<long long, int> profitNuser_pair = findPeopleToFire(i, visited);
-
-			long long sum_profit = profitNuser_pair.first;
-			int n_fired = profitNuser_pair.second;
-
-			if (sum_profit > max_profit) {
-				max_profit = sum_profit;
-				min_fired = n_fired;
-			}
-			else if (sum_profit == max_profit && n_fired < min_fired) {
-				min_fired = n_fired;
+			for (int j = 0; j < all_nodes[i]->subordinates.size(); j++) {
+				int neighbouring_i= (all_nodes[i]->subordinates)[j]->id;
+				Union(i, neighbouring_i);
 			}
 		}
-		
-		cout << min_fired << " " << max_profit << "\n";
+
+		int count_dj = 0;
+		queue<int> roots;
+		for (int j = 1; j <= n; j++)
+			if (A[j] < 0) {
+				count_dj++;
+				roots.push(j);
+			}
+
+		long long sum_profit = 0;
+		int sum_fired = 0;
+
+		for (roots; !roots.empty(); roots.pop()) {
+
+			nodeId_existinDJ.clear();
+			for (int i = 1; i <= n; i++)
+				nodeId_existinDJ[i] = false;
+
+			for (int i = 1; i <= n; i++) {
+				if (Find(i) == roots.back()) {
+					nodeId_existinDJ[i] = true;
+				}
+			}
+
+			long long max_profit = 0;
+			int min_fired = 0;
+
+			for (int i = 1; i <= n; i++) {
+				bool *visited = new bool[n + 2];
+				clearVisited(visited, n);
+				pair<long long, int> profitNuser_pair = findPeopleToFire(i, visited);
+
+				long long sum_profit = profitNuser_pair.first;
+				int n_fired = profitNuser_pair.second;
+
+				if (sum_profit > max_profit) {
+					max_profit = sum_profit;
+					min_fired = n_fired;
+				}
+				else if (sum_profit == max_profit && n_fired < min_fired) {
+					min_fired = n_fired;
+				}
+			}
+
+			if (max_profit > 0) {
+				sum_profit += max_profit;
+				sum_fired += min_fired;
+			}
+
+		}
+
+		cout << (sum_fired) << " " << sum_profit << "\n";
+
 		break;
 	}
 
