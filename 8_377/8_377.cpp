@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <cmath>
 #include <map>
+#include <stdlib.h>
 using namespace std;
 
 const int n_limit = 5002;
@@ -63,7 +64,11 @@ vector<Node*> all_nodes(n_limit);
 
 pair<long long, int> findPeopleToFire(int u, bool visited[] )//returns profit realized and no. of people fired
 {
-	
+	if (!nodeId_existinDJ[u]) {
+		return { 0, 0 };
+	}
+
+
 	visited[u] = true;
 
 	long long sum_profit = all_nodes[u]->cost;
@@ -114,7 +119,8 @@ int main()
 		for (int i = 1; i <= n; i++) {
 			for (int j = 0; j < all_nodes[i]->subordinates.size(); j++) {
 				int neighbouring_i= (all_nodes[i]->subordinates)[j]->id;
-				Union(i, neighbouring_i);
+				if(Find(i)!=Find(neighbouring_i))
+					Union(i, neighbouring_i);
 			}
 		}
 
@@ -168,7 +174,7 @@ int main()
 
 		}
 
-		cout << (sum_fired) << " " << sum_profit << "\n";
+		cout << (sum_fired) << " " << (sum_profit) << ("\n");
 
 		break;
 	}
