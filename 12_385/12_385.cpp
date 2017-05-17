@@ -26,7 +26,7 @@ struct Point {
 
 }points[n_limit], p0;
 
-Point point_copy[n_limit];
+Point point_copy[n_limit], hull_points[n_limit];
 
 
 bool selected[n_limit];
@@ -121,6 +121,18 @@ int comparePoints(const void *vp1, const void *vp2)
 		return -1;
 }
 
+double getArea_intoTwo(Point p[], int n_ver) {
+	float area = 0.0f;
+
+	for (int i = 0; i < n_ver - 1; i++)
+		area += p[i].x * p[i + 1].y - p[i + 1].x * p[i].y;
+
+	area += p[n_ver - 1].x * p[0].y - p[0].x * p[n_ver - 1].y;
+
+	area = abs(area);
+
+	return area;
+}
 
 int main()
 {
@@ -129,7 +141,7 @@ int main()
 	K =1;
 	while(true) {
 		cin >> N;
-
+		int N_copy = N;
 		if (N == 0)
 			break;
 
@@ -203,44 +215,20 @@ int main()
 			pointStack.push_back(points[i]);
 		}
 
-		/*
-		for (int i = 0; i < pointStack.size(); i++) {
-			cout << pointStack[i].x << " " << pointStack[i].y << "\n";
-		}*/
-		
-		int i, j, k;
-		int start, end;
-
-		i = 1;
-		j = 1;
-
-		int sum_con = 0;
-		int sum_ousted = 0;
-
-		while (i < pointStack.size()) {
-			if (i < pointStack.size() - 1)
-				sum_con += getTriArea(p0, pointStack[i], pointStack[i + 1]);
-			
-			start = i;
-			i++;
-			j++;
-
-			while (j < N && dist_square(pointStack[i], point_copy[j])!=0)
-				j++;
-			end = j;
-			//calculate the oustracized area
-			for (k = end; k >= start + 2; k--) {
-				sum_ousted += getTriArea(point_copy[start], point_copy[k], point_copy[k-1]);
-			}
-			
-			i = end;
-			j = end;
+		int counter_hull = 0;
+		for (pointStack;!pointStack.empty(); pointStack.pop_back()) {
+			hull_points[counter_hull++] = pointStack.back();
 		}
+
+		float hull_area = getArea_intoTwo(hull_points, counter_hull);
+		float polygon_area = getArea_intoTwo(point_copy, N_copy);
+		float result = (1 - (polygon_area / hull_area))*100;
+
 
 		cout << "Tile #" << K++;
 		cout << "\nWasted Space = ";
-		printf("%.2f %%\n\n", (float)sum_ousted*100/sum_con);
-
+		printf("%.2f %%\n\n", (float)result);
+		
 		
 	}
 
