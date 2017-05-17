@@ -151,24 +151,21 @@ int main()
 			input.push_back({ y,x });
 			//points[i] = Point(x, y);
 		}
-		if (input[0] == input[N - 1]) {
-			input.pop_back();
-			N--;
-		}
+		
 
 		sort(input.begin(), input.begin() + N);
+
 		for (int i = 0; i < N; i++) {
 			points[i] = Point(input[i].second, input[i].first);
 			selected[i] = true;
 		}
+
 		p0 = points[0];
 		qsort(&points[1], N - 1, sizeof(Point), compare);
-
-
 		for (int i = 0; i < N; i++)
 			point_copy[i] = points[i];
 
-
+		
 		int m = 1;
 		int first_i;
 		for (int i = 1; i<N; i++)
@@ -227,7 +224,7 @@ int main()
 
 		cout << "Tile #" << K++;
 		cout << "\nWasted Space = ";
-		printf("%.2f %%\n\n", (float)result);
+		printf("%.2lf %%\n\n", (float)result);
 		
 		
 	}
