@@ -63,26 +63,66 @@ bool inInterval(pair<int, int> &bounds, Signal newSignal) {
 	bool isIntersecting = (lower_boundCmp.first || upper_boundCmp.first);
 	if (isIntersecting) {
 
+		int newSignal_i = (lower_boundCmp.first == true ? lower_boundCmp.second : upper_boundCmp.second);
+		
+		pair<int, int> newTimeBound = newSignal.getTimeBound(newSignal_i);
 
+		bounds.first  = max(bounds.first , newTimeBound.first );
+		bounds.second = min(bounds.second, newTimeBound.second);
 
-
+		return true;
 	}
 	else
 		return false;
 
 }
 
+void printTime(int t) {
+	int HOUR = 3600;
+	int MIN = 60;
+	
+	int hour = t / HOUR;
+	int second = t % HOUR;
+	int minute = second / MIN;
+	second = t % MIN;
+
+
+	printf("%.2d:%.2d:%.2d\n", hour, minute, second);
+}
 
 void execute(int n) {
 	//ref is the first signal
 	int ref = 0;
 	float ref_lim = (float)5 * 60 * 60 / (2 * signals[ref].time_period);
 
-
+	bool sol_found = false;
 	for (int i = 1; i <= ref_lim; i++) {
-		signals[ref].getTimeBound(i);
+		
+		pair<int, int> ref_bound = signals[ref].getTimeBound(i);
+
+		bool accepted = true;
+		for (int j = ref + 1; j < n; j++) {
+			if (inInterval(ref_bound, signals[j]) == false) {
+				accepted = false;
+				break;
+			}
+		}
 
 
+		if (accepted) {
+			sol_found = true;
+			if (ref_bound.first <= 5 * 60 * 60)
+				printTime(ref_bound.first);
+			else
+				cout << "Signals fail to synchronise in 5 hours\n";
+
+			break;
+		}
+
+	}
+
+	if (!sol_found) {
+		cout << "Signals fail to synchronise in 5 hours\n";
 	}
 
 }
