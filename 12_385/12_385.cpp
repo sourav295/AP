@@ -122,7 +122,7 @@ int comparePoints(const void *vp1, const void *vp2)
 }
 
 double getArea_intoTwo(Point p[], int n_ver) {
-	float area = 0.0f;
+	double area = 0.0f;
 
 	for (int i = 0; i < n_ver - 1; i++)
 		area += p[i].x * p[i + 1].y - p[i + 1].x * p[i].y;
@@ -149,7 +149,8 @@ int main()
 		for (int i = 0; i < N; i++) {
 			cin >> x >> y;
 			input.push_back({ y,x });
-			//points[i] = Point(x, y);
+			
+			point_copy[i] = Point(x, y);
 		}
 		
 
@@ -162,9 +163,7 @@ int main()
 
 		p0 = points[0];
 		qsort(&points[1], N - 1, sizeof(Point), compare);
-		for (int i = 0; i < N; i++)
-			point_copy[i] = points[i];
-
+		
 		
 		int m = 1;
 		int first_i;
@@ -217,14 +216,15 @@ int main()
 			hull_points[counter_hull++] = pointStack.back();
 		}
 
-		float hull_area = getArea_intoTwo(hull_points, counter_hull);
-		float polygon_area = getArea_intoTwo(point_copy, N_copy);
-		float result = (1 - (polygon_area / hull_area))*100;
+		double hull_area = getArea_intoTwo(hull_points, counter_hull);
+		double polygon_area = getArea_intoTwo(point_copy, N_copy);
+		double result = (1 - (polygon_area / hull_area))*100;
 
+		result = abs(result);
 
 		cout << "Tile #" << K++;
 		cout << "\nWasted Space = ";
-		printf("%.2lf %%\n\n", (float)result);
+		printf("%.2lf %%\n\n", result);
 		
 		
 	}
