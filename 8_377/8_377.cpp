@@ -47,7 +47,7 @@ void UnionSet(int set1, int set2) {
 
 
 struct Node {
-	long int cost;
+	long long cost;
 	int id;
 	vector<Node*> subordinates;
 
@@ -95,7 +95,8 @@ void clearVisited(bool visited[], int n) {
 int main()
 {
 	
-	int n, m, cost;
+	int n, m;
+	long long cost;
 	int a, b;
 	while (1) {
 		cin >> n >> m;
@@ -132,8 +133,8 @@ int main()
 				roots.push(j);
 			}
 
-		long long sum_profit = 0;
-		int sum_fired = 0;
+		long long sum_profit_ans = 0;
+		int sum_fired_ans = 0;
 
 		for (roots; !roots.empty(); roots.pop()) {
 
@@ -168,13 +169,13 @@ int main()
 			}
 
 			if (max_profit > 0) {
-				sum_profit += max_profit;
-				sum_fired += min_fired;
+				sum_profit_ans += max_profit;
+				sum_fired_ans += min_fired;
 			}
 
 		}
 
-		cout << (sum_fired) << " " << (sum_profit) << ("\n");
+		cout << (sum_fired_ans) << " " << (sum_profit_ans) << ("\n");
 
 		break;
 	}
