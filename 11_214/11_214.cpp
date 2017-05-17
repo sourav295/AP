@@ -16,7 +16,7 @@ const int n_limit = 1299709;
 bool  flag[n_limit + 1];
 int   prime[n_limit + 1];
 
-void getPrime(int n){
+void getComposite(int n){
     
 	for (int i = 0; i <= n_limit; i++) {
 		flag[i] = true;
@@ -58,7 +58,7 @@ int main()
 		input.push(in);
 	}
 	
-	getPrime(max_input);
+	getComposite(max_input);
 
 	for (input; !input.empty(); input.pop()) {
 		in = input.front();

@@ -14,42 +14,87 @@
 #include <math.h>
 #include <fstream>
 #include <map>
+#include <set>
 using namespace std;
 
-const unsigned long long x_lim = (unsigned long long)18446744073709551615;
-const unsigned long long x_lim_by_4 = x_lim >> 2;//x*2^2 <= 2^64 - 2^0
+unsigned long long int max_base = 65536;
+unsigned long long int n_limit = 18446744073709551615;
+
+const double log10_nLimit = log10(n_limit);
 
 
 
+bool  flag[64 + 1];
+int   prime[64 + 1];
+int composite_dict[64];
 
-void setAsSuperPower(unsigned long x) {
-	x = x - 2;
-	flag[(x >> 6)] |= (
-							1 << (x & 63) 
-					  );
-}
+void getComposite() {
 
-bool isSuperPower(unsigned long x) {
-	x = x - 2;
-	return	flag[(x >> 6)] & (
-								1 << (x & 63) 
-							 );
-}
+	for (int i = 0; i <= 64; i++) {
+		flag[i] = true;
+	}
 
+	int  count = 0;
+	for (int i = 2; i <= 64; i++) {
 
-int main()
-{
-	for (unsigned long long i = 2; i <= x_lim; i++) {
-		if (!isSuperPower(i)) {
-			unsigned long long j    = i;
-			unsigned long long j_sq = i*i;
+		if (flag[i] == true) {
+			prime[count++] = i;
+		}
 
-			while(j <= x_lim)
-
+		for (int j = 0; j<count && i*prime[j] <= 64; j++) {
+			flag[i*prime[j]] = false;
+			if (i%prime[j] == 0)
+				break;
 		}
 	}
-	
-	
-    return 0;
+
+	count = 0;
+	for (int i = 0; i <= 64; i++) {
+		if (!flag[i])
+			composite_dict[count++] = i;
+	}
 }
 
+
+
+set<unsigned long long int> superPower_set;
+
+unsigned long long number_sq(unsigned long long n) {
+	return n*n;
+}
+
+unsigned long long number_power(unsigned long long base, int exp)
+{
+	if (!exp) {
+		return 1;
+	}
+	else if ((exp & 1)) {
+		return base * number_power(base, exp - 1);
+	}
+	else {
+		return number_sq(number_power(base, exp >>= 1));
+	}
+}
+
+int main(){
+	
+	getComposite();
+
+	unsigned long long int i, j;
+	
+	for (i = 2; i< max_base; i++) {
+		double maxRange_inverseExpo = (log10_nLimit / log10(i));
+		for (j = 0; composite_dict[j] < maxRange_inverseExpo; j++) {
+			superPower_set.insert(number_power(i, composite_dict[j]));
+		}
+	}
+
+	cout << 1 << "\n";
+
+	for (set<unsigned long long int>::iterator it = superPower_set.begin(); it != superPower_set.end(); it++)
+	{
+		cout << *it << "\n";
+	}
+
+	return 0;
+}
